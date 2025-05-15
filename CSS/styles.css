@@ -3126,5 +3126,553 @@ body {
     }
 }
 
+/* Create Deck Button */
+.create-deck-button {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
+}
 
+.create-deck-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
 
+/* Create Deck Modal */
+.deck-creation-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.step-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+}
+
+.step::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: -40px;
+    width: 40px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.step:last-child::after {
+    display: none;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.step.active .step-number {
+    background: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.step-text {
+    color: #fff;
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+.step.active .step-text {
+    opacity: 1;
+}
+
+.step-content {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.step-content h3 {
+    color: #fff;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.card-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.card-item:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.card-item.selected {
+    border-color: #4CAF50;
+    background: rgba(76, 175, 80, 0.2);
+}
+
+.card-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.card-item span {
+    color: #fff;
+    font-size: 14px;
+    display: block;
+    text-align: center;
+}
+
+.selected-evolved-cards {
+    margin-bottom: 30px;
+}
+
+.selected-evolved-cards h4 {
+    color: #fff;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.selected-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.next-step-button, .create-deck-button {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.next-step-button:hover, .create-deck-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+@media (max-width: 768px) {
+    .step-indicator {
+        gap: 20px;
+    }
+    
+    .step::after {
+        width: 20px;
+        right: -20px;
+    }
+    
+    .cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+    
+    .selected-cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Permitir scroll no grid de cartas evoluídas do modal de criar deck */
+#createDeckModal .cards-grid {
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 8px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 18px;
+}
+
+#step2 .selected-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+@media (min-width: 700px) {
+  #createDeckModal .cards-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  #step2 .selected-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1000px) {
+  #createDeckModal .cards-grid {
+    grid-template-columns: repeat(7, 1fr);
+  }
+  #step2 .selected-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+#createDeckModal .modal-content {
+    max-width: 1200px;
+    width: 98vw;
+    margin: 2% auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    background: #232323;
+    border-radius: 18px;
+    padding: 32px 32px 24px 32px;
+}
+
+#createDeckModal .modal-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #333;
+}
+
+#createDeckModal .modal-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+#createDeckModal .deck-creation-steps {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#createDeckModal .step-indicator {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+#createDeckModal .step-content {
+    width: 96%;
+    max-width: 950px;
+    box-sizing: border-box;
+    background: rgba(255,255,255,0.04);
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 24px 18px 18px 18px;
+    margin-bottom: 0;
+    margin-top: -32px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+#step1 .cards-grid.evolved-cards {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: 45vh;
+    overflow-y: auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 18px;
+    margin: 0 auto;
+    padding: 0 8px 0 0;
+    background: none;
+}
+
+@media (max-width: 900px) {
+  #createDeckModal .step-content {
+    max-height: 60vh;
+    padding: 12px 4px 8px 4px;
+  }
+  #step1 .cards-grid.evolved-cards {
+    max-height: 32vh;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  #createDeckModal .step-content {
+    max-height: 55vh;
+    padding: 8px 2px 4px 2px;
+  }
+  #step1 .cards-grid.evolved-cards {
+    max-height: 22vh;
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  #step1 .cards-grid.evolved-cards {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-height: 32vh;
+    gap: 12px;
+    padding-bottom: 8px;
+    width: 100%;
+    white-space: nowrap;
+  }
+  #step1 .cards-grid.evolved-cards .card-item {
+    min-width: 110px;
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 600px) {
+  #step1 .cards-grid.evolved-cards {
+    max-height: 22vh;
+  }
+  #step1 .cards-grid.evolved-cards .card-item {
+    min-width: 90px;
+  }
+}
+
+#createDeckModal .step-content {
+    width: 100%;
+    max-width: 700px;
+    box-sizing: border-box;
+    background: rgba(255,255,255,0.04);
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 32px 32px 24px 32px;
+    margin-bottom: 0;
+    margin-top: -32px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+#step1 .cards-grid.evolved-cards {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 28px;
+    justify-items: center;
+    max-height: 45vh;
+    overflow-y: auto;
+    margin: 0 auto;
+    padding: 0 8px 0 0;
+    background: none;
+}
+
+@media (min-width: 1000px) {
+  #createDeckModal .step-content {
+    max-width: 900px;
+    padding: 40px 60px 32px 60px;
+  }
+  #step1 .cards-grid.evolved-cards {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 32px;
+  }
+}
+
+@media (max-width: 900px) {
+  #createDeckModal .step-content {
+    max-width: 98vw;
+    padding: 16px 4vw 12px 4vw;
+  }
+  #step1 .cards-grid.evolved-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  #createDeckModal .step-content {
+    max-width: 100vw;
+    padding: 8px 2vw 4px 2vw;
+  }
+  #step1 .cards-grid.evolved-cards {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+#step2 .selected-evolved-cards {
+    background: rgba(40,40,40,0.85);
+    border-radius: 18px;
+    padding: 18px 18px 12px 18px;
+    margin-bottom: 18px;
+    width: 100%;
+    max-width: 700px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1.5px solid rgba(255,255,255,0.08);
+}
+
+#step2 .selected-cards-grid {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+}
+#step2 .selected-cards-grid .card-item {
+    background: rgba(255,255,255,0.10);
+    border-radius: 12px;
+    padding: 10px 6px 10px 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    border: 2px solid #4CAF50;
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-width: 120px;
+    max-width: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#step2 .selected-cards-grid .card-item img {
+    width: 70px;
+    height: 70px;
+}
+#step2 .selected-cards-grid .card-item span {
+    font-size: 14px;
+    margin-top: 2px;
+}
+
+#step2 .cards-grid.remaining-cards {
+    margin-top: 18px;
+    width: 100%;
+    background: none;
+    box-shadow: none;
+    border: none;
+    padding: 0 8px 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 18px;
+    justify-items: center;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+@media (max-width: 900px) {
+  #step2 .selected-evolved-cards {
+    max-width: 100%;
+    padding: 12px 4px 8px 4px;
+  }
+  #step2 .selected-cards-grid {
+    gap: 12px;
+  }
+  #step2 .cards-grid.remaining-cards {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 12px;
+    padding-bottom: 8px;
+    max-height: 120px;
+  }
+  #step2 .cards-grid.remaining-cards .card-item {
+    min-width: 110px;
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 600px) {
+  #step2 .selected-evolved-cards {
+    padding: 8px 2px 4px 2px;
+  }
+  #step2 .selected-cards-grid {
+    gap: 8px;
+  }
+  #step2 .cards-grid.remaining-cards {
+    max-height: 80px;
+  }
+  #step2 .cards-grid.remaining-cards .card-item {
+    min-width: 90px;
+  }
+}
+
+@media (max-width: 1100px) {
+  #step2 .cards-grid.remaining-cards {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 16px;
+    padding-bottom: 8px;
+    max-height: 120px;
+    width: 100%;
+    white-space: nowrap;
+  }
+  #step2 .cards-grid.remaining-cards .card-item {
+    min-width: 110px;
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 700px) {
+  #step2 .cards-grid.remaining-cards {
+    max-height: 80px;
+    gap: 10px;
+  }
+  #step2 .cards-grid.remaining-cards .card-item {
+    min-width: 90px;
+  }
+}

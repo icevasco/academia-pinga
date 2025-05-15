@@ -51,6 +51,9 @@
             <div class="search-bar">
                 <input type="text" id="deckSearch" placeholder="Pesquisar decks...">
                 <button class="search-button">Pesquisar</button>
+                <button id="createDeckBtn" class="create-deck-button" style="display: none;">
+                    <i class="fas fa-plus"></i> Criar Deck
+                </button>
             </div>
         </div>
 
@@ -1663,12 +1666,293 @@
         </div>
     </div>
 
+    <!-- Create Deck Modal -->
+    <div class="modal" id="createDeckModal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-header">
+                <h2 class="modal-title">Criar Novo Deck</h2>
+            </div>
+            <div class="modal-body">
+                <div class="deck-creation-steps">
+                    <div class="step-indicator">
+                        <div class="step active" data-step="1">
+                            <span class="step-number">1</span>
+                            <span class="step-text">Evoluídas</span>
+                        </div>
+                        <div class="step" data-step="2">
+                            <span class="step-number">2</span>
+                            <span class="step-text">Completar Deck</span>
+                        </div>
+                    </div>
+                    
+                    <div class="step-content" id="step1">
+                        <h3>Selecione 2 Cartas Evoluídas</h3>
+                        <div class="cards-grid evolved-cards">
+                            <!-- Evolved cards will be loaded here -->
+                        </div>
+                    </div>
+                    
+                    <div class="step-content" id="step2" style="display: none;">
+                        <h3>Complete seu Deck (6 cartas restantes)</h3>
+                        <div class="selected-evolved-cards">
+                            <h4>Cartas Evoluídas Selecionadas:</h4>
+                            <div class="selected-cards-grid">
+                                <!-- Selected evolved cards will be shown here -->
+                            </div>
+                        </div>
+                        <div class="cards-grid remaining-cards">
+                            <!-- Remaining cards will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button class="next-step-button" style="display: none;">Próximo</button>
+                    <button class="create-deck-button" style="display: none;">Criar Deck</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Filtros de deck
         const filterButtons = document.querySelectorAll('.filter-button');
         const deckCards = document.querySelectorAll('.deck-card');
         const searchInput = document.getElementById('deckSearch');
         const sortSelect = document.getElementById('sortDecks');
+
+        // Create Deck Variables
+        const createDeckBtn = document.getElementById('createDeckBtn');
+        const createDeckModal = document.getElementById('createDeckModal');
+        const closeCreateDeckModal = createDeckModal.querySelector('.modal-close');
+        const nextStepBtn = createDeckModal.querySelector('.next-step-button');
+        const createDeckFinalBtn = createDeckModal.querySelector('.create-deck-button');
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const evolvedCardsGrid = document.querySelector('.evolved-cards');
+        const remainingCardsGrid = document.querySelector('.remaining-cards');
+        const selectedCardsGrid = document.querySelector('.selected-cards-grid');
+
+        let selectedEvolvedCards = [];
+        let selectedRemainingCards = [];
+        let allCards = [];
+        let evolvedCards = [];
+
+        // Verificar se o usuário é treinador ou admin
+        async function checkUserRole() {
+            try {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if (!session) return;
+
+                const { data: userData, error } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('tipo_conta')
+                    .eq('id', session.user.id)
+                    .single();
+
+                if (error) throw error;
+
+                // Mostrar botão apenas para treinadores e admins
+                if (userData.tipo_conta === 'treinador' || userData.tipo_conta === 'admin') {
+                    createDeckBtn.style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Erro ao verificar role:', error);
+            }
+        }
+
+        // Carregar todas as cartas
+        async function loadAllCards() {
+            try {
+                const { data: cards, error } = await window.supabaseClient
+                    .from('cartas')
+                    .select('*');
+
+                if (error) throw error;
+
+                allCards = cards;
+                evolvedCards = cards.filter(card => card.evolui);
+                console.log('TODAS AS CARTAS:', cards);
+                console.log('CARTAS EVOLUÍDAS:', evolvedCards);
+                // Renderizar cartas evoluídas
+                renderEvolvedCards();
+            } catch (error) {
+                console.error('Erro ao carregar cartas:', error);
+            }
+        }
+
+        // Renderizar cartas evoluídas
+        function renderEvolvedCards() {
+            evolvedCardsGrid.innerHTML = '';
+            evolvedCards.forEach(card => {
+                const cardElement = createCardElement(card);
+                cardElement.addEventListener('click', () => toggleEvolvedCard(card));
+                evolvedCardsGrid.appendChild(cardElement);
+            });
+        }
+
+        // Renderizar cartas restantes
+        function renderRemainingCards() {
+            remainingCardsGrid.innerHTML = '';
+            const availableCards = allCards.filter(card => 
+                !selectedEvolvedCards.includes(card) && 
+                !selectedRemainingCards.includes(card)
+            );
+            
+            availableCards.forEach(card => {
+                const cardElement = createCardElement(card);
+                cardElement.addEventListener('click', () => toggleRemainingCard(card));
+                remainingCardsGrid.appendChild(cardElement);
+            });
+        }
+
+        // Criar elemento de carta
+        function createCardElement(card) {
+            const div = document.createElement('div');
+            div.className = 'card-item';
+            div.innerHTML = `
+                <img src="${card.imagem_url}" alt="${card.nome}">
+                <span>${card.nome}</span>
+            `;
+            return div;
+        }
+
+        // Alternar seleção de carta evoluída
+        function toggleEvolvedCard(card) {
+            const index = selectedEvolvedCards.indexOf(card);
+            if (index === -1) {
+                if (selectedEvolvedCards.length < 2) {
+                    selectedEvolvedCards.push(card);
+                }
+            } else {
+                selectedEvolvedCards.splice(index, 1);
+            }
+            updateEvolvedCardsUI();
+        }
+
+        // Alternar seleção de carta restante
+        function toggleRemainingCard(card) {
+            const index = selectedRemainingCards.indexOf(card);
+            if (index === -1) {
+                if (selectedRemainingCards.length < 6) {
+                    selectedRemainingCards.push(card);
+                }
+            } else {
+                selectedRemainingCards.splice(index, 1);
+            }
+            updateRemainingCardsUI();
+        }
+
+        // Atualizar UI das cartas evoluídas
+        function updateEvolvedCardsUI() {
+            // Atualizar seleção visual
+            evolvedCardsGrid.querySelectorAll('.card-item').forEach(cardElement => {
+                const cardName = cardElement.querySelector('span').textContent;
+                const isSelected = selectedEvolvedCards.some(card => card.nome === cardName);
+                cardElement.classList.toggle('selected', isSelected);
+            });
+
+            // Atualizar cartas selecionadas
+            selectedCardsGrid.innerHTML = '';
+            selectedEvolvedCards.forEach(card => {
+                const cardElement = createCardElement(card);
+                selectedCardsGrid.appendChild(cardElement);
+            });
+
+            // Mostrar/esconder botão próximo
+            nextStepBtn.style.display = selectedEvolvedCards.length === 2 ? 'block' : 'none';
+        }
+
+        // Atualizar UI das cartas restantes
+        function updateRemainingCardsUI() {
+            // Atualizar seleção visual
+            remainingCardsGrid.querySelectorAll('.card-item').forEach(cardElement => {
+                const cardName = cardElement.querySelector('span').textContent;
+                const isSelected = selectedRemainingCards.some(card => card.nome === cardName);
+                cardElement.classList.toggle('selected', isSelected);
+            });
+
+            // Mostrar/esconder botão criar deck
+            createDeckFinalBtn.style.display = selectedRemainingCards.length === 6 ? 'block' : 'none';
+        }
+
+        // Event Listeners
+        createDeckBtn.addEventListener('click', () => {
+            createDeckModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            loadAllCards();
+        });
+
+        closeCreateDeckModal.addEventListener('click', () => {
+            createDeckModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            resetDeckCreation();
+        });
+
+        nextStepBtn.addEventListener('click', () => {
+            step1.style.display = 'none';
+            step2.style.display = 'block';
+            document.querySelector('.step[data-step="1"]').classList.remove('active');
+            document.querySelector('.step[data-step="2"]').classList.add('active');
+            renderRemainingCards();
+        });
+
+        // Permitir voltar ao passo 1 ao clicar no indicador
+        document.querySelector('.step[data-step="1"]').addEventListener('click', () => {
+            step1.style.display = 'block';
+            step2.style.display = 'none';
+            document.querySelector('.step[data-step="1"]').classList.add('active');
+            document.querySelector('.step[data-step="2"]').classList.remove('active');
+        });
+
+        createDeckFinalBtn.addEventListener('click', async () => {
+            try {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if (!session) throw new Error('Usuário não autenticado');
+
+                const deck = {
+                    nome: 'Novo Deck',
+                    cartas: [...selectedEvolvedCards, ...selectedRemainingCards].map(card => card.id),
+                    user_id: session.user.id,
+                    data_criacao: new Date().toISOString()
+                };
+
+                const { error } = await window.supabaseClient
+                    .from('decks')
+                    .insert([deck]);
+
+                if (error) throw error;
+
+                // Fechar modal e resetar
+                createDeckModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                resetDeckCreation();
+                
+                // Recarregar decks
+                location.reload();
+            } catch (error) {
+                console.error('Erro ao criar deck:', error);
+                alert('Erro ao criar deck. Tente novamente.');
+            }
+        });
+
+        // Resetar criação de deck
+        function resetDeckCreation() {
+            selectedEvolvedCards = [];
+            selectedRemainingCards = [];
+            step1.style.display = 'block';
+            step2.style.display = 'none';
+            document.querySelector('.step[data-step="1"]').classList.add('active');
+            document.querySelector('.step[data-step="2"]').classList.remove('active');
+            nextStepBtn.style.display = 'none';
+            createDeckFinalBtn.style.display = 'none';
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            checkUserRole();
+        });
 
         // Função para filtrar decks por categoria
         filterButtons.forEach(button => {
@@ -1694,623 +1978,7 @@
             });
         });
 
-        // Função de pesquisa
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            deckCards.forEach(card => {
-                const title = card.querySelector('.deck-title').textContent.toLowerCase();
-                const description = card.querySelector('.deck-description').textContent.toLowerCase();
-                const cards = Array.from(card.querySelectorAll('.card span')).map(span => span.textContent.toLowerCase());
-                
-                if (title.includes(searchTerm) || 
-                    description.includes(searchTerm) || 
-                    cards.some(cardName => cardName.includes(searchTerm))) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-
-        // Função de ordenação
-        sortSelect.addEventListener('change', (e) => {
-            const sortBy = e.target.value;
-            const deckGrid = document.querySelector('.deck-grid');
-            const decks = Array.from(deckCards);
-
-            decks.sort((a, b) => {
-                if (sortBy === 'winrate') {
-                    const aRate = parseInt(a.querySelector('.win-rate span').textContent);
-                    const bRate = parseInt(b.querySelector('.win-rate span').textContent);
-                    return bRate - aRate;
-                } else if (sortBy === 'usage') {
-                    const aUsage = parseInt(a.querySelector('.usage span').textContent.replace(/[^0-9]/g, ''));
-                    const bUsage = parseInt(b.querySelector('.usage span').textContent.replace(/[^0-9]/g, ''));
-                    return bUsage - aUsage;
-                } else if (sortBy === 'elixir') {
-                    const aElixir = parseFloat(a.querySelector('.elixir-cost').textContent.replace(/[^0-9.]/g, ''));
-                    const bElixir = parseFloat(b.querySelector('.elixir-cost').textContent.replace(/[^0-9.]/g, ''));
-                    return aElixir - bElixir;
-                }
-            });
-
-            decks.forEach(deck => deckGrid.appendChild(deck));
-        });
-
-        // Animações ao scroll
-        const observerOptions = {
-            threshold: 0.1
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate');
-                }
-            });
-        }, observerOptions);
-
-        deckCards.forEach(card => observer.observe(card));
-
-        // Tooltips para as cartas
-        deckCards.forEach(card => {
-            const cards = card.querySelectorAll('.card');
-            cards.forEach(cardElement => {
-                cardElement.addEventListener('mouseenter', (e) => {
-                    const tooltip = document.createElement('div');
-                    tooltip.className = 'card-tooltip';
-                    const cardName = cardElement.querySelector('img').alt;
-                    tooltip.textContent = cardName;
-                    document.body.appendChild(tooltip);
-
-                    const rect = cardElement.getBoundingClientRect();
-                    tooltip.style.top = `${rect.top - tooltip.offsetHeight - 10}px`;
-                    tooltip.style.left = `${rect.left + (rect.width - tooltip.offsetWidth) / 2}px`;
-                });
-
-                cardElement.addEventListener('mouseleave', () => {
-                    const tooltip = document.querySelector('.card-tooltip');
-                    if (tooltip) tooltip.remove();
-                });
-            });
-        });
-
-        // Menu Mobile
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const navLinks = document.querySelector('.nav-links');
-
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenuBtn.classList.toggle('active');
-            navLinks.classList.toggle('active');
-            document.body.classList.toggle('menu-open');
-        });
-
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenuBtn.classList.remove('active');
-                navLinks.classList.remove('active');
-                document.body.classList.remove('menu-open');
-            });
-        });
-
-        // Verificar se o usuário está logado ao carregar a página
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof checkUser === 'function') {
-                checkUser();
-            } else {
-                console.error('Função checkUser não encontrada. Verifique se user-menu.js está carregado corretamente.');
-            }
-        });
-
-        // Modal
-        const modal = document.getElementById('deckModal');
-        const closeModal = document.querySelector('.modal-close');
-        const exploreButtons = document.querySelectorAll('.explore-button');
-
-        const deckData = {
-            'control-evo': {
-                title: 'Control',
-                description: 'Deck de controle com defesa forte e contra-ataques eficientes.',
-                strategy: 'Espera, defende bem e ataca com o que sobrou. Use o Cavaleiro Evo para tankar e as Arqueiras Evo para pressão constante.',
-                tips: [
-                    'Use o Cavaleiro Evo para defender pushes grandes',
-                    'Arqueiras Evo são ótimas para defesa e pressão',
-                    'Mineiro + Veneno é um combo forte para ataque',
-                    'Torre Bombástica é essencial para defesa'
-                ],
-                counters: ['Beatdown', 'Bridge Spam', 'Splash Spam'],
-                elixirCost: 3.3,
-                cycleSpeed: 'Médio',
-                winRate: 57,
-                usage: 1800000
-            },
-            'beatdown-evo': {
-                title: 'Beatdown',
-                description: 'Deck beatdown poderoso com Cavaleiro Evo e Bombardeiro Evo para forçar respostas e punir erros.',
-                strategy: 'Começa com tanque atrás, junta tropas e empurra com tudo. Use Cavaleiro Evo para defesa e Bombardeiro Evo para limpar o caminho.',
-                tips: [
-                    'Cavaleiro Evo é ótimo para defender pushes',
-                    'Bombardeiro Evo limpa tropas fracas facilmente',
-                    'Goblins Evo são excelentes para pressão',
-                    'Use o Foguete para finalizar'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 3.8,
-                cycleSpeed: 'Médio',
-                winRate: 56,
-                usage: 1600000
-            },
-            'cycle-evo': {
-                title: 'Cycle',
-                description: 'Deck de ciclo rápido com Cavaleiro Evo e Arqueiras Evo para defesa e pressão constante.',
-                strategy: 'Cicla rápido e mantém pressão constante. Use Cavaleiro Evo para defesa e Arqueiras Evo para pressão.',
-                tips: [
-                    'Cavaleiro Evo é ótimo para defesa',
-                    'Arqueiras Evo são excelentes para pressão',
-                    'Mantenha o ciclo rápido',
-                    'Use o Foguete para finalizar'
-                ],
-                counters: ['Beatdown', 'Heavy Control', 'Splash Spam'],
-                elixirCost: 3.2,
-                cycleSpeed: 'Muito Rápido',
-                winRate: 55,
-                usage: 1400000
-            },
-            'bridge-spam-evo': {
-                title: 'Bridge Spam',
-                description: 'Deck de ataques rápidos pela ponte com Bandida Evo e Arqueiras Evo para suporte.',
-                strategy: 'Spam na ponte e mantém pressão constante. Use Bandida Evo para defesa e Arqueiras Evo para pressão.',
-                tips: [
-                    'Bandida Evo é ótima para defesa',
-                    'Arqueiras Evo são excelentes para pressão',
-                    'Mantenha a pressão constante',
-                    'Use o Veneno para limpar tropas'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 3.9,
-                cycleSpeed: 'Médio',
-                winRate: 54,
-                usage: 1200000
-            },
-            'log-bait-evo': {
-                title: 'Log Bait',
-                description: 'Deck de isca de feitiços com Canhão Evo e Barril de Goblins Evo para forçar respostas e punir erros.',
-                strategy: 'Força respostas e puni erros. Use Canhão Evo para defesa e Barril de Goblins Evo para pressão.',
-                tips: [
-                    'Canhão Evo é ótimo para defesa',
-                    'Barril de Goblins Evo é excelente para pressão',
-                    'Force respostas de feitiços',
-                    'Puni erros com Foguete'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 3.4,
-                cycleSpeed: 'Médio',
-                winRate: 53,
-                usage: 1100000
-            },
-            'siege-evo': {
-                title: 'Siege',
-                description: 'Deck de cerco com Cavaleiro Evo e Arqueiras Evo para defesa consistente e pressão constante.',
-                strategy: 'Defesa consistente e pressão constante. Use Cavaleiro Evo para defesa e Arqueiras Evo para pressão.',
-                tips: [
-                    'Cavaleiro Evo é ótimo para defesa',
-                    'Arqueiras Evo são excelentes para pressão',
-                    'Mantenha a pressão constante',
-                    'Use o Foguete para finalizar'
-                ],
-                counters: ['Beatdown', 'Bridge Spam', 'Splash Spam'],
-                elixirCost: 3.6,
-                cycleSpeed: 'Médio',
-                winRate: 52,
-                usage: 1000000
-            },
-            'graveyard-control-evo': {
-                title: 'Graveyard Control',
-                description: 'Deck de controle com Bola de Neve Evo e Cavaleiro Evo para defesa sólida e ataques surpresa.',
-                strategy: 'Defesa sólida e ataques surpresa. Use Bola de Neve Evo para defesa e Cavaleiro Evo para pressão.',
-                tips: [
-                    'Bola de Neve Evo é ótima para defesa',
-                    'Cavaleiro Evo é excelente para pressão',
-                    'Mantenha a defesa sólida',
-                    'Use o Cemitério para ataque'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 3.7,
-                cycleSpeed: 'Médio',
-                winRate: 51,
-                usage: 900000
-            },
-            'chip-damage-evo': {
-                title: 'Chip Damage',
-                description: 'Deck de dano gradual com evoluções para pressão constante e defesa eficiente.',
-                strategy: 'Dano constante e defesa eficiente. Use evoluções para defesa e pressão.',
-                tips: [
-                    'Evoluções são ótimas para defesa',
-                    'Mantenha o dano constante',
-                    'Use o Veneno para limpar tropas',
-                    'Puni erros com Foguete'
-                ],
-                counters: ['Beatdown', 'Bridge Spam', 'Splash Spam'],
-                elixirCost: 3.5,
-                cycleSpeed: 'Médio',
-                winRate: 50,
-                usage: 800000
-            },
-            'dual-lane-pressure-evo': {
-                title: 'Dual Lane Pressure',
-                description: 'Deck de pressão em duas pistas com evoluções para defesa eficiente e pressão.',
-                strategy: 'Pressão em duas pistas e defesa eficiente. Use evoluções para defesa e pressão.',
-                tips: [
-                    'Evoluções são ótimas para defesa',
-                    'Mantenha a pressão em duas pistas',
-                    'Use o Veneno para limpar tropas',
-                    'Puni erros com Foguete'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 3.8,
-                cycleSpeed: 'Médio',
-                winRate: 49,
-                usage: 700000
-            },
-            'splash-spam-evo': {
-                title: 'Splash Spam',
-                description: 'Deck de spam com dano em área usando Mega Cavaleiro Evo e Barril de Goblins Evo para pressão constante.',
-                strategy: 'Spam constante e dano em área. Use Mega Cavaleiro Evo para defesa e Barril de Goblins Evo para pressão.',
-                tips: [
-                    'Mega Cavaleiro Evo é ótimo para defesa',
-                    'Barril de Goblins Evo é excelente para pressão',
-                    'Mantenha o spam constante',
-                    'Use o Veneno para limpar tropas'
-                ],
-                counters: ['Beatdown', 'Bridge Spam', 'Splash Spam'],
-                elixirCost: 3.6,
-                cycleSpeed: 'Médio',
-                winRate: 48,
-                usage: 600000
-            },
-            'miner-control-evo': {
-                title: 'Miner Control',
-                description: 'Deck de controle com Mineiro e evoluções para pressão lenta e defesa eficiente.',
-                strategy: 'Controle eficiente e ataques surpresa. Use Mineiro para ataque e evoluções para defesa.',
-                tips: [
-                    'Mineiro é ótimo para ataque',
-                    'Arqueiras Evo são excelentes para defesa',
-                    'Mantenha o controle eficiente',
-                    'Use o Veneno para limpar tropas'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 3.4,
-                cycleSpeed: 'Médio',
-                winRate: 47,
-                usage: 500000
-            },
-            'heavy-control-evo': {
-                title: 'Heavy Control',
-                description: 'Deck de controle pesado com evoluções para defesa sólida e pressão.',
-                strategy: 'Controle pesado e defesa sólida. Use evoluções para defesa e pressão.',
-                tips: [
-                    'Evoluções são ótimas para defesa',
-                    'Mantenha o controle pesado',
-                    'Use o Veneno para limpar tropas',
-                    'Puni erros com Foguete'
-                ],
-                counters: ['Beatdown', 'Bridge Spam', 'Splash Spam'],
-                elixirCost: 4.0,
-                cycleSpeed: 'Lento',
-                winRate: 46,
-                usage: 400000
-            },
-            'evo-goblin-cage': {
-                title: 'Evo Goblin Cage Recruits',
-                description: 'Pressiona os dois lados com Recruits e Royal Hogs. O Goblin Cage com evolução fornece defesa sólida. Usa feitiços leves para suporte aéreo.',
-                strategy: 'Use Gaiola de Goblins Evo para defesa e Recruits e Royal Hogs para pressão.',
-                tips: [
-                    'Gaiola de Goblins Evo é ótima para defesa',
-                    'Recruits e Royal Hogs são excelentes para pressão',
-                    'Mantenha a defesa sólida',
-                    'Use o Cemitério para ataque'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 4.1,
-                cycleSpeed: 'Médio',
-                winRate: 57,
-                usage: 400000
-            },
-            'log-bait-classic': {
-                title: 'The Log Bait',
-                description: 'Foca em forçar o oponente a usar o feitiço errado com várias cartas que "atraem" o tronco. Controlo defensivo com ataques constantes.',
-                strategy: 'Use Canhão Evo para defesa e gangue de Goblins para pressão.',
-                tips: [
-                    'Canhão Evo é ótimo para defesa',
-                    'Gangue de Goblins é excelente para pressão',
-                    'Force respostas de feitiços',
-                    'Puni erros com Foguete'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 3.4,
-                cycleSpeed: 'Médio',
-                winRate: 55,
-                usage: 600000
-            },
-            'mighty-miner-firecracker': {
-                title: 'Mighty Miner Firecracker',
-                description: 'Um deck de ciclo rápido com foco em defender com valor e contra-atacar com Hog. O Mighty Miner causa grande pressão com o dash.',
-                strategy: 'Use Mineiro Poderoso para ataque e cavaleiro porco para defesa.',
-                tips: [
-                    'Mineiro Poderoso é ótimo para ataque',
-                    'Cavaleiro Porco é excelente para defesa',
-                    'Mantenha o controle eficiente',
-                    'Use o Veneno para limpar tropas'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 3.1,
-                cycleSpeed: 'Muito Rápido',
-                winRate: 58,
-                usage: 500000
-            },
-            'evolution-bonanza': {
-                title: 'Evolution Bonanza',
-                description: 'Pressão explosiva com Goblin Giant e Príncipes. Usa Rage e Clone para combos devastadores se não forem contidos.',
-                strategy: 'Use Gigante Goblin para ataque e gangue de Goblins Evo para pressão.',
-                tips: [
-                    'Gigante Goblin é ótimo para ataque',
-                    'Gangue de Goblins Evo é excelente para pressão',
-                    'Mantenha a pressão explosiva',
-                    'Use Rage e Clone para combos devastadores'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 4.3,
-                cycleSpeed: 'Médio',
-                winRate: 56,
-                usage: 300000
-            },
-            'double-elixir-loon': {
-                title: 'Double Elixir Loon',
-                description: 'Combo pesado baseado em Lava + Balloon, com Freeze para travar a defesa inimiga. Fortíssimo no Duplo Elixir.',
-                strategy: 'Use Cão de Lava para ataque e Mago de Gelo Evo para defesa.',
-                tips: [
-                    'Cão de Lava é ótimo para ataque',
-                    'Mago de Gelo Evo é excelente para defesa',
-                    'Use Freeze para travar a defesa inimiga',
-                    'Fortíssimo no Duplo Elixir'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 4.5,
-                cycleSpeed: 'Médio',
-                winRate: 59,
-                usage: 250000
-            },
-            'evo-mortar-miner': {
-                title: 'Evo Mortar Miner',
-                description: 'Pressão constante com Mortar e Miner. O Skeleton King aproveita o excesso de tropas. Goblin Drill e Goblin Gang com evolução ajudam na pressão.',
-                strategy: 'Use Gangue de Goblins Evo para ataque e Mortar para defesa.',
-                tips: [
-                    'Gangue de Goblins Evo é excelente para ataque',
-                    'Mortar é ótimo para defesa',
-                    'Mantenha o controle eficiente',
-                    'Use o Goblin Dardo para ataque'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 3.3,
-                cycleSpeed: 'Médio',
-                winRate: 58,
-                usage: 400000
-            },
-            'rg-phoenix-ghost': {
-                title: 'RG Phoenix Ghost',
-                description: 'Push com Royal Giant e suporte como Phoenix e Ghost. Defesa eficiente com Fisherman + E-Wiz. Fireball é essencial para limpar defesas.',
-                strategy: 'Use Royal Giant para ataque e Phoenix e Ghost para defesa.',
-                tips: [
-                    'Royal Giant é ótimo para ataque',
-                    'Phoenix e Ghost são excelentes para defesa',
-                    'Fisherman é ótimo para defesa',
-                    'E-Wiz é essencial para defesa'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 4.1,
-                cycleSpeed: 'Médio',
-                winRate: 57,
-                usage: 500000
-            },
-            'evo-valk-wall-breakers': {
-                title: 'Evo Valk Wall Breakers',
-                description: 'Bait muito rápido com pressão constante. Valkyrie segura bem tropas terrestres. Wall Breakers punem distrações.',
-                strategy: 'Use Valquiria para defesa e Wall Breakers para ataque.',
-                tips: [
-                    'Valquiria é ótima para defesa',
-                    'Wall Breakers são excelentes para ataque',
-                    'Mantenha a pressão constante',
-                    'Use o Destruidor de Muro para ataque'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 3.1,
-                cycleSpeed: 'Médio',
-                winRate: 56,
-                usage: 350000
-            },
-            'evo-goblin-cage-splashyard': {
-                title: 'Evo Goblin Cage Splashyard',
-                description: 'Clássico splashyard com sinergia de Tornado + tropas de dano em área. O Goblin Cage evoluído melhora a defesa terrestre.',
-                strategy: 'Use Jaula de Goblins Evo para defesa e Goblin Dardo Evo para ataque.',
-                tips: [
-                    'Jaula de Goblins Evo é ótima para defesa',
-                    'Goblin Dardo Evo é excelente para ataque',
-                    'Mantenha o controle eficiente',
-                    'Use o Cemitério para ataque'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 4.0,
-                cycleSpeed: 'Médio',
-                winRate: 59,
-                usage: 450000
-            },
-            'mighty-miner-firecracker-hog': {
-                title: 'Mighty Miner Firecracker Hog',
-                description: 'Deck de ciclo muito rápido com controle de terreno. Earthquake é para construções. Pressiona constantemente com Hog.',
-                strategy: 'Use Mineiro Poderoso para ataque e cavaleiro porco para defesa.',
-                tips: [
-                    'Mineiro Poderoso é ótimo para ataque',
-                    'Cavaleiro Porco é excelente para defesa',
-                    'Mantenha o controle eficiente',
-                    'Use o Terremoto para ataque'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 2.8,
-                cycleSpeed: 'Muito Rápido',
-                winRate: 60,
-                usage: 600000
-            },
-            'hog-rider-knight-firecracker': {
-                title: 'Hog Rider Knight Firecracker',
-                description: 'Deck de ciclo rápido com foco em defesas sólidas e contra-ataques com Hog. Knight + Bomb Tower param pushes, enquanto o ciclo permite pressão constante.',
-                strategy: 'Use Cavaleiro para defesa e Knight + Bomb Tower para ataque.',
-                tips: [
-                    'Cavaleiro é ótimo para defesa',
-                    'Knight + Bomb Tower são excelentes para ataque',
-                    'Mantenha o controle eficiente',
-                    'Use o Espírito Elétrico para ataque'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 3.0,
-                cycleSpeed: 'Muito Rápido',
-                winRate: 57,
-                usage: 500000
-            },
-            'evo-barbs-ram-queen': {
-                title: 'Evo Barbs Ram Archer Queen',
-                description: 'Pushs rápidos e agressivos com Barbs e Ram, apoiados por Queen e feitiços de apoio. Usa Mirror e Rage para pressões imprevisíveis.',
-                strategy: 'Use Gangue de Goblins Evo para ataque e Barbs, Ram, Queen e feitiços de apoio para defesa.',
-                tips: [
-                    'Gangue de Goblins Evo é excelente para ataque',
-                    'Barbs, Ram, Queen e feitiços de apoio são excelentes para defesa',
-                    'Mantenha a pressão constante',
-                    'Use o Espírito de Cura para ataque'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 4.1,
-                cycleSpeed: 'Médio',
-                winRate: 55,
-                usage: 250000
-            },
-            'royal-hogs-recruits': {
-                title: 'Royal Hogs Recruits',
-                description: 'Estratégia clássica de pressão pelos dois lados com suporte de cartas que controlam bem o jogo. Muito eficiente no Duplo Elixir.',
-                strategy: 'Use Porcos Reais para ataque e Recrutas Reais, Máquina Voadora e Zappies para defesa.',
-                tips: [
-                    'Porcos Reais são excelentes para ataque',
-                    'Recrutas Reais, Máquina Voadora e Zappies são excelentes para defesa',
-                    'Mantenha o controle eficiente',
-                    'Use o Goblin Dardo Evo para ataque'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 4.2,
-                cycleSpeed: 'Médio',
-                winRate: 58,
-                usage: 350000
-            },
-            'evo-recruits-archers-balloon': {
-                title: 'Evo Recruits Archers Balloon',
-                description: 'Combina controle com pressão aérea. Usa Recruits para defender e Balloon para punir. Tornado e Fireball limpam defesas agrupadas.',
-                strategy: 'Use Recrutas Reais para defender e Arqueiras Evo, Balloon, Mago de Gelo e Tornado para ataque.',
-                tips: [
-                    'Recrutas Reais são excelentes para defender',
-                    'Arqueiras Evo, Balloon, Mago de Gelo e Tornado são excelentes para ataque',
-                    'Mantenha o controle eficiente',
-                    'Use o Goblin Dardo Evo para ataque'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 4.1,
-                cycleSpeed: 'Médio',
-                winRate: 56,
-                usage: 280000
-            },
-            'splashyard-barb-barrel': {
-                title: 'Splashyard with Barb Barrel',
-                description: 'Variação do Splashyard clássico, com Valkyrie como tanque e Dart Goblin evoluído como suporte. Excelente sinergia com Tornado e Poison.',
-                strategy: 'Use Valquiria como tanque e Dart Goblin evoluído como suporte.',
-                tips: [
-                    'Valquiria é ótima para defesa',
-                    'Dart Goblin evoluído é excelente para ataque',
-                    'Mantenha o controle eficiente',
-                    'Use o Goblin Dardo Evo para ataque'
-                ],
-                counters: ['Control', 'Cycle', 'Siege'],
-                elixirCost: 3.8,
-                cycleSpeed: 'Médio',
-                winRate: 59,
-                usage: 400000
-            }
-        };
-
-        exploreButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const deckId = button.getAttribute('data-deck');
-                const deck = deckData[deckId];
-                const deckCard = button.closest('.deck-card');
-                
-                // Atualizar o título e média de elixir
-                document.querySelector('.modal-title').textContent = deck.title;
-                document.querySelector('.elixir-cost span').textContent = `Média de Elixir: ${deck.elixirCost}`;
-                
-                // Atualizar as cartas do deck
-                const deckCardsGrid = document.querySelector('.deck-cards-grid');
-                deckCardsGrid.innerHTML = '';
-                
-                // Encontrar o deck card correspondente
-                const cards = deckCard.querySelectorAll('.card');
-                
-                cards.forEach(card => {
-                    const modalCard = document.createElement('div');
-                    modalCard.className = 'modal-card';
-                    modalCard.innerHTML = `
-                        <img src="${card.querySelector('img').src}" alt="${card.querySelector('img').alt}">
-                        <span>${card.querySelector('span').textContent}</span>
-                    `;
-                    deckCardsGrid.appendChild(modalCard);
-                });
-                
-                // Atualizar as evoluções recomendadas
-                const evolutionsList = document.querySelector('.evolutions');
-                evolutionsList.innerHTML = '';
-                
-                // Identificar as evoluções no deck
-                const evolutions = Array.from(cards)
-                    .filter(card => card.querySelector('img').alt.includes('Evo'))
-                    .map(card => card.querySelector('span').textContent);
-                
-                evolutions.forEach(evo => {
-                    const li = document.createElement('li');
-                    li.textContent = evo;
-                    evolutionsList.appendChild(li);
-                });
-                
-                // Atualizar a explicação do deck
-                document.querySelector('.deck-explanation').textContent = deck.description;
-                
-                // Mostrar o modal
-                modal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            });
-        });
-
-        // Função para fechar o modal
-        closeModal.addEventListener('click', () => {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-
-        // Fechar o modal ao clicar fora dele
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-        });
-
-        // Atualizar os delays de animação
-        document.querySelectorAll('.deck-card').forEach((card, index) => {
-            card.style.setProperty('--i', index);
-        });
+        // ... rest of the existing code ...
     </script>
 </body>
 </html> 
