@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planos - Academia Pinga</title>
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="stylesheet" href="../CSS/planos.css">
+    <link rel="stylesheet" href="../CSS/user-menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../JS/user-menu.js" defer></script>
+    <link rel="icon" type="image/png" href="../IMG/favicon_sem_fundo.png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-logo">
+                <img src="../IMG/academia_pinga_sem_fundo.png" alt="Academia Pinga" style="height: 50px; margin-right: 10px;">
+                Academia Pinga
+            </a>
+            <button class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="planos.html">Planos</a>
+                <a href="treinadores.html">Treinadores</a>
+                <a href="decks.html">Decks</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="avaliacoes.html">Avaliações</a>
+                <a href="outros-jogos.html">Outros Jogos</a>
+                <a href="../login.html" id="loginLink">Iniciar Sessão/Registo</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="plans-hero">
+        <div class="hero-content">
+            <h1 class="animate__animated animate__fadeInDown">Escolha seu Plano</h1>
+            <p class="animate__animated animate__fadeInUp">Comece sua jornada para se tornar um jogador profissional</p>
+        </div>
+    </div>
+
+    <div class="plans-container">
+        <div class="plans-grid">
+            <!-- Plano Iniciante -->
+            <div class="plan-card" data-plano="iniciante">
+                <div class="plan-content">
+                    <div class="plan-badge">Iniciante</div>
+                    <h3 class="plan-title">Plano Iniciante</h3>
+                    <p class="plan-description">Ideal para principiantes que querem aprender os fundamentos do jogo.</p>
+                    <div class="plan-meta">
+                        <div class="plan-price">
+                            <span class="valor">29,90€</span>
+                            <span class="periodo">/mês</span>
+                        </div>
+                        <div class="plan-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.5</span>
+                            <span class="rating-count">(120+ avaliações)</span>
+                        </div>
+                    </div>
+                    <div class="plan-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Acesso a todos os decks básicos</li>
+                            <li><i class="fas fa-check"></i> 2 sessões de coaching por mês</li>
+                            <li><i class="fas fa-check"></i> Acesso ao grupo de WhatsApp</li>
+                            <li><i class="fas fa-check"></i> Suporte por email</li>
+                        </ul>
+                    </div>
+                    <div class="plan-actions">
+                        <button class="detalhes-botao">Ver Detalhes</button>
+                        <button class="selecionar-plano">Inscrever</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plano Avançado -->
+            <div class="plan-card featured" data-plano="avancado">
+                <div class="plan-content">
+                    <div class="plan-badge">Mais Popular</div>
+                    <h3 class="plan-title">Plano Avançado</h3>
+                    <p class="plan-description">Para jogadores que já dominam o básico e querem evoluir.</p>
+                    <div class="plan-meta">
+                        <div class="plan-price">
+                            <span class="valor">49,90€</span>
+                            <span class="periodo">/mês</span>
+                        </div>
+                        <div class="plan-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.8</span>
+                            <span class="rating-count">(250+ avaliações)</span>
+                        </div>
+                    </div>
+                    <div class="plan-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Acesso a todos os decks avançados</li>
+                            <li><i class="fas fa-check"></i> 4 sessões de coaching por mês</li>
+                            <li><i class="fas fa-check"></i> Acesso ao grupo de WhatsApp</li>
+                            <li><i class="fas fa-check"></i> Suporte prioritário por email e WhatsApp</li>
+                            <li><i class="fas fa-check"></i> Análise de replays</li>
+                        </ul>
+                    </div>
+                    <div class="plan-actions">
+                        <button class="detalhes-botao">Ver Detalhes</button>
+                        <button class="selecionar-plano">Inscrever</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plano Pro -->
+            <div class="plan-card" data-plano="pro">
+                <div class="plan-content">
+                    <div class="plan-badge">Premium</div>
+                    <h3 class="plan-title">Plano Pro</h3>
+                    <p class="plan-description">Para jogadores experientes que procuram a excelência.</p>
+                    <div class="plan-meta">
+                        <div class="plan-price">
+                            <span class="valor">79,90€</span>
+                            <span class="periodo">/mês</span>
+                        </div>
+                        <div class="plan-rating">
+                            <i class="fas fa-star"></i>
+                            <span>5.0</span>
+                            <span class="rating-count">(100+ avaliações)</span>
+                        </div>
+                    </div>
+                    <div class="plan-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Acesso a todos os decks pro</li>
+                            <li><i class="fas fa-check"></i> 8 sessões de coaching por mês</li>
+                            <li><i class="fas fa-check"></i> Acesso ao grupo de WhatsApp</li>
+                            <li><i class="fas fa-check"></i> Suporte VIP 24/7</li>
+                            <li><i class="fas fa-check"></i> Análise detalhada de replays</li>
+                            <li><i class="fas fa-check"></i> Estratégias personalizadas</li>
+                            <li><i class="fas fa-check"></i> Acesso antecipado a novos decks</li>
+                        </ul>
+                    </div>
+                    <div class="plan-actions">
+                        <button class="detalhes-botao">Ver Detalhes</button>
+                        <button class="selecionar-plano">Inscrever</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes do Plano -->
+    <div class="modal-plano" id="modal-plano">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h3 class="modal-titulo" id="modal-titulo"></h3>
+                    <p class="modal-subtitulo" id="modal-subtitulo"></p>
+                </div>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-info">
+                    <p class="modal-descricao" id="modal-descricao"></p>
+                    <ul class="modal-beneficios" id="modal-beneficios"></ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="modal-preco" id="modal-preco"></div>
+                <div class="modal-actions">
+                    <button class="selecionar-plano">Inscrever Agora</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../JS/user-menu.js" defer></script>
+    <script src="../JS/planos.js" defer></script>
+    <script>
+        // Verificar se o usuário está logado ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof checkUser === 'function') {
+                checkUser();
+            }
+        });
+    </script>
+</body>
+</html> 

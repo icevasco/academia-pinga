@@ -1,0 +1,2316 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decks Mais Famosos - Academia Pinga</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="stylesheet" href="../CSS/user-menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../JS/user-menu.js" defer></script>
+    <link rel="icon" type="image/png" href="../IMG/favicon_sem_fundo.png">
+    <style>
+        .animate__animated {
+            animation-duration: 0.5s !important;
+        }
+        .deck-card {
+            animation-delay: calc(var(--i, 0) * 0.1s) !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-logo">
+                <img src="../IMG/academia_pinga_sem_fundo.png" alt="Academia Pinga" style="height: 50px; margin-right: 10px;">
+                Academia Pinga
+            </a>
+            <button class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="planos.html">Planos</a>
+                <a href="treinadores.html">Treinadores</a>
+                <a href="decks.html">Decks</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="avaliacoes.html">Avaliações</a>
+                <a href="outros-jogos.html">Outros Jogos</a>
+                <a href="../login.html" id="loginLink">Iniciar Sessão/Registo</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="decks-container">
+        <div class="decks-header animate__animated animate__fadeInDown">
+            <h1>Decks Mais Famosos</h1>
+            <p>Descubra os decks mais populares e eficientes do Clash Royale</p>
+            <div class="search-bar">
+                <input type="text" id="deckSearch" placeholder="Pesquisar decks...">
+                <button class="search-button">Pesquisar</button>
+            </div>
+        </div>
+
+        <div class="deck-filters animate__animated animate__fadeIn">
+            <button class="filter-button active" data-filter="all">Todos</button>
+            <button class="filter-button" data-filter="control">Control</button>
+            <button class="filter-button" data-filter="beatdown">Beatdown</button>
+            <button class="filter-button" data-filter="cycle">Cycle</button>
+            <button class="filter-button" data-filter="bridge-spam">Bridge Spam</button>
+            <button class="filter-button" data-filter="log-bait">Log Bait</button>
+            <button class="filter-button" data-filter="siege">Siege</button>
+            <button class="filter-button" data-filter="chip">Chip</button>
+            <button class="filter-button" data-filter="dual-lane">Dual Lane</button>
+            <button class="filter-button" data-filter="splash">Splash</button>
+            <button class="filter-button" data-filter="miner">Miner</button>
+            <button class="filter-button" data-filter="heavy-control">Heavy Control</button>
+            <div class="sort-options">
+                <select id="sortDecks">
+                    <option value="winrate">Win Rate</option>
+                    <option value="usage">Usos</option>
+                    <option value="elixir">Elixir</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="deck-stats-overview">
+            <div class="stat-card">
+                <h3></h3>
+            </div>
+            <div class="stat-card">
+                <h3></h3>
+            </div>
+            <div class="stat-card">
+                <h3></h3>
+            </div>
+        </div>
+
+        <div class="deck-grid">
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="control">
+                <span class="deck-tag">Meta Atual</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Control #1 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.3</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cavaleiro_evo.png" alt="Cavaleiro Evo">
+                            <span>Cavaleiro Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/arqueiras_evo.png" alt="Arqueiras Evo">
+                            <span>Arqueiras Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/mineiro.png" alt="Mineiro">
+                            <span>Mineiro</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/veneno.png" alt="Veneno">
+                            <span>Veneno</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/torre_bomba.png" alt="Torre Bomba">
+                            <span>Torre Bomba</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_gelo.png" alt="Espírito de Gelo">
+                            <span>Espírito de Gelo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tronco.png" alt="Tronco">
+                            <span>Tronco</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/goblins.png" alt="Goblins">
+                            <span>Goblins</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Deck de controle com defesa forte e contra-ataques eficientes. Use o Cavaleiro Evo e Arqueiras Evo como principais unidades.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 57%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>1.8% Usos</span>
+                            </span>
+                        </div>
+                        <button type="button" class="explore-button" data-deck="control-evo">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="beatdown" style="animation-delay: 0.2s">
+                <span class="deck-tag">Popular</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Beatdown #2 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.8</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cavaleiro_evo.png" alt="Cavaleiro Evo">
+                            <span>Cavaleiro Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bombardeiro_evo.png" alt="Bombardeiro Evo">
+                            <span>Bombardeiro Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/princesa.png" alt="Princesa">
+                            <span>Princesa</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/barril_goblins.png" alt="Barril de Goblins">
+                            <span>Barril de Goblins</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/goblins.png" alt="Goblins">
+                            <span>Goblins</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/torre_bomba.png" alt="Torre Bomba">
+                            <span>Torre Bomba</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/foguete.png" alt="Foguete">
+                            <span>Foguete</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tronco.png" alt="Tronco">
+                            <span>Tronco</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Deck beatdown poderoso com Goblins Evo e Bombardeiro Evo como principais unidades de pressão.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 56%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>1.6% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="beatdown-evo">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="cycle" style="animation-delay: 0.4s">
+                <span class="deck-tag">Meta</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Cycle #3 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.2</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cavaleiro_evo.png" alt="Cavaleiro Evo">
+                            <span>Cavaleiro Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/arqueiras_evo.png" alt="Arqueiras Evo">
+                            <span>Arqueiras Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/x_besta.png" alt="X-Besta">
+                            <span>X-Besta</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tesla.png" alt="Tesla">
+                            <span>Tesla</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bola_fogo.png" alt="Bola de Fogo">
+                            <span>Bola de Fogo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bola_neve.png" alt="Bola de Neve">
+                            <span>Bola de Neve</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tronco.png" alt="Tronco">
+                            <span>Tronco</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_gelo.png" alt="Espírito de Gelo">
+                            <span>Espírito de Gelo</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Deck de ciclo rápido com X-Besta e Arqueiras Evo como principais unidades de ataque.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 55%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>1.4% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="cycle-evo">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="bridge-spam" style="animation-delay: 0.6s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Bridge Spam #4 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.9</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/pekka_evo.png" alt="P.E.K.K.A Evo">
+                            <span>P.E.K.K.A Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/arqueiras_evo.png" alt="Arqueiras Evo">
+                            <span>Arqueiras Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/ariete.png" alt="Ariete de Batalha">
+                            <span>Ariete de Batalha</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/fantasma_real.png" alt="Fantasma Real">
+                            <span>Fantasma Real</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/mago_eletrico.png" alt="Mago Elétrico">
+                            <span>Mago Elétrico</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bandida.png" alt="Bandida">
+                            <span>Bandida</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_eletrico.png" alt="Espírito Elétrico">
+                            <span>Espírito Elétrico</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/veneno.png" alt="Veneno">
+                            <span>Veneno</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Deck de ataques rápidos pela ponte com Bandida Evo e Arqueiras Evo como principais unidades.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 54%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>1.2% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="bridge-spam-evo">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="log-bait" style="animation-delay: 0.8s">
+                <span class="deck-tag">Meta Atual</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Log Bait #5 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.4</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/canhao_evo.png" alt="Canhão Evo">
+                            <span>Canhão Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/barril_goblins_evo.png" alt="Barril de Goblins Evo">
+                            <span>Barril de Goblins Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_gelo.png" alt="Espírito de Gelo">
+                            <span>Espírito de Gelo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/princesa.png" alt="Princesa">
+                            <span>Princesa</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/gangue_goblins.png" alt="Gangue de Goblins">
+                            <span>Gangue de Goblins</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cavaleiro.png" alt="Cavaleiro">
+                            <span>Cavaleiro</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tronco.png" alt="Tronco">
+                            <span>Tronco</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/foguete.png" alt="Foguete">
+                            <span>Foguete</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Deck de isca de feitiços com Goblins Evo e Bombardeiro Evo como principais unidades de pressão.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 53%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>1.1% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="log-bait-evo">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="siege" style="animation-delay: 1s">
+                <span class="deck-tag">Popular</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Siege #6 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.6</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cavaleiro_evo.png" alt="Cavaleiro Evo">
+                            <span>Cavaleiro Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/arqueiras_evo.png" alt="Arqueiras Evo">
+                            <span>Arqueiras Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/x_besta.png" alt="X-Besta">
+                            <span>X-Besta</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_gelo.png" alt="Espírito de Gelo">
+                            <span>Espírito de Gelo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/canhao.png" alt="Canhão">
+                            <span>Canhão</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tronco.png" alt="Tronco">
+                            <span>Tronco</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bola_fogo.png" alt="Bola de Fogo">
+                            <span>Bola de Fogo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tesla.png" alt="Tesla">
+                            <span>Tesla</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Deck de cerco com X-Besta e evoluções para defesa consistente e pressão constante.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 52%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>1.0% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="siege-evo">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="control" style="animation-delay: 1.2s">
+                <span class="deck-tag">Meta</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Graveyard Control #7 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.7</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bola_neve_evo.png" alt="Bola de Neve Evo">
+                            <span>Bola de Neve Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cavaleiro_evo.png" alt="Cavaleiro Evo">
+                            <span>Cavaleiro Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bombardeiro.png" alt="Bombardeiro">
+                            <span>Bombardeiro</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tesla.png" alt="Tesla">
+                            <span>Tesla</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/veneno.png" alt="Veneno">
+                            <span>Veneno</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cemiterio.png" alt="Cemitério">
+                            <span>Cemitério</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tronco.png" alt="Tronco">
+                            <span>Tronco</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_gelo.png" alt="Espírito de Gelo">
+                            <span>Espírito de Gelo</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Deck de controle com Cemitério e evoluções para defesa sólida e ataques surpresa.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 51%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.9% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="graveyard-control-evo">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="chip" style="animation-delay: 1.4s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Chip Damage #8 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.5</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/mosqueteira_evo.png" alt="Mosqueteira Evo">
+                            <span>Mosqueteira Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/arqueiras_evo.png" alt="Arqueiras Evo">
+                            <span>Arqueiras Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/goblins.png" alt="Goblins">
+                            <span>Goblins</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/torre_bomba.png" alt="Torre Bomba">
+                            <span>Torre Bomba</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/veneno.png" alt="Veneno">
+                            <span>Veneno</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_eletrico.png" alt="Espírito Elétrico">
+                            <span>Espírito Elétrico</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tronco.png" alt="Tronco">
+                            <span>Tronco</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/mineiro.png" alt="Mineiro">
+                            <span>Mineiro</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Deck de dano gradual com Mineiro e evoluções para pressão constante e defesa eficiente.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 50%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.8% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="chip-damage-evo">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="dual-lane" style="animation-delay: 1.6s">
+                <span class="deck-tag">Meta Atual</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Dual Lane Pressure #9 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.8</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/pekka_evo.png" alt="P.E.K.K.A Evo">
+                            <span>P.E.K.K.A Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/arqueiras_evo.png" alt="Arqueiras Evo">
+                            <span>Arqueiras Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/fantasma_real.png" alt="Fantasma Real">
+                            <span>Fantasma Real</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/ariete.png" alt="Ariete de Batalha">
+                            <span>Ariete de Batalha</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/barbaros.png" alt="Bárbaros">
+                            <span>Bárbaros</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/mago_eletrico.png" alt="Mago Elétrico">
+                            <span>Mago Elétrico</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bandida.png" alt="Bandida">
+                            <span>Bandida</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/veneno.png" alt="Veneno">
+                            <span>Veneno</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Deck de pressão dupla com Bandida Evo e Arqueiras Evo para dividir a defesa do oponente.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 49%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.7% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="dual-lane-pressure-evo">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="splash" style="animation-delay: 1.8s">
+                <span class="deck-tag">Popular</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Splash Spam #10 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.6</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/mega_cavaleiro_evo.png" alt="Mega Cavaleiro Evo">
+                            <span>Mega Cavaleiro Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/barril_goblins_evo.png" alt="Barril de Goblins Evo">
+                            <span>Barril de Goblins Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/goblins.png" alt="Goblins">
+                            <span>Goblins</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/morcegos.png" alt="Morcegos">
+                            <span>Morcegos</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/gangue_goblins.png" alt="Gangue de Goblins">
+                            <span>Gangue de Goblins</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bombardeiro.png" alt="Bombardeiro">
+                            <span>Bombardeiro</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_eletrico.png" alt="Espírito Elétrico">
+                            <span>Espírito Elétrico</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/veneno.png" alt="Veneno">
+                            <span>Veneno</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Deck de spam com dano em área usando evoluções para defesa e pressão.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 48%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.6% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="splash-spam-evo">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="miner" style="animation-delay: 2s">
+                <span class="deck-tag">Meta</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Miner Control #11 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.4</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cavaleiro_evo.png" alt="Cavaleiro Evo">
+                            <span>Cavaleiro Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/arqueiras_evo.png" alt="Arqueiras Evo">
+                            <span>Arqueiras Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/mineiro.png" alt="Mineiro">
+                            <span>Mineiro</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/veneno.png" alt="Veneno">
+                            <span>Veneno</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/torre_bomba.png" alt="Torre Bomba">
+                            <span>Torre Bomba</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/goblins.png" alt="Goblins">
+                            <span>Goblins</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tronco.png" alt="Tronco">
+                            <span>Tronco</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_eletrico.png" alt="Espírito Elétrico">
+                            <span>Espírito Elétrico</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Deck de controle com Mineiro e evoluções para pressão lenta e defesa eficiente.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 47%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.7% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="miner-control-evo">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="heavy-control" style="animation-delay: 2.2s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Heavy Control #12 <span class="elixir-cost"><i class="fas fa-bolt"></i>4.0</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cavaleiro_evo.png" alt="Cavaleiro Evo">
+                            <span>Cavaleiro Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/arqueiras_evo.png" alt="Arqueiras Evo">
+                            <span>Arqueiras Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/foguete.png" alt="Foguete">
+                            <span>Foguete</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tronco.png" alt="Tronco">
+                            <span>Tronco</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/canhao.png" alt="Canhão">
+                            <span>Canhão</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_gelo.png" alt="Espírito de Gelo">
+                            <span>Espírito de Gelo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/goblins.png" alt="Goblins">
+                            <span>Goblins</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/mosqueteira.png" alt="Mosqueteira">
+                            <span>Mosqueteira</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Deck de controle pesado com evoluções e feitiços poderosos para vitórias no tempo.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 46%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.8% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="heavy-control-evo">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="control" style="animation-delay: 2.4s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Evo Goblin Cage Recruits #13 <span class="elixir-cost"><i class="fas fa-bolt"></i>4.1</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/jaula_goblin_evo.png" alt="Jaula de Goblins Evo">
+                            <span>Jaula de Goblins Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/gangue_goblins.png" alt="Gangue de Goblins">
+                            <span>Gangue de Goblins</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/recrutas_reais.png" alt="Recrutas Reais">
+                            <span>Recrutas Reais</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/porcos_reais.png" alt="Porcos Reais">
+                            <span>Porcos Reais</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bola_fogo.png" alt="Bola de Fogo">
+                            <span>Bola de Fogo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_eletrico.png" alt="Espírito Elétrico">
+                            <span>Espírito Elétrico</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/flechas.png" alt="Flechas">
+                            <span>Flechas</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/maquina_voadora.png" alt="Máquina Voadora">
+                            <span>Máquina Voadora</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Pressiona os dois lados com Recruits e Royal Hogs. O Goblin Cage com evolução fornece defesa sólida. Usa feitiços leves para suporte aéreo.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 57%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.6% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="evo-goblin-cage">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="log-bait" style="animation-delay: 0.6s">
+                <span class="deck-tag">Meta</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">The Log Bait #14 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.4</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cavaleiro_evo.png" alt="Cavaleiro Evo">
+                            <span>Cavaleiro Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_gelo_evo.png" alt="Espírito de Gelo Evo">
+                            <span>Espírito de Gelo Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/princesa.png" alt="Princesa">
+                            <span>Princesa</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/barril_goblins.png" alt="Barril de Goblins">
+                            <span>Barril de Goblins</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/gangue_goblins.png" alt="Gangue de Goblins">
+                            <span>Gangue de Goblins</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bola_fogo.png" alt="Bola de Fogo">
+                            <span>Bola de Fogo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/foguete.png" alt="Foguete">
+                            <span>Foguete</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/canhao.png" alt="Canhão">
+                            <span>Canhão</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Foca em forçar o oponente a usar o feitiço errado com várias cartas que "atraem" o tronco. Controlo defensivo com ataques constantes.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 55%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.5% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="log-bait-classic">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="cycle" style="animation-delay: 0.8s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Mighty Miner Firecracker #15 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.1</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_gelo_evo.png" alt="Mineiro">
+                            <span>Mineiro</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/pirotecnica_evo.png" alt="Pirotecnia Evo">
+                            <span>Pirotecnia Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/mineiro_bombado.png" alt="Mineiro Bombado">
+                            <span>Mineiro Bombado</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/goblins.png" alt="Goblins">
+                            <span>Goblins</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/terramoto.png" alt="Terremoto">
+                            <span>Terremoto</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/torre_bomba.png" alt="Torre Bomba">
+                            <span>Torre Bomba</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tronco.png" alt="Tronco">
+                            <span>Tronco</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/mineiro.png" alt="Mineiro">
+                            <span>Mineiro</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Um deck de ciclo rápido com foco em defender com valor e contra-atacar com Hog. O Mighty Miner causa grande pressão com o dash.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 58%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.5% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="mighty-miner-firecracker">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="beatdown" style="animation-delay: 3s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Evolution Bonanza #16 <span class="elixir-cost"><i class="fas fa-bolt"></i>4.3</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/gigante_goblin_evo.png" alt="Gigante Goblin Evo">
+                            <span>Gigante Goblin</span>
+                        </div>
+                        <div class="card">
+                        <img src="../IMG/CARTAS/goblin_dardo_evo.png" alt="Goblin Dardo Evo">
+                            <span>Goblin Dardo Evo</span>
+                            
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/gangue_goblins.png" alt="Gangue de Goblins Evo">
+                            <span>Gangue de Goblins </span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/princesa.png" alt="Princesa">
+                            <span>Princesa</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/principe_trevas.png" alt="Príncipe Trevas">
+                            <span>Príncipe Trevas</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/furia.png" alt="Fúria">
+                            <span>Fúria</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espelho.png" alt="Espelho">
+                            <span>Espelho</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/flechas.png" alt="Flechas">
+                            <span>Flechas</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Pressão explosiva com Goblin Giant e Príncipes. Usa Rage e Clone para combos devastadores se não forem contidos.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 56%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.4% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="evolution-bonanza">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="beatdown" style="animation-delay: 3.2s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Double Elixir Loon #17 <span class="elixir-cost"><i class="fas fa-bolt"></i>4.5</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/lenhador_evo.png" alt="Lenhador Evo">
+                            <span>Lenhador Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/dragao_eletrico_evo.png" alt="Dragao Eletrico Evo">
+                            <span>Dragao Eletrico Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/balao.png" alt="Balão">
+                            <span>Balão</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/lancador.png" alt="Lancador">
+                            <span>Lancador</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/dragao_inferno.png" alt="Dragao Inferno">
+                            <span>Dragao Inferno</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/gelo.png" alt="Gelo">
+                            <span>Gelo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tornado.png" alt="Tornado">
+                            <span>Tornado</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/barril_barbaro.png" alt="Barril de Bárbaro">
+                            <span>Barril de Bárbaro</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Combo pesado baseado em Lava + Balloon, com Freeze para travar a defesa inimiga. Fortíssimo no Duplo Elixir.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 59%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.5% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="double-elixir-loon">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="control" style="animation-delay: 3.4s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Evo Mortar Miner #18 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.3</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/morteiro_evo.png" alt="Morteiro Evo">
+                            <span>Morteiro Evo</span>
+                        </div>
+                        <div class="card">
+                        <img src="../IMG/CARTAS/goblin_dardo_evo.png" alt="Goblin Dardo Evo">
+                            <span>Goblin Dardo Evo</span>
+                            
+                        </div> 
+                        <div class="card">
+                            <img src="../IMG/CARTAS/gangue_goblins.png" alt="Gangue de Goblins">
+                            <span>Gangue de Goblins </span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/rei_esqueletos.png" alt="Rei Esqueleto">
+                            <span>Rei Esqueleto</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/broca_goblin.png" alt="Broca Goblin">
+                            <span>Broca Goblin</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/mineiro.png" alt="Mineiro">
+                            <span>Mineiro</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/flechas.png" alt="Flechas">
+                            <span>Flechas</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/goblins_lanceiros.png" alt="Goblins Lanceiros">
+                            <span>Goblins Lanceiros</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Pressão constante com Mortar e Miner. O Skeleton King aproveita o excesso de tropas. Goblin Drill e Goblin Gang com evolução ajudam na pressão.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 58%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.8% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="evo-mortar-miner">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="beatdown" style="animation-delay: 3.6s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">RG Phoenix Ghost #19 <span class="elixir-cost"><i class="fas fa-bolt"></i>4.1</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/gigante_real_evo.png" alt="Gigante Real Evo">
+                            <span>Gigante Real Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cacador_evo.png" alt="Cacador Evo">
+                            <span>Cacador Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/guardas.png" alt="Guardas">
+                            <span>Guardas</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/pescador.png" alt="Pescador">
+                            <span>Pescador</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/monge.png" alt="Monge">
+                            <span>Monge</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bola_fogo.png" alt="Bola de Fogo">
+                            <span>Bola de Fogo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_eletrico.png" alt="Espírito Elétrico">
+                            <span>Espírito Elétrico</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tronco.png" alt="Tronco">
+                            <span>Tronco</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Push com Royal Giant e suporte como Phoenix e Ghost. Defesa eficiente com Fisherman + E-Wiz. Fireball é essencial para limpar defesas.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 57%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.7% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="rg-phoenix-ghost">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="cycle" style="animation-delay: 3.8s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Evo Valk Wall Breakers #20 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.1</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/barril_goblins_evo.png" alt="Barril Goblins Evo">
+                            <span>Barril Goblins Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/valquiria_evo.png" alt="Valquíria Evo">
+                            <span>Valquíria Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/destruidores_muro.png" alt="Destruidores de Muro">
+                            <span>Destruidores de Muro</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/mineiro.png" alt="Mineiro">
+                            <span>Mineiro</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/princesa.png" alt="Princesa">
+                            <span>Princesa</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/gangue_goblins.png" alt="Gangue de Goblins">
+                            <span>Gangue de Goblins</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_gelo.png" alt="Espírito de Gelo">
+                            <span>Espírito de Gelo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/canhao.png" alt="Canhão">
+                            <span>Canhão</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Bait muito rápido com pressão constante. Valkyrie segura bem tropas terrestres. Wall Breakers punem distrações.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 56%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.6% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="evo-valk-wall-breakers">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="control" style="animation-delay: 4s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Evo Goblin Cage Splashyard #21 <span class="elixir-cost"><i class="fas fa-bolt"></i>4.0</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/jaula_goblin_evo.png" alt="Jaula de Goblins Evo">
+                            <span>Jaula de Goblins Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cavaleiro_evo.png" alt="Cavaleiro Evo">
+                            <span>Cavaleiro Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cemiterio.png" alt="Cemitério">
+                            <span>Cemitério</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/mago_gelo.png" alt="Mago de Gelo">
+                            <span>Mago de Gelo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bebe_dragao.png" alt="Bebê Dragão">
+                            <span>Bebê Dragão</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tornado.png" alt="Tornado">
+                            <span>Tornado</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/veneno.png" alt="Veneno">
+                            <span>Veneno</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/barril_barbaro.png" alt="Barril de Bárbaro">
+                            <span>Barril de Bárbaro</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Clássico splashyard com sinergia de Tornado + tropas de dano em área. O Goblin Cage evoluído melhora a defesa terrestre.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 59%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.9% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="evo-goblin-cage-splashyard">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="cycle" style="animation-delay: 4.2s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Mighty Miner Firecracker Hog #22 <span class="elixir-cost"><i class="fas fa-bolt"></i>2.8</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/pirotecnica_evo.png" alt="Pirotecnica Evo">
+                            <span>Pirotecnica Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/esqueletos_evo.png" alt="Esqueletos Evo">
+                            <span>Esqueletos Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/corredor.png" alt="Corredor">
+                            <span>Corredor</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/mineiro_bombado.png" alt="Mineiro Bombado">
+                            <span>Mineiro Bombado</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_gelo.png" alt="Espírito de Gelo">
+                            <span>Espírito de Gelo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/torre_bomba.png" alt="Torre Bomba">
+                            <span>Torre Bomba</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/terramoto.png" alt="Terremoto">
+                            <span>Terremoto</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tronco.png" alt="Tronco">
+                            <span>Tronco</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Deck de ciclo muito rápido com controle de terreno. Earthquake é para construções. Pressiona constantemente com Hog.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 60%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.7% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="mighty-miner-firecracker-hog">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="cycle" style="animation-delay: 4.4s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Hog Rider Knight Firecracker #23 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.0</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cavaleiro_evo.png" alt="Cavaleiro Evo">
+                            <span>Cavaleiro</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/pirotecnica_evo.png" alt="Pirotecnia Evo">
+                            <span>Pirotecnia</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/corredor.png" alt="Corredor">
+                            <span>Corredor</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/goblins.png" alt="Goblins">
+                            <span>Goblins</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_gelo.png" alt="Espírito de Gelo">
+                            <span>Espírito de Gelo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/torre_bomba.png" alt="Torre Bomba">
+                            <span>Torre Bomba</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tronco.png" alt="Tronco">
+                            <span>Tronco</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/terramoto.png" alt="Terremoto">
+                            <span>Terremoto</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Deck de ciclo rápido com foco em defesas sólidas e contra-ataques com Hog. Knight + Bomb Tower param pushes, enquanto o ciclo permite pressão constante.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 57%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.7% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="hog-rider-knight-firecracker">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="bridge-spam" style="animation-delay: 4.6s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Evo Barbs Ram Archer Queen #24 <span class="elixir-cost"><i class="fas fa-bolt"></i>4.1</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/ariete_evo.png" alt="Ariete Evo">
+                            <span>Ariete Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/barbaros_evo.png" alt="Barbaros Evo">
+                            <span>Barbaros Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/rainha_arqueira.png" alt="Rainha Arqueira">
+                            <span>Rainha Arqueira</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bandida.png" alt="Bandida">
+                            <span>Bandida</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/espirito_cura.png" alt="Espírito de Cura">
+                            <span>Espírito de Cura</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/fantasma_real.png" alt="Fantasma Real">
+                            <span>Fantasma Real</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/flechas.png" alt="Flechas">
+                            <span>Flechas</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/coletor_elixir.png" alt="Coletor de Elixir">
+                            <span>Coletor de Elixir</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Pushs rápidos e agressivos com Barbs e Ram, apoiados por Queen e feitiços de apoio. Usa Mirror e Rage para pressões imprevisíveis.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 55%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.5% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="evo-barbs-ram-queen">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="control" style="animation-delay: 4.8s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Royal Hogs Recruits #25 <span class="elixir-cost"><i class="fas fa-bolt"></i>4.2</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/jaula_goblin_evo.png" alt="Jaula de Goblin Evo">
+                            <span>Jaula de Goblin Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/recrutas_reais_evo.png" alt="Recrutas Reais Evo">
+                            <span>Recrutas Reais Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/maquina_voadora.png" alt="Máquina Voadora">
+                            <span>Máquina Voadora</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/zappies.png" alt="Zappies">
+                            <span>Zappies</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/porcos_reais.png" alt="Porcos Reais">
+                            <span>Porcos Reais</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bola_fogo.png" alt="Bola de Fogo">
+                            <span>Bola de Fogo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/flechas.png" alt="Flechas">
+                            <span>Flechas</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/barril_barbaro.png" alt="Barril de Bárbaro">
+                            <span>Barril de Bárbaro</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Estratégia clássica de pressão pelos dois lados com suporte de cartas que controlam bem o jogo. Muito eficiente no Duplo Elixir.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 58%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.7% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="royal-hogs-recruits">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="control" style="animation-delay: 5s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Evo Recruits Archers Balloon #26 <span class="elixir-cost"><i class="fas fa-bolt"></i>4.1</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/recrutas_reais_evo.png" alt="Recrutas Reais Evo">
+                            <span>Recrutas Reais Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/arqueiras_evo.png" alt="Arqueiras Evo">
+                            <span>Arqueiras Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/balao.png" alt="Balão">
+                            <span>Balão</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/pequeno_principe.png" alt="Pequeno Príncipe">
+                            <span>Pequeno Príncipe</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bola_neve.png" alt="Bola de Neve">
+                            <span>Bola de Neve</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/flechas.png" alt="Flechas">
+                            <span>Flechas</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/lenhador.png" alt="Lenhador">
+                            <span>Lenhador</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/pescador.png" alt="Pescador">
+                            <span>Pescador</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Combina controle com pressão aérea. Usa Recruits para defender e Balloon para punir. Tornado e Fireball limpam defesas agrupadas.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 56%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.6% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="evo-recruits-archers-balloon">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" data-category="control" style="animation-delay: 5.2s">
+                <span class="deck-tag">Novo</span>
+                <div class="deck-content">
+                    <h2 class="deck-title">Splashyard with Barb Barrel #27 <span class="elixir-cost"><i class="fas fa-bolt"></i>3.8</span></h2>
+                    <div class="deck-cards">
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cavaleiro_evo.png" alt="Cavaleiro Evo">
+                            <span>Cavaleiro Evo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/lapide.png" alt="Lapide">
+                            <span>Lapide</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/mago_gelo.png" alt="Mago de Gelo">
+                            <span>Mago de Gelo</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/cemiterio.png" alt="Cemitério">
+                            <span>Cemitério</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/veneno.png" alt="Veneno">
+                            <span>Veneno</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/tornado.png" alt="Tornado">
+                            <span>Tornado</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/barril_barbaro.png" alt="Barril de Bárbaro">
+                            <span>Barril de Bárbaro</span>
+                        </div>
+                        <div class="card">
+                            <img src="../IMG/CARTAS/bebe_dragao.png" alt="Bebê Dragão">
+                            <span>Bebê Dragão</span>
+                        </div>
+                    </div>
+                    <p class="deck-description">
+                        Variação do Splashyard clássico, com Valkyrie como tanque e Dart Goblin evoluído como suporte. Excelente sinergia com Tornado e Poison.
+                    </p>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span class="win-rate">
+                                <i class="fas fa-trophy"></i>
+                                <span>Win Rate: 59%</span>
+                            </span>
+                            <span class="usage">
+                                <i class="fas fa-users"></i>
+                                <span>0.9% Usos</span>
+                            </span>
+                        </div>
+                        <button class="explore-button" data-deck="splashyard-barb-barrel">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="deckModal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-header">
+                <h2 class="modal-title"></h2>
+                <div class="deck-stats">
+                    <span class="elixir-cost">
+                        <i class="fas fa-bolt"></i>
+                        <span>Média de Elixir: 0</span>
+                    </span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="deck-cards-grid">
+                    <!-- Cartas serão inseridas aqui via JavaScript -->
+                </div>
+                <div class="deck-info">
+                    <div class="info-section">
+                        <h3><i class="fas fa-star"></i> Melhores Evoluções</h3>
+                        <ul class="evolutions"></ul>
+                    </div>
+                    <div class="info-section">
+                        <h3><i class="fas fa-info-circle"></i> Explicação do Deck</h3>
+                        <p class="deck-explanation"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Filtros de deck
+        const filterButtons = document.querySelectorAll('.filter-button');
+        const deckCards = document.querySelectorAll('.deck-card');
+        const searchInput = document.getElementById('deckSearch');
+        const sortSelect = document.getElementById('sortDecks');
+
+        // Função para filtrar decks por categoria
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remover classe active de todos os botões
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Adicionar classe active ao botão clicado
+                button.classList.add('active');
+
+                const filter = button.getAttribute('data-filter');
+                console.log('Filtro selecionado:', filter); // Debug
+
+                deckCards.forEach(card => {
+                    const category = card.getAttribute('data-category');
+                    console.log('Categoria do deck:', category); // Debug
+
+                    if (filter === 'all') {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = category === filter ? 'block' : 'none';
+                    }
+                });
+            });
+        });
+
+        // Função de pesquisa
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            deckCards.forEach(card => {
+                const title = card.querySelector('.deck-title').textContent.toLowerCase();
+                const description = card.querySelector('.deck-description').textContent.toLowerCase();
+                const cards = Array.from(card.querySelectorAll('.card span')).map(span => span.textContent.toLowerCase());
+                
+                if (title.includes(searchTerm) || 
+                    description.includes(searchTerm) || 
+                    cards.some(cardName => cardName.includes(searchTerm))) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Função de ordenação
+        sortSelect.addEventListener('change', (e) => {
+            const sortBy = e.target.value;
+            const deckGrid = document.querySelector('.deck-grid');
+            const decks = Array.from(deckCards);
+
+            decks.sort((a, b) => {
+                if (sortBy === 'winrate') {
+                    const aRate = parseInt(a.querySelector('.win-rate span').textContent);
+                    const bRate = parseInt(b.querySelector('.win-rate span').textContent);
+                    return bRate - aRate;
+                } else if (sortBy === 'usage') {
+                    const aUsage = parseInt(a.querySelector('.usage span').textContent.replace(/[^0-9]/g, ''));
+                    const bUsage = parseInt(b.querySelector('.usage span').textContent.replace(/[^0-9]/g, ''));
+                    return bUsage - aUsage;
+                } else if (sortBy === 'elixir') {
+                    const aElixir = parseFloat(a.querySelector('.elixir-cost').textContent.replace(/[^0-9.]/g, ''));
+                    const bElixir = parseFloat(b.querySelector('.elixir-cost').textContent.replace(/[^0-9.]/g, ''));
+                    return aElixir - bElixir;
+                }
+            });
+
+            decks.forEach(deck => deckGrid.appendChild(deck));
+        });
+
+        // Animações ao scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, observerOptions);
+
+        deckCards.forEach(card => observer.observe(card));
+
+        // Tooltips para as cartas
+        deckCards.forEach(card => {
+            const cards = card.querySelectorAll('.card');
+            cards.forEach(cardElement => {
+                cardElement.addEventListener('mouseenter', (e) => {
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'card-tooltip';
+                    const cardName = cardElement.querySelector('img').alt;
+                    tooltip.textContent = cardName;
+                    document.body.appendChild(tooltip);
+
+                    const rect = cardElement.getBoundingClientRect();
+                    tooltip.style.top = `${rect.top - tooltip.offsetHeight - 10}px`;
+                    tooltip.style.left = `${rect.left + (rect.width - tooltip.offsetWidth) / 2}px`;
+                });
+
+                cardElement.addEventListener('mouseleave', () => {
+                    const tooltip = document.querySelector('.card-tooltip');
+                    if (tooltip) tooltip.remove();
+                });
+            });
+        });
+
+        // Menu Mobile
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuBtn.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenuBtn.classList.remove('active');
+                navLinks.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            });
+        });
+
+        // Verificar se o usuário está logado ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof checkUser === 'function') {
+                checkUser();
+            } else {
+                console.error('Função checkUser não encontrada. Verifique se user-menu.js está carregado corretamente.');
+            }
+        });
+
+        // Modal
+        const modal = document.getElementById('deckModal');
+        const closeModal = document.querySelector('.modal-close');
+        const exploreButtons = document.querySelectorAll('.explore-button');
+
+        const deckData = {
+            'control-evo': {
+                title: 'Control',
+                description: 'Deck de controle com defesa forte e contra-ataques eficientes.',
+                strategy: 'Espera, defende bem e ataca com o que sobrou. Use o Cavaleiro Evo para tankar e as Arqueiras Evo para pressão constante.',
+                tips: [
+                    'Use o Cavaleiro Evo para defender pushes grandes',
+                    'Arqueiras Evo são ótimas para defesa e pressão',
+                    'Mineiro + Veneno é um combo forte para ataque',
+                    'Torre Bombástica é essencial para defesa'
+                ],
+                counters: ['Beatdown', 'Bridge Spam', 'Splash Spam'],
+                elixirCost: 3.3,
+                cycleSpeed: 'Médio',
+                winRate: 57,
+                usage: 1800000
+            },
+            'beatdown-evo': {
+                title: 'Beatdown',
+                description: 'Deck beatdown poderoso com Cavaleiro Evo e Bombardeiro Evo para forçar respostas e punir erros.',
+                strategy: 'Começa com tanque atrás, junta tropas e empurra com tudo. Use Cavaleiro Evo para defesa e Bombardeiro Evo para limpar o caminho.',
+                tips: [
+                    'Cavaleiro Evo é ótimo para defender pushes',
+                    'Bombardeiro Evo limpa tropas fracas facilmente',
+                    'Goblins Evo são excelentes para pressão',
+                    'Use o Foguete para finalizar'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 3.8,
+                cycleSpeed: 'Médio',
+                winRate: 56,
+                usage: 1600000
+            },
+            'cycle-evo': {
+                title: 'Cycle',
+                description: 'Deck de ciclo rápido com Cavaleiro Evo e Arqueiras Evo para defesa e pressão constante.',
+                strategy: 'Cicla rápido e mantém pressão constante. Use Cavaleiro Evo para defesa e Arqueiras Evo para pressão.',
+                tips: [
+                    'Cavaleiro Evo é ótimo para defesa',
+                    'Arqueiras Evo são excelentes para pressão',
+                    'Mantenha o ciclo rápido',
+                    'Use o Foguete para finalizar'
+                ],
+                counters: ['Beatdown', 'Heavy Control', 'Splash Spam'],
+                elixirCost: 3.2,
+                cycleSpeed: 'Muito Rápido',
+                winRate: 55,
+                usage: 1400000
+            },
+            'bridge-spam-evo': {
+                title: 'Bridge Spam',
+                description: 'Deck de ataques rápidos pela ponte com Bandida Evo e Arqueiras Evo para suporte.',
+                strategy: 'Spam na ponte e mantém pressão constante. Use Bandida Evo para defesa e Arqueiras Evo para pressão.',
+                tips: [
+                    'Bandida Evo é ótima para defesa',
+                    'Arqueiras Evo são excelentes para pressão',
+                    'Mantenha a pressão constante',
+                    'Use o Veneno para limpar tropas'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 3.9,
+                cycleSpeed: 'Médio',
+                winRate: 54,
+                usage: 1200000
+            },
+            'log-bait-evo': {
+                title: 'Log Bait',
+                description: 'Deck de isca de feitiços com Canhão Evo e Barril de Goblins Evo para forçar respostas e punir erros.',
+                strategy: 'Força respostas e puni erros. Use Canhão Evo para defesa e Barril de Goblins Evo para pressão.',
+                tips: [
+                    'Canhão Evo é ótimo para defesa',
+                    'Barril de Goblins Evo é excelente para pressão',
+                    'Force respostas de feitiços',
+                    'Puni erros com Foguete'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 3.4,
+                cycleSpeed: 'Médio',
+                winRate: 53,
+                usage: 1100000
+            },
+            'siege-evo': {
+                title: 'Siege',
+                description: 'Deck de cerco com Cavaleiro Evo e Arqueiras Evo para defesa consistente e pressão constante.',
+                strategy: 'Defesa consistente e pressão constante. Use Cavaleiro Evo para defesa e Arqueiras Evo para pressão.',
+                tips: [
+                    'Cavaleiro Evo é ótimo para defesa',
+                    'Arqueiras Evo são excelentes para pressão',
+                    'Mantenha a pressão constante',
+                    'Use o Foguete para finalizar'
+                ],
+                counters: ['Beatdown', 'Bridge Spam', 'Splash Spam'],
+                elixirCost: 3.6,
+                cycleSpeed: 'Médio',
+                winRate: 52,
+                usage: 1000000
+            },
+            'graveyard-control-evo': {
+                title: 'Graveyard Control',
+                description: 'Deck de controle com Bola de Neve Evo e Cavaleiro Evo para defesa sólida e ataques surpresa.',
+                strategy: 'Defesa sólida e ataques surpresa. Use Bola de Neve Evo para defesa e Cavaleiro Evo para pressão.',
+                tips: [
+                    'Bola de Neve Evo é ótima para defesa',
+                    'Cavaleiro Evo é excelente para pressão',
+                    'Mantenha a defesa sólida',
+                    'Use o Cemitério para ataque'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 3.7,
+                cycleSpeed: 'Médio',
+                winRate: 51,
+                usage: 900000
+            },
+            'chip-damage-evo': {
+                title: 'Chip Damage',
+                description: 'Deck de dano gradual com evoluções para pressão constante e defesa eficiente.',
+                strategy: 'Dano constante e defesa eficiente. Use evoluções para defesa e pressão.',
+                tips: [
+                    'Evoluções são ótimas para defesa',
+                    'Mantenha o dano constante',
+                    'Use o Veneno para limpar tropas',
+                    'Puni erros com Foguete'
+                ],
+                counters: ['Beatdown', 'Bridge Spam', 'Splash Spam'],
+                elixirCost: 3.5,
+                cycleSpeed: 'Médio',
+                winRate: 50,
+                usage: 800000
+            },
+            'dual-lane-pressure-evo': {
+                title: 'Dual Lane Pressure',
+                description: 'Deck de pressão em duas pistas com evoluções para defesa eficiente e pressão.',
+                strategy: 'Pressão em duas pistas e defesa eficiente. Use evoluções para defesa e pressão.',
+                tips: [
+                    'Evoluções são ótimas para defesa',
+                    'Mantenha a pressão em duas pistas',
+                    'Use o Veneno para limpar tropas',
+                    'Puni erros com Foguete'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 3.8,
+                cycleSpeed: 'Médio',
+                winRate: 49,
+                usage: 700000
+            },
+            'splash-spam-evo': {
+                title: 'Splash Spam',
+                description: 'Deck de spam com dano em área usando Mega Cavaleiro Evo e Barril de Goblins Evo para pressão constante.',
+                strategy: 'Spam constante e dano em área. Use Mega Cavaleiro Evo para defesa e Barril de Goblins Evo para pressão.',
+                tips: [
+                    'Mega Cavaleiro Evo é ótimo para defesa',
+                    'Barril de Goblins Evo é excelente para pressão',
+                    'Mantenha o spam constante',
+                    'Use o Veneno para limpar tropas'
+                ],
+                counters: ['Beatdown', 'Bridge Spam', 'Splash Spam'],
+                elixirCost: 3.6,
+                cycleSpeed: 'Médio',
+                winRate: 48,
+                usage: 600000
+            },
+            'miner-control-evo': {
+                title: 'Miner Control',
+                description: 'Deck de controle com Mineiro e evoluções para pressão lenta e defesa eficiente.',
+                strategy: 'Controle eficiente e ataques surpresa. Use Mineiro para ataque e evoluções para defesa.',
+                tips: [
+                    'Mineiro é ótimo para ataque',
+                    'Arqueiras Evo são excelentes para defesa',
+                    'Mantenha o controle eficiente',
+                    'Use o Veneno para limpar tropas'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 3.4,
+                cycleSpeed: 'Médio',
+                winRate: 47,
+                usage: 500000
+            },
+            'heavy-control-evo': {
+                title: 'Heavy Control',
+                description: 'Deck de controle pesado com evoluções para defesa sólida e pressão.',
+                strategy: 'Controle pesado e defesa sólida. Use evoluções para defesa e pressão.',
+                tips: [
+                    'Evoluções são ótimas para defesa',
+                    'Mantenha o controle pesado',
+                    'Use o Veneno para limpar tropas',
+                    'Puni erros com Foguete'
+                ],
+                counters: ['Beatdown', 'Bridge Spam', 'Splash Spam'],
+                elixirCost: 4.0,
+                cycleSpeed: 'Lento',
+                winRate: 46,
+                usage: 400000
+            },
+            'evo-goblin-cage': {
+                title: 'Evo Goblin Cage Recruits',
+                description: 'Pressiona os dois lados com Recruits e Royal Hogs. O Goblin Cage com evolução fornece defesa sólida. Usa feitiços leves para suporte aéreo.',
+                strategy: 'Use Gaiola de Goblins Evo para defesa e Recruits e Royal Hogs para pressão.',
+                tips: [
+                    'Gaiola de Goblins Evo é ótima para defesa',
+                    'Recruits e Royal Hogs são excelentes para pressão',
+                    'Mantenha a defesa sólida',
+                    'Use o Cemitério para ataque'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 4.1,
+                cycleSpeed: 'Médio',
+                winRate: 57,
+                usage: 400000
+            },
+            'log-bait-classic': {
+                title: 'The Log Bait',
+                description: 'Foca em forçar o oponente a usar o feitiço errado com várias cartas que "atraem" o tronco. Controlo defensivo com ataques constantes.',
+                strategy: 'Use Canhão Evo para defesa e gangue de Goblins para pressão.',
+                tips: [
+                    'Canhão Evo é ótimo para defesa',
+                    'Gangue de Goblins é excelente para pressão',
+                    'Force respostas de feitiços',
+                    'Puni erros com Foguete'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 3.4,
+                cycleSpeed: 'Médio',
+                winRate: 55,
+                usage: 600000
+            },
+            'mighty-miner-firecracker': {
+                title: 'Mighty Miner Firecracker',
+                description: 'Um deck de ciclo rápido com foco em defender com valor e contra-atacar com Hog. O Mighty Miner causa grande pressão com o dash.',
+                strategy: 'Use Mineiro Poderoso para ataque e cavaleiro porco para defesa.',
+                tips: [
+                    'Mineiro Poderoso é ótimo para ataque',
+                    'Cavaleiro Porco é excelente para defesa',
+                    'Mantenha o controle eficiente',
+                    'Use o Veneno para limpar tropas'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 3.1,
+                cycleSpeed: 'Muito Rápido',
+                winRate: 58,
+                usage: 500000
+            },
+            'evolution-bonanza': {
+                title: 'Evolution Bonanza',
+                description: 'Pressão explosiva com Goblin Giant e Príncipes. Usa Rage e Clone para combos devastadores se não forem contidos.',
+                strategy: 'Use Gigante Goblin para ataque e gangue de Goblins Evo para pressão.',
+                tips: [
+                    'Gigante Goblin é ótimo para ataque',
+                    'Gangue de Goblins Evo é excelente para pressão',
+                    'Mantenha a pressão explosiva',
+                    'Use Rage e Clone para combos devastadores'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 4.3,
+                cycleSpeed: 'Médio',
+                winRate: 56,
+                usage: 300000
+            },
+            'double-elixir-loon': {
+                title: 'Double Elixir Loon',
+                description: 'Combo pesado baseado em Lava + Balloon, com Freeze para travar a defesa inimiga. Fortíssimo no Duplo Elixir.',
+                strategy: 'Use Cão de Lava para ataque e Mago de Gelo Evo para defesa.',
+                tips: [
+                    'Cão de Lava é ótimo para ataque',
+                    'Mago de Gelo Evo é excelente para defesa',
+                    'Use Freeze para travar a defesa inimiga',
+                    'Fortíssimo no Duplo Elixir'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 4.5,
+                cycleSpeed: 'Médio',
+                winRate: 59,
+                usage: 250000
+            },
+            'evo-mortar-miner': {
+                title: 'Evo Mortar Miner',
+                description: 'Pressão constante com Mortar e Miner. O Skeleton King aproveita o excesso de tropas. Goblin Drill e Goblin Gang com evolução ajudam na pressão.',
+                strategy: 'Use Gangue de Goblins Evo para ataque e Mortar para defesa.',
+                tips: [
+                    'Gangue de Goblins Evo é excelente para ataque',
+                    'Mortar é ótimo para defesa',
+                    'Mantenha o controle eficiente',
+                    'Use o Goblin Dardo para ataque'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 3.3,
+                cycleSpeed: 'Médio',
+                winRate: 58,
+                usage: 400000
+            },
+            'rg-phoenix-ghost': {
+                title: 'RG Phoenix Ghost',
+                description: 'Push com Royal Giant e suporte como Phoenix e Ghost. Defesa eficiente com Fisherman + E-Wiz. Fireball é essencial para limpar defesas.',
+                strategy: 'Use Royal Giant para ataque e Phoenix e Ghost para defesa.',
+                tips: [
+                    'Royal Giant é ótimo para ataque',
+                    'Phoenix e Ghost são excelentes para defesa',
+                    'Fisherman é ótimo para defesa',
+                    'E-Wiz é essencial para defesa'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 4.1,
+                cycleSpeed: 'Médio',
+                winRate: 57,
+                usage: 500000
+            },
+            'evo-valk-wall-breakers': {
+                title: 'Evo Valk Wall Breakers',
+                description: 'Bait muito rápido com pressão constante. Valkyrie segura bem tropas terrestres. Wall Breakers punem distrações.',
+                strategy: 'Use Valquiria para defesa e Wall Breakers para ataque.',
+                tips: [
+                    'Valquiria é ótima para defesa',
+                    'Wall Breakers são excelentes para ataque',
+                    'Mantenha a pressão constante',
+                    'Use o Destruidor de Muro para ataque'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 3.1,
+                cycleSpeed: 'Médio',
+                winRate: 56,
+                usage: 350000
+            },
+            'evo-goblin-cage-splashyard': {
+                title: 'Evo Goblin Cage Splashyard',
+                description: 'Clássico splashyard com sinergia de Tornado + tropas de dano em área. O Goblin Cage evoluído melhora a defesa terrestre.',
+                strategy: 'Use Jaula de Goblins Evo para defesa e Goblin Dardo Evo para ataque.',
+                tips: [
+                    'Jaula de Goblins Evo é ótima para defesa',
+                    'Goblin Dardo Evo é excelente para ataque',
+                    'Mantenha o controle eficiente',
+                    'Use o Cemitério para ataque'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 4.0,
+                cycleSpeed: 'Médio',
+                winRate: 59,
+                usage: 450000
+            },
+            'mighty-miner-firecracker-hog': {
+                title: 'Mighty Miner Firecracker Hog',
+                description: 'Deck de ciclo muito rápido com controle de terreno. Earthquake é para construções. Pressiona constantemente com Hog.',
+                strategy: 'Use Mineiro Poderoso para ataque e cavaleiro porco para defesa.',
+                tips: [
+                    'Mineiro Poderoso é ótimo para ataque',
+                    'Cavaleiro Porco é excelente para defesa',
+                    'Mantenha o controle eficiente',
+                    'Use o Terremoto para ataque'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 2.8,
+                cycleSpeed: 'Muito Rápido',
+                winRate: 60,
+                usage: 600000
+            },
+            'hog-rider-knight-firecracker': {
+                title: 'Hog Rider Knight Firecracker',
+                description: 'Deck de ciclo rápido com foco em defesas sólidas e contra-ataques com Hog. Knight + Bomb Tower param pushes, enquanto o ciclo permite pressão constante.',
+                strategy: 'Use Cavaleiro para defesa e Knight + Bomb Tower para ataque.',
+                tips: [
+                    'Cavaleiro é ótimo para defesa',
+                    'Knight + Bomb Tower são excelentes para ataque',
+                    'Mantenha o controle eficiente',
+                    'Use o Espírito Elétrico para ataque'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 3.0,
+                cycleSpeed: 'Muito Rápido',
+                winRate: 57,
+                usage: 500000
+            },
+            'evo-barbs-ram-queen': {
+                title: 'Evo Barbs Ram Archer Queen',
+                description: 'Pushs rápidos e agressivos com Barbs e Ram, apoiados por Queen e feitiços de apoio. Usa Mirror e Rage para pressões imprevisíveis.',
+                strategy: 'Use Gangue de Goblins Evo para ataque e Barbs, Ram, Queen e feitiços de apoio para defesa.',
+                tips: [
+                    'Gangue de Goblins Evo é excelente para ataque',
+                    'Barbs, Ram, Queen e feitiços de apoio são excelentes para defesa',
+                    'Mantenha a pressão constante',
+                    'Use o Espírito de Cura para ataque'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 4.1,
+                cycleSpeed: 'Médio',
+                winRate: 55,
+                usage: 250000
+            },
+            'royal-hogs-recruits': {
+                title: 'Royal Hogs Recruits',
+                description: 'Estratégia clássica de pressão pelos dois lados com suporte de cartas que controlam bem o jogo. Muito eficiente no Duplo Elixir.',
+                strategy: 'Use Porcos Reais para ataque e Recrutas Reais, Máquina Voadora e Zappies para defesa.',
+                tips: [
+                    'Porcos Reais são excelentes para ataque',
+                    'Recrutas Reais, Máquina Voadora e Zappies são excelentes para defesa',
+                    'Mantenha o controle eficiente',
+                    'Use o Goblin Dardo Evo para ataque'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 4.2,
+                cycleSpeed: 'Médio',
+                winRate: 58,
+                usage: 350000
+            },
+            'evo-recruits-archers-balloon': {
+                title: 'Evo Recruits Archers Balloon',
+                description: 'Combina controle com pressão aérea. Usa Recruits para defender e Balloon para punir. Tornado e Fireball limpam defesas agrupadas.',
+                strategy: 'Use Recrutas Reais para defender e Arqueiras Evo, Balloon, Mago de Gelo e Tornado para ataque.',
+                tips: [
+                    'Recrutas Reais são excelentes para defender',
+                    'Arqueiras Evo, Balloon, Mago de Gelo e Tornado são excelentes para ataque',
+                    'Mantenha o controle eficiente',
+                    'Use o Goblin Dardo Evo para ataque'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 4.1,
+                cycleSpeed: 'Médio',
+                winRate: 56,
+                usage: 280000
+            },
+            'splashyard-barb-barrel': {
+                title: 'Splashyard with Barb Barrel',
+                description: 'Variação do Splashyard clássico, com Valkyrie como tanque e Dart Goblin evoluído como suporte. Excelente sinergia com Tornado e Poison.',
+                strategy: 'Use Valquiria como tanque e Dart Goblin evoluído como suporte.',
+                tips: [
+                    'Valquiria é ótima para defesa',
+                    'Dart Goblin evoluído é excelente para ataque',
+                    'Mantenha o controle eficiente',
+                    'Use o Goblin Dardo Evo para ataque'
+                ],
+                counters: ['Control', 'Cycle', 'Siege'],
+                elixirCost: 3.8,
+                cycleSpeed: 'Médio',
+                winRate: 59,
+                usage: 400000
+            }
+        };
+
+        exploreButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const deckId = button.getAttribute('data-deck');
+                const deck = deckData[deckId];
+                const deckCard = button.closest('.deck-card');
+                
+                // Atualizar o título e média de elixir
+                document.querySelector('.modal-title').textContent = deck.title;
+                document.querySelector('.elixir-cost span').textContent = `Média de Elixir: ${deck.elixirCost}`;
+                
+                // Atualizar as cartas do deck
+                const deckCardsGrid = document.querySelector('.deck-cards-grid');
+                deckCardsGrid.innerHTML = '';
+                
+                // Encontrar o deck card correspondente
+                const cards = deckCard.querySelectorAll('.card');
+                
+                cards.forEach(card => {
+                    const modalCard = document.createElement('div');
+                    modalCard.className = 'modal-card';
+                    modalCard.innerHTML = `
+                        <img src="${card.querySelector('img').src}" alt="${card.querySelector('img').alt}">
+                        <span>${card.querySelector('span').textContent}</span>
+                    `;
+                    deckCardsGrid.appendChild(modalCard);
+                });
+                
+                // Atualizar as evoluções recomendadas
+                const evolutionsList = document.querySelector('.evolutions');
+                evolutionsList.innerHTML = '';
+                
+                // Identificar as evoluções no deck
+                const evolutions = Array.from(cards)
+                    .filter(card => card.querySelector('img').alt.includes('Evo'))
+                    .map(card => card.querySelector('span').textContent);
+                
+                evolutions.forEach(evo => {
+                    const li = document.createElement('li');
+                    li.textContent = evo;
+                    evolutionsList.appendChild(li);
+                });
+                
+                // Atualizar a explicação do deck
+                document.querySelector('.deck-explanation').textContent = deck.description;
+                
+                // Mostrar o modal
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // Função para fechar o modal
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        // Fechar o modal ao clicar fora dele
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Atualizar os delays de animação
+        document.querySelectorAll('.deck-card').forEach((card, index) => {
+            card.style.setProperty('--i', index);
+        });
+    </script>
+</body>
+</html> 

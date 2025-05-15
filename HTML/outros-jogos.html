@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outros Jogos - Academia Pinga</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="stylesheet" href="../CSS/user-menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../JS/user-menu.js" defer></script>
+    <link rel="icon" type="image/png" href="../IMG/favicon_sem_fundo.png">
+    <style>
+        .deck-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff !important;
+        }
+
+        .deck-header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: none !important;
+        }
+
+        .deck-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #1a237e;
+        }
+
+        .deck-header p {
+            color: #666;
+            font-size: 1.1em;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .deck-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .deck-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .deck-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .deck-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(45deg, #1a237e, #283593);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1;
+        }
+
+        .deck-content {
+            padding: 25px;
+        }
+
+        .deck-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .deck-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .deck-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .deck-stats {
+            display: flex;
+            gap: 15px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .deck-stats span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .deck-stats i {
+            color: #1a237e;
+        }
+
+        .explore-button {
+            color: #1a237e;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid #1a237e;
+            cursor: pointer;
+        }
+
+        .explore-button:hover {
+            transform: scale(1.05);
+            background: #1a237e;
+            color: white;
+        }
+
+        .deck-features {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .feature-list i {
+            color: #1a237e;
+            font-size: 0.9em;
+        }
+
+        .deck-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+            transition: transform 0.3s ease;
+        }
+
+        .deck-card:hover .deck-image {
+            transform: scale(1.05);
+        }
+
+        .coming-soon-badge {
+            background: linear-gradient(45deg, #FF4444, #ff6b6b);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .deck-grid {
+                grid-template-columns: 1fr;
+                padding: 0 15px;
+            }
+
+            .deck-header h1 {
+                font-size: 2em;
+            }
+
+            .deck-card {
+                margin-bottom: 20px;
+            }
+
+            .deck-meta {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .explore-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-logo">
+                <img src="../IMG/academia_pinga_sem_fundo.png" alt="Academia Pinga" style="height: 50px; margin-right: 10px;">
+                Academia Pinga
+            </a>
+            <button class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="planos.html">Planos</a>
+                <a href="treinadores.html">Treinadores</a>
+                <a href="decks.html">Decks</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="avaliacoes.html">Avaliações</a>
+                <a href="outros-jogos.html">Outros Jogos</a>
+                <a href="../login.html" id="loginLink">Iniciar Sessão/Registo</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="deck-container">
+        <div class="deck-header animate__animated animate__fadeInDown">
+            <h1>Explora Outros Jogos</h1>
+            <p style="background: none; color: #666;">Alarga os teus horizontes com as nossas formações para outros jogos populares!</p>
+        </div>
+
+        <div class="deck-grid">
+            <div class="deck-card animate__animated animate__fadeInUp">
+                <span class="deck-tag">Popular</span>
+                <img src="../IMG/clash-of-clans.jpg" alt="Clash of Clans" class="deck-image">
+                <div class="deck-content">
+                    <h2 class="deck-title">Clash of Clans</h2>
+                    <p class="deck-description">Domina as estratégias de ataque e defesa, gere a tua aldeia e lidera o teu clã até à vitória!</p>
+                    <div class="deck-features">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Estratégias de ataque</li>
+                            <li><i class="fas fa-check"></i> Gestão de recursos</li>
+                            <li><i class="fas fa-check"></i> Tácticas de clã</li>
+                        </ul>
+                    </div>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span><i class="fas fa-star"></i> 4,8★</span>
+                            <span><i class="fas fa-users"></i> 1M+ Alunos</span>
+                        </div>
+                        <a href="https://supercell.com/en/games/clashofclans/" target="_blank" class="explore-button">Explorar</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                <span class="deck-tag">Em Alta</span>
+                <img src="../IMG/brawl-stars.jpg" alt="Brawl Stars" class="deck-image">
+                <div class="deck-content">
+                    <h2 class="deck-title">Brawl Stars</h2>
+                    <p class="deck-description">Aprende tácticas avançadas, domina cada brawler e conquista a arena!</p>
+                    <div class="deck-features">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Guias de brawlers</li>
+                            <li><i class="fas fa-check"></i> Tácticas de equipa</li>
+                            <li><i class="fas fa-check"></i> Modos de jogo</li>
+                        </ul>
+                    </div>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span><i class="fas fa-star"></i> 4,7★</span>
+                            <span><i class="fas fa-users"></i> 800k+ Alunos</span>
+                        </div>
+                        <a href="https://supercell.com/en/games/brawlstars/" target="_blank" class="explore-button">Explorar</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+                <img src="../IMG/hay-day.jpg" alt="Hay Day" class="deck-image">
+                <div class="deck-content">
+                    <h2 class="deck-title">Hay Day</h2>
+                    <p class="deck-description">Maximiza a tua produção, aprende estratégias de mercado e constrói a quinta perfeita!</p>
+                    <div class="deck-features">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Gestão de quinta</li>
+                            <li><i class="fas fa-check"></i> Estratégias de venda</li>
+                            <li><i class="fas fa-check"></i> Produção eficiente</li>
+                        </ul>
+                    </div>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span><i class="fas fa-star"></i> 4,6★</span>
+                            <span><i class="fas fa-users"></i> 500k+ Alunos</span>
+                        </div>
+                        <a href="https://supercell.com/en/games/hayday/" target="_blank" class="explore-button">Explorar</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" style="animation-delay: 0.6s">
+                <img src="../IMG/boom-beach.jpg" alt="Boom Beach" class="deck-image">
+                <div class="deck-content">
+                    <h2 class="deck-title">Boom Beach</h2>
+                    <p class="deck-description">Domina as estratégias de combate, constrói a tua base e conquista ilhas inimigas!</p>
+                    <div class="deck-features">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Tácticas de ataque</li>
+                            <li><i class="fas fa-check"></i> Defesa de base</li>
+                            <li><i class="fas fa-check"></i> Gestão de recursos</li>
+                        </ul>
+                    </div>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span><i class="fas fa-star"></i> 4,5★</span>
+                            <span><i class="fas fa-users"></i> 300k+ Alunos</span>
+                        </div>
+                        <a href="https://supercell.com/en/games/boombeach/" target="_blank" class="explore-button">Explorar</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck-card animate__animated animate__fadeInUp" style="animation-delay: 0.8s">
+                <span class="deck-tag">Novo</span>
+                <img src="../IMG/squad-busters.jpg" alt="Squad Busters" class="deck-image">
+                <div class="deck-content">
+                    <h2 class="deck-title">Squad Busters</h2>
+                    <p class="deck-description">Junta-te à festa neste jogo de acção multijogador onde 10 jogadores competem para coleccionar e manter o maior número de gemas!</p>
+                    <div class="deck-features">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Mais de 30 personagens</li>
+                            <li><i class="fas fa-check"></i> Modos de jogo dinâmicos</li>
+                            <li><i class="fas fa-check"></i> Evolução de personagens</li>
+                        </ul>
+                    </div>
+                    <div class="deck-meta">
+                        <div class="deck-stats">
+                            <span><i class="fas fa-star"></i> 4,9★</span>
+                            <span><i class="fas fa-users"></i> 2M+ Alunos</span>
+                        </div>
+                        <a href="https://squadbusters.supercell.com/en/" target="_blank" class="explore-button">Explorar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Menu Mobile
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuBtn.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenuBtn.classList.remove('active');
+                navLinks.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            });
+        });
+
+        // Verificar se o usuário está logado
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof checkUser === 'function') checkUser();
+        });
+    </script>
+</body>
+</html> 

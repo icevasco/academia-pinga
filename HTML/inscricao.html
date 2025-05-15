@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscrição - Academia Pinga</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="stylesheet" href="../CSS/user-menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../JS/user-menu.js" defer></script>
+    <link rel="icon" type="image/png" href="../IMG/favicon_sem_fundo.png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-logo">
+                <img src="../IMG/academia_pinga_sem_fundo.png" alt="Academia Pinga" style="height: 50px; margin-right: 10px;">
+                Academia Pinga
+            </a>
+            <button class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="planos.html">Planos</a>
+                <a href="treinadores.html">Treinadores</a>
+                <a href="decks.html">Decks</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="avaliacoes.html">Avaliações</a>
+                <a href="outros-jogos.html">Outros Jogos</a>
+                <a href="../login.html" id="loginLink">Iniciar Sessão/Registo</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Inscreva-se na Academia</h1>
+        <p>Comece sua jornada para se tornar um jogador profissional</p>
+
+        <form id="inscricaoForm">
+            <div class="form-group">
+                <label for="nome">Nome Completo</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <div class="label-with-info">
+                    <label for="tag">Tag do Clash Royale</label>
+                    <button type="button" class="info-button" onclick="showTagTutorial()">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                </div>
+                <input type="text" id="tag" name="tag" placeholder="#ABC123" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="trofeus">Troféus Atuais</label>
+                    <input type="number" id="trofeus" name="trofeus" min="0" max="9000" required>
+                </div>
+                <div class="form-group">
+                    <label for="nivel">Nível do Rei</label>
+                    <input type="number" id="nivel" name="nivel" min="1" max="15" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Escolha seu Plano</label>
+                <div class="planos-grid">
+                    <div class="plano-card" data-plano="iniciante" onclick="selecionarPlano('iniciante')">
+                        <input type="radio" name="plano" id="plano-iniciante" value="iniciante" required>
+                        <label for="plano-iniciante">
+                            <h3>Plano Iniciante</h3>
+                            <div class="plano-preco">€29.99<span>/mês</span></div>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Acesso a cursos básicos</li>
+                                <li><i class="fas fa-check"></i> Decks populares</li>
+                                <li><i class="fas fa-check"></i> Suporte por email</li>
+                            </ul>
+                        </label>
+                    </div>
+
+                    <div class="plano-card" data-plano="avancado" onclick="selecionarPlano('avancado')">
+                        <input type="radio" name="plano" id="plano-avancado" value="avancado" required>
+                        <label for="plano-avancado">
+                            <div class="featured-badge">Mais Popular</div>
+                            <h3>Plano Avançado</h3>
+                            <div class="plano-preco">€49.99<span>/mês</span></div>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Todos os cursos</li>
+                                <li><i class="fas fa-check"></i> Decks exclusivos</li>
+                                <li><i class="fas fa-check"></i> 1 sessão de coaching/mês</li>
+                                <li><i class="fas fa-check"></i> Suporte prioritário</li>
+                            </ul>
+                        </label>
+                    </div>
+
+                    <div class="plano-card" data-plano="pro" onclick="selecionarPlano('pro')">
+                        <input type="radio" name="plano" id="plano-pro" value="pro" required>
+                        <label for="plano-pro">
+                            <h3>Plano Pro</h3>
+                            <div class="plano-preco">€79.99<span>/mês</span></div>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Conteúdo premium</li>
+                                <li><i class="fas fa-check"></i> Decks personalizados</li>
+                                <li><i class="fas fa-check"></i> 4 sessões de coaching/mês</li>
+                                <li><i class="fas fa-check"></i> Suporte VIP 24/7</li>
+                            </ul>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <span>Li e aceito os <a href="termos.html" target="_blank">Termos de Serviço</a></span>
+                </label>
+            </div>
+
+            <button type="submit" class="submit-button">Enviar Inscrição</button>
+        </form>
+    </div>
+
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Confirmar Inscrição</h2>
+            <div id="modalBody"></div>
+            <div class="modal-buttons">
+                <button onclick="closeModal()" class="btn-secondary">Cancelar</button>
+                <button onclick="submitForm()" class="btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="tagTutorialModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeTagTutorial()">&times;</span>
+            <h2>Como Encontrar a Sua Tag do Clash Royale</h2>
+            <div class="tutorial-content">
+                <div class="tutorial-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Abrir o Clash Royale</h3>
+                        <p>Inicie o jogo no seu dispositivo móvel</p>
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Aceder ao Seu Perfil</h3>
+                        <p>Toque no ícone do seu perfil no canto superior esquerdo do ecrã</p>
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Encontrar a Sua Tag</h3>
+                        <p>A sua tag aparece logo abaixo do seu nome de utilizador, começando com o símbolo #</p>
+                        <div class="tag-example">
+                            <span class="tag-label">Nome:</span>
+                            <span class="tag-value">Manoel Pinga</span>
+                        </div>
+                        <div class="tag-example" style="margin-top: 5px;">
+                            <span class="tag-label">Tag:</span>
+                            <span class="tag-value">#ABC123XYZ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Copiar a Tag</h3>
+                        <p>Clique na tag e aparecerá um botão para copiar. Clique no botão para copiar a tag completa.</p>
+                        <div class="tag-example" style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+                            <span class="tag-value">#ABC123XYZ</span>
+                            <button class="copy-button" style="background: #2196F3; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                                <i class="fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tutorial-note">
+                    <i class="fas fa-info-circle"></i>
+                    <p>A sua tag é única e serve como identificador do seu perfil no jogo. É essencial para o processo de inscrição.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .planos-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+    .plano-card {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        background: white;
+    }
+
+    .plano-card:hover {
+        transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .plano-card.selected {
+            border-color: #2196F3;
+            background-color: #e3f2fd;
+            box-shadow: 0 5px 15px rgba(33,150,243,0.2);
+        }
+
+        /* Cores específicas para cada plano */
+        .plano-card[data-plano="iniciante"].selected {
+            border-color: #1b4332;
+            background-color: #a8e6cf;
+            box-shadow: 0 5px 15px rgba(27,67,50,0.2);
+        }
+
+        .plano-card[data-plano="avancado"].selected {
+            border-color: #7f4f24;
+            background-color: #ffd3b6;
+            box-shadow: 0 5px 15px rgba(127,79,36,0.2);
+        }
+
+        .plano-card[data-plano="pro"].selected {
+            border-color: #7f1d1d;
+            background-color: #ffaaa5;
+            box-shadow: 0 5px 15px rgba(127,29,29,0.2);
+    }
+
+    .plano-card input[type="radio"] {
+        display: none;
+    }
+
+    .plano-card label {
+            cursor: pointer;
+            width: 100%;
+        display: block;
+    }
+
+    .plano-preco {
+            font-size: 24px;
+        color: #2196F3;
+        margin: 10px 0;
+        font-weight: bold;
+    }
+
+    .plano-preco span {
+            font-size: 14px;
+        color: #666;
+        font-weight: normal;
+    }
+
+        .featured-badge {
+            background: #ffd700;
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .submit-button {
+            background: #2196F3;
+            color: white;
+            padding: 15px 30px;
+        border: none;
+            border-radius: 5px;
+        cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-secondary {
+            background: #f1f1f1;
+            color: #666;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .tutorial-content {
+            padding: 20px;
+            max-height: calc(90vh - 100px);
+            overflow-y: auto;
+        }
+
+        .tutorial-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .step-number {
+            background: #2196F3;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex-grow: 1;
+        }
+
+        .step-content h3 {
+            color: #2196F3;
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+
+        .step-content p {
+            color: #333;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .tag-example {
+            margin-top: 10px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .tag-label {
+            color: #666;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .tag-value {
+            color: #2196F3;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .tutorial-note {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .tutorial-note i {
+            color: #2196F3;
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        .tutorial-note p {
+            color: #333;
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .planos-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .label-with-info {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .info-button {
+        background: none;
+        border: none;
+            color: #2196F3;
+            font-size: 16px;
+        cursor: pointer;
+            padding: 0;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-button:hover {
+            color: #1976D2;
+        }
+
+        /* Estilo para a barra de rolagem */
+        .tutorial-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .tutorial-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .tutorial-content::-webkit-scrollbar-thumb {
+            background: #2196F3;
+            border-radius: 4px;
+        }
+
+        .tutorial-content::-webkit-scrollbar-thumb:hover {
+            background: #1976D2;
+        }
+    </style>
+
+    <script>
+        // Inicializar Supabase
+        const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co'
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3dkZmlmaGhjcW10cG5ob3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTUzMDksImV4cCI6MjA2MDQzMTMwOX0.Q50xEMRQLTjuOKtn0f92GX5NKY9GgWWYVfHlmE5yhUs'
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+
+        // Preencher automaticamente nome e email se o utilizador estiver autenticado
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                // Buscar nome e email na tabela utilizadores
+                const { data: userData } = await supabase
+                    .from('utilizadores')
+                    .select('nome, email')
+                    .eq('id', user.id)
+                    .single();
+                if (userData) {
+                    const nomeInput = document.querySelector('input[name="nome"]');
+                    const emailInput = document.querySelector('input[name="email"]');
+                    if (nomeInput) nomeInput.value = userData.nome || '';
+                    if (emailInput) emailInput.value = userData.email || '';
+                }
+            }
+        });
+
+        // Manipular envio do formulário
+        document.getElementById('inscricaoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const planoSelecionado = document.querySelector('input[name="plano"]:checked');
+            if (!planoSelecionado) {
+                alert('Por favor, selecione um plano para continuar.');
+                return;
+            }
+            showModal();
+        });
+
+        // Mostrar modal
+        function showModal() {
+            const modal = document.getElementById('confirmationModal');
+            modal.style.display = 'block';
+            
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const tag = document.getElementById('tag').value;
+            const trofeus = document.getElementById('trofeus').value;
+            const nivel = document.getElementById('nivel').value;
+            const plano = document.querySelector('input[name="plano"]:checked').value;
+            
+            const planoText = {
+                'iniciante': 'Plano Iniciante (€29.99/mês)',
+                'avancado': 'Plano Avançado (€49.99/mês)',
+                'pro': 'Plano Pro (€79.99/mês)'
+            }[plano];
+
+            document.getElementById('modalBody').innerHTML = `
+                <div style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 5px; color: #333;">
+                    <strong>Nome Completo:</strong> ${nome}
+                </div>
+                <div style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 5px; color: #333;">
+                    <strong>Email:</strong> ${email}
+                </div>
+                <div style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 5px; color: #333;">
+                    <strong>Tag do Clash Royale:</strong> ${tag}
+                </div>
+                <div style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 5px; color: #333;">
+                    <strong>Troféus Atuais:</strong> ${trofeus}
+                </div>
+                <div style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 5px; color: #333;">
+                    <strong>Nível do Rei:</strong> ${nivel}
+                </div>
+                <div style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 5px; color: #333;">
+                    <strong>Plano Escolhido:</strong> ${planoText}
+                </div>
+            `;
+
+            // Adicionar eventos aos botões do modal
+            const cancelButton = modal.querySelector('.btn-secondary');
+            const confirmButton = modal.querySelector('.btn-primary');
+            
+            cancelButton.onclick = closeModal;
+            confirmButton.onclick = submitForm;
+        }
+
+        // Fechar modal
+        function closeModal() {
+            const modal = document.getElementById('confirmationModal');
+            modal.style.display = 'none';
+        }
+
+        // Mostrar tutorial da tag
+        function showTagTutorial() {
+            const modal = document.getElementById('tagTutorialModal');
+            modal.style.display = 'block';
+        }
+
+        // Fechar tutorial da tag
+        function closeTagTutorial() {
+            const modal = document.getElementById('tagTutorialModal');
+            modal.style.display = 'none';
+        }
+
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            const confirmationModal = document.getElementById('confirmationModal');
+            const tagTutorialModal = document.getElementById('tagTutorialModal');
+            
+            if (event.target === confirmationModal) {
+                closeModal();
+            }
+            if (event.target === tagTutorialModal) {
+                closeTagTutorial();
+            }
+        }
+
+        // Enviar formulário
+        async function submitForm() {
+            const nome = document.getElementById('nome').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const tag = document.getElementById('tag').value.trim();
+            const trofeus = document.getElementById('trofeus').value.trim();
+            const nivel = document.getElementById('nivel').value.trim();
+            const plano = document.querySelector('input[name="plano"]:checked').value;
+
+            // Validação dos campos
+            if (!nome || !email || !tag || !trofeus || !nivel) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            try {
+                // Verificar se o usuário já existe
+                const { data: existingUser, error: checkError } = await supabase
+                    .from('utilizadores')
+                    .select('id')
+                    .eq('email', email)
+                    .single();
+
+                if (checkError && checkError.code !== 'PGRST116') { // PGRST116 é o erro de "não encontrado"
+                    throw checkError;
+                }
+
+                if (existingUser) {
+                    // Se o usuário já existe, verificar se é admin ou treinador
+                    const { data: userData, error: userError } = await supabase
+                        .from('utilizadores')
+                        .select('tipo_conta')
+                        .eq('id', existingUser.id)
+                        .single();
+
+                    if (userError) throw userError;
+
+                    // Manter o tipo_conta original se for admin ou treinador
+                    const tipoConta = (userData.tipo_conta === 'admin' || userData.tipo_conta === 'treinador') 
+                        ? userData.tipo_conta 
+                        : 'premium';
+
+                    // Atualizar os dados do usuário
+                    const { error: updateError } = await supabase
+                        .from('utilizadores')
+                        .update({
+                            nome: nome,
+                            tipo_conta: tipoConta
+                        })
+                        .eq('email', email);
+
+                    if (updateError) throw updateError;
+
+                    // Criar inscrição na tabela inscricoes
+                    const { error: inscricaoError } = await supabase
+                        .from('inscricoes')
+                        .upsert({
+                            utilizador_id: existingUser.id,
+                            plano: plano,
+                            tag: tag,
+                            trofeus: trofeus,
+                            nivel: nivel,
+                            status: 'pendente',
+                            data_inscricao: new Date().toISOString()
+                        });
+
+                    if (inscricaoError) throw inscricaoError;
+
+                    alert('Dados enviados com sucesso!');
+                    window.location.href = '../login.html';
+                    return;
+                }
+
+                // Se o usuário não existe, cria um novo
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email: email,
+                    password: Math.random().toString(36).slice(-8),
+                    options: {
+                        data: {
+                            nome: nome
+                        }
+                    }
+                });
+
+                if (authError) throw authError;
+
+                // Criar registro na tabela utilizadores (apenas dados básicos)
+                const { error: insertError } = await supabase
+                    .from('utilizadores')
+                    .insert({
+                        id: authData.user.id,
+                        nome: nome,
+                        email: email,
+                        tipo_conta: 'premium'
+                    });
+
+                if (insertError) throw insertError;
+
+                // Criar inscrição na tabela inscricoes
+                const { error: inscricaoError } = await supabase
+                    .from('inscricoes')
+                    .insert({
+                        utilizador_id: authData.user.id,
+                        plano: plano,
+                        tag: tag,
+                        trofeus: trofeus,
+                        nivel: nivel,
+                        status: 'pendente',
+                        data_inscricao: new Date().toISOString()
+                    });
+
+                if (inscricaoError) throw inscricaoError;
+
+                alert('Inscrição realizada com sucesso! Um email foi enviado para você com instruções de acesso.');
+                window.location.href = '../login.html';
+            } catch (error) {
+                console.error('Erro na inscrição:', error);
+                if (error.message && error.message.includes('already registered')) {
+                    alert('Este email já está registrado. Por favor, faça login ou use outro email.');
+                } else {
+                    alert('Erro ao realizar a inscrição. Por favor, tente novamente.');
+                }
+            }
+        }
+
+        // Selecionar plano
+        function selecionarPlano(plano) {
+            // Remover seleção de todos os planos
+            document.querySelectorAll('.plano-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Selecionar o plano escolhido
+            const planoCard = document.querySelector(`#plano-${plano}`).closest('.plano-card');
+            planoCard.classList.add('selected');
+            document.getElementById(`plano-${plano}`).checked = true;
+        }
+
+        // Selecionar plano avançado por padrão
+        window.addEventListener('load', () => {
+            // Verificar se há um plano especificado na URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const planoParam = urlParams.get('plano');
+            
+            if (planoParam) {
+                selecionarPlano(planoParam);
+            } else {
+                selecionarPlano('avancado');
+            }
+            
+            preencherFormulario();
+        });
+
+        // Função para pré-preencher o formulário
+        async function preencherFormulario() {
+            try {
+                const { data: { user }, error } = await window.supabaseClient.auth.getUser()
+                if (error) throw error
+
+                if (user) {
+                    // Buscar dados do usuário
+                    const { data: userData, error: userError } = await window.supabaseClient
+                        .from('utilizadores')
+                        .select('nome, email')
+                        .eq('id', user.id)
+                        .single()
+
+                    if (userError) throw userError
+
+                    // Pré-preencher nome e email com os dados do usuário
+                    document.getElementById('nome').value = userData.nome || ''
+                    document.getElementById('email').value = userData.email || ''
+                }
+            } catch (error) {
+                console.error('Erro ao buscar dados do usuário:', error)
+            }
+        }
+
+        // Verificar se o usuário está logado
+        async function checkUser() {
+            try {
+                const { data: { session }, error } = await window.supabaseClient.auth.getSession()
+                if (error) throw error
+
+                // Se não estiver logado, redirecionar para a página de login
+                if (!session) {
+                    const urlParams = new URLSearchParams(window.location.search)
+                    const plano = urlParams.get('plano')
+                    const redirectPath = plano ? `../login.html?redirect=inscricao.html&plano=${plano}` : '../login.html?redirect=inscricao.html'
+                    window.location.href = redirectPath
+                    return
+                }
+
+                // Se estiver logado, atualizar o menu do usuário
+                const { data: userData, error: userError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('nome, tipo_conta')
+                    .eq('id', session.user.id)
+                    .single()
+
+                if (userError) throw userError
+
+                // Atualizar o menu do usuário
+                const loginLink = document.getElementById('loginLink')
+                if (loginLink) {
+                    const userMenu = document.createElement('div')
+                    userMenu.className = 'user-menu'
+                    userMenu.innerHTML = `
+                        <div class="user-info">
+                            <span class="user-name">${userData.nome}</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="user-dropdown">
+                            <div class="account-type">${userData.tipo_conta === 'admin' ? 'Administrador' : userData.tipo_conta === 'treinador' ? 'Treinador' : 'Aluno'}</div>
+                            ${userData.tipo_conta === 'admin' || userData.tipo_conta === 'treinador' ? `
+                                <a href="admin.html" class="dropdown-item">
+                                    <i class="fas fa-user-shield"></i> Painel Admin
+                                </a>
+                            ` : ''}
+                            <a href="perfil.html" class="dropdown-item">
+                                <i class="fas fa-user"></i> Meu Perfil
+                            </a>
+                            <a href="configuracoes.html" class="dropdown-item">
+                                <i class="fas fa-cog"></i> Configurações
+                            </a>
+                            <div class="dropdown-item logout" onclick="handleLogout()">
+                                <i class="fas fa-sign-out-alt"></i> Sair
+                            </div>
+                        </div>
+                    `
+                    loginLink.parentNode.replaceChild(userMenu, loginLink)
+
+                    // Adicionar eventos do dropdown
+                    const userInfo = userMenu.querySelector('.user-info')
+                    const dropdown = userMenu.querySelector('.user-dropdown')
+                    const chevron = userInfo.querySelector('.fa-chevron-down')
+                    
+                    let isDropdownOpen = false
+
+                    userInfo.addEventListener('click', (e) => {
+                        e.stopPropagation()
+                        isDropdownOpen = !isDropdownOpen
+                        dropdown.classList.toggle('active')
+                        chevron.style.transform = isDropdownOpen ? 'rotate(180deg)' : 'rotate(0)'
+                    })
+
+                    document.addEventListener('click', (e) => {
+                        if (!userMenu.contains(e.target) && isDropdownOpen) {
+                            isDropdownOpen = false
+                            dropdown.classList.remove('active')
+                            chevron.style.transform = 'rotate(0)'
+                        }
+                    })
+                }
+            } catch (error) {
+                console.error('Erro ao verificar usuário:', error)
+                window.location.href = '../login.html?redirect=inscricao.html'
+            }
+        }
+
+        // Função para fazer logout
+        async function handleLogout() {
+            try {
+                const { error } = await window.supabaseClient.auth.signOut()
+                if (error) throw error
+                window.location.href = '../login.html'
+            } catch (error) {
+                console.error('Erro ao fazer logout:', error)
+            }
+        }
+
+        // Menu Mobile
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuBtn.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenuBtn.classList.remove('active');
+                navLinks.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            });
+        });
+
+        // Animações de scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.plan-card').forEach((card) => {
+            observer.observe(card);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof checkUser === 'function') checkUser();
+        });
+    </script>
+</body>
+</html> 

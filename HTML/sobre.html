@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre - Academia Pinga</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="stylesheet" href="../CSS/user-menu.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../JS/user-menu.js" defer></script>
+    <link rel="icon" type="image/png" href="../IMG/favicon_sem_fundo.png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-logo">
+                <img src="../IMG/academia_pinga_sem_fundo.png" alt="Academia Pinga" style="height: 50px; margin-right: 10px;">
+                Academia Pinga
+            </a>
+            <button class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="planos.html">Planos</a>
+                <a href="treinadores.html">Treinadores</a>
+                <a href="decks.html">Decks</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="avaliacoes.html">Avaliações</a>
+                <a href="outros-jogos.html">Outros Jogos</a>
+                <a href="../login.html" id="loginLink">Iniciar Sessão/Registo</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="about-container">
+        <div class="about-header animate__animated animate__fadeInDown">
+            <h1>Sobre a Academia Pinga</h1>
+            <p>A transformar jogadores em campeões desde 2023</p>
+        </div>
+
+        <div class="about-grid">
+            <div class="about-card animate__animated animate__fadeInUp">
+                <h2>A Nossa Missão</h2>
+                <p>Capacitar jogadores de todos os níveis a atingirem o seu máximo potencial no Clash Royale e noutros jogos competitivos, através de formação personalizada, conteúdos de alta qualidade e uma comunidade envolvida. O nosso objetivo é formar não só jogadores excecionais, mas também líderes e mentores para a próxima geração.</p>
+            </div>
+
+            <div class="about-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                <h2>A Nossa Visão</h2>
+                <p>Ser a principal plataforma de ensino e desenvolvimento de jogadores de Clash Royale em Portugal, reconhecida internacionalmente pela excelência, resultados comprovados e pela construção de uma comunidade forte e colaborativa. Procuramos revolucionar a forma como o jogo é ensinado e praticado.</p>
+            </div>
+
+            <div class="about-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+                <h2>Os Nossos Valores</h2>
+                <ul class="values-list">
+                    <li>Excelência no ensino e desenvolvimento contínuo</li>
+                    <li>Compromisso com resultados e satisfação dos alunos</li>
+                    <li>Comunidade e colaboração entre jogadores</li>
+                    <li>Inovação constante nas metodologias de ensino</li>
+                    <li>Ética, transparência e respeito mútuo</li>
+                    <li>Diversidade e inclusão na comunidade gaming</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <div class="stats-container">
+                <div class="stat-item animate__animated animate__fadeInUp">
+                    <div class="stat-value">2000+</div>
+                    <div class="stat-label">Alunos Formados</div>
+                </div>
+                <div class="stat-item animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                    <div class="stat-value">20+</div>
+                    <div class="stat-label">Treinadores Profissionais</div>
+                </div>
+                <div class="stat-item animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+                    <div class="stat-value">99%</div>
+                    <div class="stat-label">Satisfação</div>
+                </div>
+                <div class="stat-item animate__animated animate__fadeInUp" style="animation-delay: 0.6s">
+                    <div class="stat-value">100+</div>
+                    <div class="stat-label">Torneios Vencidos</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="team-section">
+            <h2 class="section-title">A Nossa Equipa</h2>
+            <div class="team-grid">
+                <div class="team-card animate__animated animate__fadeInUp">
+                    <div class="team-content">
+                        <div class="team-image">
+                            <img src="../IMG/joao-silva.jpg" alt="João Silva">
+                        </div>
+                        <h3 class="team-name">João Silva</h3>
+                        <p class="team-role">Head Coach</p>
+                        <p class="team-description">Especialista em estratégias avançadas e análise de jogos. Com mais de 5 anos de experiência em competições internacionais.</p>
+                        <div class="team-achievements">
+                            <span>Top 100 Global</span>
+                            <span>3x Campeão Nacional</span>
+                        </div>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                    <div class="team-content">
+                        <div class="team-image">
+                            <img src="../IMG/manoel-pinga.jpg" alt="Manoel Pinga">
+                        </div>
+                        <h3 class="team-name">Manoel Pinga</h3>
+                        <p class="team-role">Fundador & CEO</p>
+                        <p class="team-description">Jogador profissional, Top 1 Global em Clash Royale e apaixonado por ensinar. Visionário na indústria de eSports.</p>
+                        <div class="team-achievements">
+                            <span>Top 1 Global</span>
+                            <span>5x Campeão Mundial</span>
+                        </div>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+                    <div class="team-content">
+                        <div class="team-image">
+                            <img src="../IMG/pedro-costa.jpg" alt="Pedro Costa">
+                        </div>
+                        <h3 class="team-name">Pedro Costa</h3>
+                        <p class="team-role">Diretor de Conteúdo</p>
+                        <p class="team-description">Responsável pelo desenvolvimento de formações e materiais pedagógicos. Especialista em metodologias de ensino.</p>
+                        <div class="team-achievements">
+                            <span>Top 50 Global</span>
+                            <span>2x Campeão Europeu</span>
+                        </div>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Menu Mobile
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuBtn.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenuBtn.classList.remove('active');
+                navLinks.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            });
+        });
+
+        // Animações de scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.team-card').forEach((card) => {
+            observer.observe(card);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof checkUser === 'function') checkUser();
+        });
+    </script>
+</body>
+</html> 

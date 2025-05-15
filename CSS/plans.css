@@ -1,0 +1,487 @@
+:root {
+    --primary-color: #1a1a1a;
+    --text-color: #333;
+    --card-bg: #fff;
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+}
+
+/* Hero Section */
+.plans-hero {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    padding: 80px 20px;
+    text-align: center;
+    color: white;
+    margin-bottom: 40px;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Plans Container */
+.plans-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Plans Header */
+.plans-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.plans-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    background: #f5f5f5;
+    padding: 10px 20px;
+    border-radius: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.discount-badge {
+    background: #ff4444;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    margin-left: 5px;
+}
+
+/* Plans Grid */
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.plan-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: 2px solid transparent;
+}
+
+.plan-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.plan-card[data-plan="iniciante"]:hover {
+    border-color: #1b4332;
+}
+
+.plan-card[data-plan="avancado"]:hover {
+    border-color: #7f4f24;
+}
+
+.plan-card[data-plan="pro"]:hover {
+    border-color: #7f1d1d;
+}
+
+.plan-card.featured {
+    transform: scale(1.05);
+}
+
+.plan-card.featured:hover {
+    transform: scale(1.05) translateY(-10px);
+}
+
+.plan-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #2196F3;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.plan-card[data-plan="iniciante"] .plan-badge {
+    background: #1b4332;
+}
+
+.plan-card[data-plan="avancado"] .plan-badge {
+    background: #7f4f24;
+}
+
+.plan-card[data-plan="pro"] .plan-badge {
+    background: #7f1d1d;
+}
+
+.plan-content {
+    padding: 30px;
+}
+
+.plan-title {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.plan-description {
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.plan-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.plan-price {
+    display: flex;
+    flex-direction: column;
+}
+
+.price-amount {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2196F3;
+}
+
+.plan-card[data-plan="iniciante"] .price-amount {
+    color: #1b4332;
+}
+
+.plan-card[data-plan="avancado"] .price-amount {
+    color: #7f4f24;
+}
+
+.plan-card[data-plan="pro"] .price-amount {
+    color: #7f1d1d;
+}
+
+.price-period {
+    font-size: 1rem;
+    color: #666;
+}
+
+.plan-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.plan-rating i {
+    color: #ffd700;
+}
+
+.rating-count {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.plan-features {
+    margin-bottom: 30px;
+}
+
+.plan-features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.plan-features li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    color: #444;
+}
+
+.plan-features i {
+    color: #4CAF50;
+}
+
+.plan-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.details-button, .enroll-button {
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    text-align: center;
+}
+
+.details-button {
+    background: transparent;
+    border: 2px solid #2196F3;
+    color: #2196F3;
+}
+
+.plan-card[data-plan="iniciante"] .details-button {
+    border-color: #1b4332;
+    color: #1b4332;
+}
+
+.plan-card[data-plan="avancado"] .details-button {
+    border-color: #7f4f24;
+    color: #7f4f24;
+}
+
+.plan-card[data-plan="pro"] .details-button {
+    border-color: #7f1d1d;
+    color: #7f1d1d;
+}
+
+.details-button:hover {
+    background: #2196F3;
+    color: white;
+}
+
+.plan-card[data-plan="iniciante"] .details-button:hover {
+    background: #1b4332;
+    border-color: #1b4332;
+}
+
+.plan-card[data-plan="avancado"] .details-button:hover {
+    background: #7f4f24;
+    border-color: #7f4f24;
+}
+
+.plan-card[data-plan="pro"] .details-button:hover {
+    background: #7f1d1d;
+    border-color: #7f1d1d;
+}
+
+.enroll-button {
+    background: #2196F3;
+    border: none;
+    color: white;
+}
+
+.plan-card[data-plan="iniciante"] .enroll-button {
+    background: #1b4332;
+}
+
+.plan-card[data-plan="avancado"] .enroll-button {
+    background: #7f4f24;
+}
+
+.plan-card[data-plan="pro"] .enroll-button {
+    background: #7f1d1d;
+}
+
+.enroll-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+/* Modal */
+.plan-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.modal-header {
+    padding: 25px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 0;
+}
+
+.modal-subtitle {
+    color: #666;
+    margin: 5px 0 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-description {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.modal-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.modal-features li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    color: #444;
+}
+
+.modal-features i {
+    color: #4CAF50;
+}
+
+.modal-footer {
+    padding: 25px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2196F3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .plans-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .plan-card.featured {
+        transform: none;
+    }
+
+    .plan-card.featured:hover {
+        transform: translateY(-10px);
+    }
+
+    .plan-actions {
+        flex-direction: column;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.plan-card {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+.plan-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.plan-card:nth-child(3) {
+    animation-delay: 0.4s;
+} 

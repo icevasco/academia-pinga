@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academia Pinga Clash Royale - Torne-se um Pro Player</title>
+    <link rel="icon" type="image/png" href="IMG/favicon_sem_fundo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="CSS/styles.css">
+    <link rel="stylesheet" href="CSS/user-menu.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="JS/user-menu.js" defer></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">
+                <img src="IMG/academia_pinga_sem_fundo.png" alt="Academia Pinga" style="height: 50px; margin-right: 10px;">
+                Academia Pinga
+            </a>
+            <button class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="HTML/planos.html">Planos</a>
+                <a href="HTML/treinadores.html">Treinadores</a>
+                <a href="HTML/decks.html">Decks</a>
+                <a href="HTML/sobre.html">Sobre</a>
+                <a href="HTML/avaliacoes.html">Avaliações</a>
+                <a href="HTML/outros-jogos.html">Outros Jogos</a>
+                <a href="login.html" id="loginLink">Iniciar Sessão/Registo</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <img src="IMG/academia_pinga_sem_fundo.png" alt="Academia Pinga" class="hero-logo animate__animated animate__fadeInDown" style="width: 300px; margin-bottom: 2rem;">
+            <h1 class="animate__animated animate__fadeInDown" style="color: #FFD700; text-shadow: 0 0 10px rgba(255,215,0,0.5), 0 0 20px rgba(255,215,0,0.3), 0 0 30px rgba(255,215,0,0.2); font-size: 3.5rem; font-weight: 800; letter-spacing: 2px; background: linear-gradient(45deg, #FFD700, #FFA500); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem;">Domina o Clash Royale</h1>
+            <p class="animate__animated animate__fadeIn" style="font-size: 1.2rem; line-height: 1.6; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">Aprenda com os melhores jogadores e torne-se um pro player. Estratégias exclusivas, dicas avançadas e coaching personalizado.</p>
+            <a href="HTML/planos.html" class="cta-button animate__animated animate__fadeInUp" style="background: linear-gradient(45deg, #FFD700, #FFA500); border: none; padding: 15px 40px; font-size: 1.2rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(255,215,0,0.3);">Começar Agora</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <h2 class="section-title animate__animated animate__fadeInDown" style="color: #FFD700; text-shadow: 0 0 10px rgba(255,215,0,0.5), 0 0 20px rgba(255,215,0,0.3), 0 0 30px rgba(255,215,0,0.2); font-size: 3.5rem; font-weight: 800; letter-spacing: 2px; background: linear-gradient(45deg, #FFD700, #FFA500); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem;">Por que escolher a Academia Pinga?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h3>Treinamento Personalizado</h3>
+                <p>Aprenda estratégias avançadas e técnicas específicas para o seu nível de jogo, com planos de treino adaptados às suas necessidades.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Comunidade Ativa</h3>
+                <p>Junte-se a uma comunidade vibrante de jogadores, participe de torneios e compartilhe experiências com outros membros.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Progresso Garantido</h3>
+                <p>Veja seu progresso com métricas detalhadas e receba feedback constante dos nossos treinadores profissionais.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-courses">
+        <h2 class="section-title">Cursos em Destaque</h2>
+        <div class="courses-preview">
+            <div class="course-card">
+                <div class="course-content">
+                    <span class="course-badge beginner">Iniciante</span>
+                    <h3 class="course-title">Fundamentos do Clash Royale</h3>
+                    <p class="course-description">Aprenda os conceitos básicos e estratégias essenciais para começar sua jornada no Clash Royale. Ideal para jogadores que estão começando.</p>
+                    <div class="course-features">
+                        <div class="feature">
+                            <i class="fas fa-clock"></i>
+                            <span>4 semanas</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-book"></i>
+                            <span>12 aulas</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-star"></i>
+                            <span>4.8/5</span>
+                        </div>
+                    </div>
+                    <div class="course-meta">
+                        <div class="course-price">
+                            <span class="price">€29.99</span>
+                            <span class="original-price">€49.99</span>
+                        </div>
+                        <a href="HTML/planos.html" class="enroll-button">Ver Plano</a>
+                    </div>
+                </div>
+            </div>
+            <div class="course-card">
+                <div class="course-content">
+                    <span class="course-badge advanced">Avançado</span>
+                    <h3 class="course-title">Estratégias Profissionais</h3>
+                    <p class="course-description">Domine técnicas avançadas e estratégias utilizadas pelos melhores jogadores do mundo. Aprenda a pensar como um pro player.</p>
+                    <div class="course-features">
+                        <div class="feature">
+                            <i class="fas fa-clock"></i>
+                            <span>8 semanas</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-book"></i>
+                            <span>24 aulas</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-star"></i>
+                            <span>4.9/5</span>
+                        </div>
+                    </div>
+                    <div class="course-meta">
+                        <div class="course-price">
+                            <span class="price">€79.99</span>
+                            <span class="original-price">€129.99</span>
+                        </div>
+                        <a href="HTML/planos.html" class="enroll-button">Ver Plano</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Pronto para Começar?</h2>
+            <p>Junte-se a milhares de jogadores que já melhoraram suas habilidades conosco!</p>
+            <div class="cta-buttons">
+                <a href="HTML/planos.html" class="cta-button">Ver Planos</a>
+                <a href="HTML/treinadores.html" class="cta-button secondary">Conhecer Treinadores</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-value">1000+</div>
+                <div class="stat-label">Alunos Formados</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">15+</div>
+                <div class="stat-label">Treinadores Pro</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">98%</div>
+                <div class="stat-label">Satisfação</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">50+</div>
+                <div class="stat-label">Torneios Vencidos</div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Menu Mobile
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn')
+        const navLinks = document.querySelector('.nav-links')
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuBtn.classList.toggle('active')
+            navLinks.classList.toggle('active')
+            document.body.classList.toggle('menu-open')
+        })
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenuBtn.classList.remove('active')
+                navLinks.classList.remove('active')
+                document.body.classList.remove('menu-open')
+            })
+        })
+
+        // Animações de scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate')
+                }
+            })
+        }, {
+            threshold: 0.1
+        })
+
+        document.querySelectorAll('.feature-card, .cta-section').forEach((element) => {
+            observer.observe(element)
+        })
+
+        // Animação do hero
+        document.querySelector('.hero').classList.add('animate')
+    </script>
+</body>
+</html>

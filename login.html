@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Academia Pinga</title>
+    <link rel="icon" type="image/png" href="IMG/favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            width: 90%;
+            max-width: 1000px;
+            min-height: 600px;
+        }
+
+        .left-side {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+        }
+
+        .right-side {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .welcome-text {
+            margin-bottom: 30px;
+        }
+
+        .welcome-text h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .welcome-text p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #dc3545;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .register-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .features {
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-item i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .left-side {
+                padding: 30px;
+            }
+
+            .right-side {
+                padding: 30px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="CSS/user-menu.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-side">
+            <div class="welcome-text">
+                <h1>Bem-vindo de volta!</h1>
+                <p>Entre para acessar sua conta e continuar sua jornada de aprendizado.</p>
+            </div>
+            <div class="features">
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Acesso a todos os cursos</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Certificados exclusivos</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Suporte personalizado</span>
+                </div>
+            </div>
+        </div>
+        <div class="right-side">
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn">Entrar</button>
+                <div id="errorMessage" class="error-message"></div>
+                <div class="register-link">
+                    <a href="registo.html">Não tem uma conta? Registre-se</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts devem estar APENAS no final do body -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Inicialização do Supabase
+        const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co'
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3dkZmlmaGhjcW10cG5ob3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTUzMDksImV4cCI6MjA2MDQzMTMwOX0.Q50xEMRQLTjuOKtn0f92GX5NKY9GgWWYVfHlmE5yhUs'
+        window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
+    </script>
+    <script src="JS/user-menu.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault()
+            
+            const email = document.getElementById('email').value
+            const password = document.getElementById('password').value
+            const errorMessage = document.getElementById('errorMessage')
+
+            try {
+                if (!window.supabaseClient) {
+                    throw new Error('Cliente Supabase não inicializado')
+                }
+
+                // Fazer login
+                const { data: authData, error: authError } = await window.supabaseClient.auth.signInWithPassword({
+                    email,
+                    password
+                })
+
+                if (authError) {
+                    throw authError
+                }
+
+                if (!authData.user) {
+                    throw new Error('Erro ao fazer login')
+                }
+
+                // Verificar se o usuário existe na tabela utilizadores
+                const { data: userData, error: userError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('tipo_conta')
+                    .eq('id', authData.user.id)
+                    .single()
+
+                // Se o usuário não existir na tabela utilizadores, criar o registro
+                if (userError && userError.code === 'PGRST116') {
+                    const { error: insertError } = await window.supabaseClient
+                        .from('utilizadores')
+                        .insert([
+                            {
+                                id: authData.user.id,
+                                nome: authData.user.user_metadata.nome || 'Usuário',
+                                email: email,
+                                tipo_conta: 'gratuito',
+                                data_criacao: new Date().toISOString()
+                            }
+                        ])
+
+                    if (insertError) {
+                        console.error('Erro ao criar perfil:', insertError)
+                        throw new Error('Erro ao criar perfil do usuário')
+                    }
+                }
+
+                // Redirecionar para a página inicial
+                window.location.href = 'index.html'
+            } catch (error) {
+                console.error('Erro no login:', error)
+                errorMessage.textContent = error.message || 'Erro ao fazer login. Por favor, tente novamente.'
+            }
+        })
+    </script>
+</body>
+</html> 

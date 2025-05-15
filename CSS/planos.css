@@ -1,0 +1,410 @@
+/* Estilos Gerais */
+.plans-hero {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    padding: 80px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.plans-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('../IMG/academia_pinga_sem_fundo.png') no-repeat center;
+    background-size: 300px;
+    opacity: 0.1;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    color: #cccccc;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Container e Grid */
+.plans-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+/* Cards dos Planos */
+.plan-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: 2px solid transparent;
+}
+
+.plan-card[data-plano="iniciante"] {
+    border-color: #1b4332;
+    background: linear-gradient(135deg, #a8e6cf 0%, #c8e6c9 100%);
+}
+
+.plan-card[data-plano="avancado"] {
+    border-color: #7f4f24;
+    background: linear-gradient(135deg, #ffd3b6 0%, #ffecb3 100%);
+}
+
+.plan-card[data-plano="pro"] {
+    border-color: #7f1d1d;
+    background: linear-gradient(135deg, #ffaaa5 0%, #ffd3b6 100%);
+}
+
+.plan-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.plan-card[data-plano="iniciante"]:hover {
+    box-shadow: 0 8px 25px rgba(27,67,50,0.2);
+}
+
+.plan-card[data-plano="avancado"]:hover {
+    box-shadow: 0 8px 25px rgba(127,79,36,0.2);
+}
+
+.plan-card[data-plano="pro"]:hover {
+    box-shadow: 0 8px 25px rgba(127,29,29,0.2);
+}
+
+.plan-card.featured {
+    transform: scale(1.05);
+    z-index: 1;
+}
+
+.plan-card.featured:hover {
+    transform: scale(1.05) translateY(-10px);
+}
+
+.plan-content {
+    padding: 30px;
+}
+
+.plan-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #ff6b6b;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.plan-title {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+.plan-card[data-plano="iniciante"] .plan-title {
+    color: #1b4332;
+}
+
+.plan-card[data-plano="avancado"] .plan-title {
+    color: #7f4f24;
+}
+
+.plan-card[data-plano="pro"] .plan-title {
+    color: #7f1d1d;
+}
+
+.plan-description {
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.plan-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 15px;
+}
+
+.plan-price {
+    text-align: left;
+}
+
+.valor {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.periodo {
+    color: #666;
+    font-size: 1rem;
+}
+
+.plan-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.plan-rating i {
+    color: #ffd700;
+}
+
+.rating-count {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.plan-features {
+    margin: 25px 0;
+}
+
+.plan-features ul {
+    list-style: none;
+    padding: 0;
+}
+
+.plan-features li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.plan-features i {
+    color: #4CAF50;
+    font-size: 1.1rem;
+}
+
+.plan-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.detalhes-botao, .selecionar-plano {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.detalhes-botao {
+    background: transparent;
+    border: 2px solid currentColor;
+    color: inherit;
+}
+
+.plan-card[data-plano="iniciante"] .detalhes-botao {
+    color: #1b4332;
+}
+
+.plan-card[data-plano="avancado"] .detalhes-botao {
+    color: #7f4f24;
+}
+
+.plan-card[data-plano="pro"] .detalhes-botao {
+    color: #7f1d1d;
+}
+
+.detalhes-botao:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.selecionar-plano {
+    background: currentColor;
+    color: white;
+}
+
+.plan-card[data-plano="iniciante"] .selecionar-plano {
+    background: #1b4332;
+}
+
+.plan-card[data-plano="avancado"] .selecionar-plano {
+    background: #7f4f24;
+}
+
+.plan-card[data-plano="pro"] .selecionar-plano {
+    background: #7f1d1d;
+}
+
+.selecionar-plano:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+/* Modal */
+.modal-plano {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-titulo {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 0;
+}
+
+.modal-subtitulo {
+    color: #666;
+    margin: 5px 0 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #666;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-descricao {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.modal-beneficios {
+    list-style: none;
+    padding: 0;
+}
+
+.modal-beneficios li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.modal-beneficios i {
+    color: #4CAF50;
+}
+
+.modal-footer {
+    padding: 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-preco {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .plans-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .plan-card.featured {
+        transform: none;
+    }
+
+    .plan-card.featured:hover {
+        transform: translateY(-10px);
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+
+    .plan-actions {
+        flex-direction: column;
+    }
+
+    .detalhes-botao, .selecionar-plano {
+        width: 100%;
+    }
+} 

@@ -1,0 +1,3233 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Academia Pinga</title>
+    <link rel="icon" type="image/png" href="../IMG/favicon_sem_fundo.png">
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="stylesheet" href="../CSS/user-menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../JS/user-menu.js" defer></script>
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            color: white;
+        }
+
+        .dashboard-title {
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .dashboard-title i {
+            font-size: 32px;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #2196F3;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            color: #666;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2196F3;
+            margin: 15px 0;
+        }
+
+        .stat-card .trend {
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .trend.up {
+            color: #4CAF50;
+        }
+
+        .trend.down {
+            color: #f44336;
+        }
+
+        .dashboard-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .section-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #2196F3, #1976D2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .section-card:hover::before {
+            opacity: 1;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .section-card h2 {
+            margin: 0 0 15px 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+        }
+
+        .section-card p {
+            margin: 0;
+            color: #666;
+        }
+
+        .section-card i {
+            font-size: 32px;
+            color: #2196F3;
+            margin-bottom: 20px;
+        }
+
+        .content-section {
+            display: none;
+            margin-top: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .content-section.active {
+            display: block !important;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: #2196F3;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 20px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: rgba(33, 150, 243, 0.1);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .action-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 8px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .edit-button {
+            background: #2196F3;
+            color: white;
+        }
+
+        .delete-button {
+            background: #dc3545;
+            color: white;
+        }
+
+        .filters-container {
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filters-container select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+            min-width: 150px;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .filters-container select:hover {
+            border-color: #2196F3;
+        }
+
+        .status-badge {
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-pendente {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .status-aprovado {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-rejeitado {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .approve-button {
+            background: #28a745;
+            color: white;
+        }
+
+        .reject-button {
+            background: #dc3545;
+            color: white;
+        }
+
+        .account-type-select {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            min-width: 180px;
+        }
+
+        .account-type-select:hover {
+            border-color: #2196F3;
+            box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
+        }
+
+        .search-container {
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #2196F3;
+            box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
+        }
+
+        .refresh-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .refresh-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2196F3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading .loading-spinner {
+            display: inline-block;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 9999;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            min-width: 300px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #4CAF50;
+        }
+
+        .notification.error {
+            background: #f44336;
+        }
+
+        .notification.info {
+            background: #2196F3;
+        }
+
+        .forms-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .tab-button {
+            padding: 12px 25px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            color: #2196F3;
+        }
+
+        .tab-button.active {
+            color: #2196F3;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #2196F3;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tab-button .badge {
+            background: #e3f2fd;
+            color: #2196F3;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .form-tab {
+            display: none;
+        }
+
+        .form-tab.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            margin: 10% auto;
+            padding: 0;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #dc3545;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .warning-text {
+            color: #dc3545;
+            margin: 15px 0;
+        }
+
+        .warning-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .warning-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #666;
+        }
+
+        .warning-list li:before {
+            content: '⚠️';
+            position: absolute;
+            left: 0;
+        }
+
+        .confirmation-input {
+            margin-top: 20px;
+        }
+
+        .confirmation-input label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        .confirmation-input input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .confirmation-input input:focus {
+            border-color: #dc3545;
+            outline: none;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        .close-button:hover {
+            color: #dc3545;
+        }
+
+        .cancel-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #6c757d;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-button:hover {
+            background: #5a6268;
+        }
+
+        .modal-footer .delete-button {
+            background: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-footer .delete-button:disabled {
+            background: #dc354580;
+            cursor: not-allowed;
+        }
+
+        .modal-footer .delete-button:not(:disabled):hover {
+            background: #c82333;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        #accountsSection {
+            display: none;
+            margin-top: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #accountsSection.active {
+            display: block !important;
+        }
+
+        .content-section {
+            display: none;
+            margin-top: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .content-section.active {
+            display: block !important;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .account-type-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .account-type-gratuito {
+            background: #e3f2fd;
+            color: #1976D2;
+        }
+
+        .account-type-premium {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .account-type-admin {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .account-type-treinador {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #2196F3;
+            outline: none;
+            box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
+        }
+
+        .modal-footer .edit-button {
+            background: #2196F3;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            min-width: 150px;
+            justify-content: center;
+        }
+
+        .modal-footer .edit-button:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+        }
+
+        .modal-footer .edit-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
+        }
+
+        .modal-footer .edit-button i {
+            font-size: 16px;
+        }
+
+        .modal-footer .edit-button.loading {
+            background: #1976D2;
+            cursor: wait;
+            opacity: 0.8;
+        }
+
+        .modal-footer .edit-button.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        .treinadores-dashboard {
+            padding: 20px;
+        }
+
+        .treinador-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .treinador-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .treinador-detalhes h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .treinador-detalhes p {
+            margin: 5px 0 0;
+            color: #666;
+        }
+
+        .agendamentos-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .filtros-agendamentos {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filtros-agendamentos select {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+        }
+
+        .lista-agendamentos {
+            display: grid;
+            gap: 15px;
+        }
+
+        .agendamento-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .agendamento-info h3 {
+            margin: 0;
+            color: #333;
+        }
+
+        .agendamento-info p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .agendamento-acoes {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-confirmar {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-cancelar {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .status-pendente {
+            background: #FFC107;
+            color: #000;
+        }
+
+        .status-confirmado {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .status-cancelado {
+            background: #f44336;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .treinador-info {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .filtros-agendamentos {
+                flex-direction: column;
+            }
+
+            .agendamento-card {
+                grid-template-columns: 1fr;
+            }
+
+            .agendamento-acoes {
+                justify-content: center;
+            }
+        }
+
+        .treinadores-dashboard {
+            padding: 20px;
+        }
+
+        .treinador-header {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .treinador-info {
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+        }
+
+        .treinador-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #2196F3;
+            box-shadow: 0 4px 8px rgba(33, 150, 243, 0.2);
+        }
+
+        .treinador-detalhes {
+            flex: 1;
+        }
+
+        .treinador-detalhes h2 {
+            margin: 0;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .treinador-detalhes p {
+            margin: 5px 0 15px;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .treinador-stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            min-width: 120px;
+        }
+
+        .stat-item i {
+            font-size: 24px;
+            color: #2196F3;
+            margin-bottom: 8px;
+        }
+
+        .stat-item span {
+            display: block;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin: 5px 0;
+        }
+
+        .stat-item label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .treinador-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .action-button.primary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .action-button.primary:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(33, 150, 243, 0.2);
+        }
+
+        .action-button.secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .action-button.secondary:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-header i {
+            font-size: 20px;
+            color: #2196F3;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .card-content {
+            min-height: 200px;
+        }
+
+        .agendamentos-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .filtros-agendamentos {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filtros-agendamentos select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            min-width: 150px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filtros-agendamentos select:hover {
+            border-color: #2196F3;
+        }
+
+        .search-box {
+            position: relative;
+            min-width: 250px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 35px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #2196F3;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+        }
+
+        .lista-agendamentos {
+            display: grid;
+            gap: 15px;
+        }
+
+        .agendamento-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .agendamento-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .agendamento-info h3 {
+            margin: 0;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .agendamento-info p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .agendamento-info .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        .status-pendente {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-confirmado {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelado {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .agendamento-acoes {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-confirmar, .btn-cancelar {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-confirmar {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-confirmar:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-cancelar {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-cancelar:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .treinador-header {
+                flex-direction: column;
+            }
+
+            .treinador-info {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .treinador-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .treinador-actions {
+                margin-top: 20px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filtros-agendamentos {
+                flex-direction: column;
+            }
+
+            .filtros-agendamentos select,
+            .search-box {
+                width: 100%;
+            }
+
+            .agendamento-card {
+                grid-template-columns: 1fr;
+            }
+
+            .agendamento-acoes {
+                justify-content: center;
+            }
+        }
+
+        .avatar-upload-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+
+        .avatar-upload-container:hover {
+            border-color: #2196F3;
+            background: #f0f7ff;
+        }
+
+        /* Estilos do Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #2196F3;
+            outline: none;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .save-button,
+        .cancel-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .save-button {
+            background: #2196F3;
+            color: white;
+            flex: 1;
+        }
+
+        .save-button:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+        }
+
+        .cancel-button {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .cancel-button:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .account-type-premium_iniciante {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .account-type-premium_avancado {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .account-type-premium_pro {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-logo">
+                <img src="../IMG/academia_pinga_sem_fundo.png" alt="Academia Pinga" style="height: 50px; margin-right: 10px;">
+                Academia Pinga
+            </a>
+            <button class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="planos.html">Planos</a>
+                <a href="treinadores.html">Treinadores</a>
+                <a href="decks.html">Decks</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="avaliacoes.html">Avaliações</a>
+                <a href="outros-jogos.html">Outros Jogos</a>
+                <a href="admin.html" id="adminLink" style="display: none;">Painel Admin</a>
+                <a href="../login.html" id="loginLink">Iniciar Sessão/Registo</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div id="mainDashboard">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Painel Administrativo
+                </h1>
+                <button class="refresh-button" onclick="refreshDashboard()">
+                    <i class="fas fa-sync-alt"></i>
+                    Atualizar
+                    <div class="loading-spinner"></div>
+                </button>
+            </div>
+
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <h3>Total de Usuários</h3>
+                    <div class="value" id="totalUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Inscrições Pendentes</h3>
+                    <div class="value" id="pendingSubscriptions">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Premium Iniciante</h3>
+                    <div class="value" id="premiumInicianteUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Premium Avançado</h3>
+                    <div class="value" id="premiumAvancadoUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Premium Pro</h3>
+                    <div class="value" id="premiumProUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Administradores</h3>
+                    <div class="value" id="adminUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Treinadores</h3>
+                    <div class="value" id="treinadorUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Contas Gratuitas</h3>
+                    <div class="value" id="gratuitoUsers">0</div>
+                </div>
+            </div>
+
+            <div class="dashboard-sections">
+                <div class="section-card" onclick="showSection('accounts')">
+                    <i class="fas fa-users"></i>
+                    <h2>Todas as Contas</h2>
+                    <p>Gerencie todas as contas de usuários</p>
+                </div>
+                <div class="section-card" onclick="showSection('forms')">
+                    <i class="fas fa-file-alt"></i>
+                    <h2>Formulários de Curso</h2>
+                    <p>Visualize e gerencie inscrições em cursos</p>
+                </div>
+                <div class="section-card" onclick="showSection('treinadores')">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <h2>Dashboard Treinadores</h2>
+                    <p>Gerencie agendamentos e perfil de treinador</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="accountsSection" class="content-section">
+            <button class="back-button" onclick="showMainDashboard()">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            <h2>Todas as Contas</h2>
+            <div class="table-container">
+                <table id="accountsTable">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Tipo de Conta</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="formsSection" class="content-section">
+            <button class="back-button" onclick="showMainDashboard()">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            <h2>Formulários de Curso</h2>
+            
+            <div class="admin-container">
+                <div class="admin-tabs">
+                    <button class="tab-button active" onclick="abrirTab('formularios')">Formulários</button>
+                    <button class="tab-button" onclick="abrirTab('vistos')">Vistos</button>
+                </div>
+
+                <div id="formularios" class="tab-content active">
+                    <div class="forms-tabs">
+                        <button class="tab-button active" onclick="showFormTab('pendentes')">
+                            <i class="fas fa-clock"></i> Pendentes
+                            <span class="badge" id="pendentesCount">0</span>
+                        </button>
+                        <button class="tab-button" onclick="showFormTab('vistos')">
+                            <i class="fas fa-check-circle"></i> Vistos
+                            <span class="badge" id="vistosCount">0</span>
+                        </button>
+                    </div>
+
+                    <div class="filters-container">
+                        <select id="planoFilter" onchange="filterForms()">
+                            <option value="todos">Todos os Planos</option>
+                            <option value="iniciante">Iniciante</option>
+                            <option value="avancado">Avançado</option>
+                            <option value="pro">Pro</option>
+                        </select>
+                        <div class="search-container">
+                            <input type="text" class="search-input" placeholder="Pesquisar..." onkeyup="searchForms(this.value)">
+                        </div>
+                    </div>
+
+                    <div id="pendentesTab" class="form-tab active">
+                        <div class="table-container">
+                            <table id="pendentesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Email</th>
+                                        <th>Tag</th>
+                                        <th>Plano</th>
+                                        <th>Troféus</th>
+                                        <th>Nível</th>
+                                        <th>Data</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="vistosTab" class="form-tab">
+                        <div class="table-container">
+                            <table id="vistosTable">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Email</th>
+                                        <th>Tag</th>
+                                        <th>Plano</th>
+                                        <th>Troféus</th>
+                                        <th>Nível</th>
+                                        <th>Status</th>
+                                        <th>Tipo de Conta</th>
+                                        <th>Data</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="vistos" class="tab-content">
+                    <!-- Conteúdo existente dos vistos -->
+                </div>
+            </div>
+        </div>
+
+        <div id="treinadoresSection" class="content-section">
+            <button class="back-button" onclick="showMainDashboard()">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            <h2>Dashboard Treinadores</h2>
+            
+            <div class="treinadores-dashboard">
+                <!-- Cabeçalho com informações do treinador -->
+                <div class="treinador-header">
+                    <div class="treinador-info">
+                        <img id="treinadorAvatar" src="" alt="Avatar do Treinador" class="treinador-avatar">
+                        <div class="treinador-detalhes">
+                            <h2 id="treinadorNome"></h2>
+                            <p id="treinadorEspecialidade"></p>
+                            <div class="treinador-stats">
+                                <div class="stat-item">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <span id="totalAulas">0</span>
+                                    <label>Aulas Realizadas</label>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-star"></i>
+                                    <span id="avaliacaoMedia">0.0</span>
+                                    <label>Avaliação Média</label>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-users"></i>
+                                    <span id="totalAlunos">0</span>
+                                    <label>Alunos Ativos</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="treinador-actions">
+                        <button class="action-button primary" onclick="editarPerfilTreinador()">
+                            <i class="fas fa-edit"></i> Editar Perfil
+                        </button>
+                        <button class="action-button secondary" onclick="gerarRelatorio()">
+                            <i class="fas fa-chart-bar"></i> Relatório
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cards de resumo -->
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <i class="fas fa-clock"></i>
+                            <h3>Próximas Aulas</h3>
+                        </div>
+                        <div class="card-content" id="proximasAulas">
+                            <!-- Preenchido via JavaScript -->
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <i class="fas fa-calendar-alt"></i>
+                            <h3>Agenda da Semana</h3>
+                        </div>
+                        <div class="card-content" id="agendaSemana">
+                            <!-- Preenchido via JavaScript -->
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <i class="fas fa-star"></i>
+                            <h3>Últimas Avaliações</h3>
+                        </div>
+                        <div class="card-content" id="ultimasAvaliacoes">
+                            <!-- Preenchido via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção de Agendamentos -->
+                <div class="agendamentos-section">
+                    <div class="section-header">
+                        <h2>Agendamentos</h2>
+                        <div class="filtros-agendamentos">
+                            <select id="filtroStatus" onchange="carregarAgendamentos()">
+                                <option value="todos">Todos os Status</option>
+                                <option value="pendente">Pendentes</option>
+                                <option value="confirmado">Confirmados</option>
+                                <option value="cancelado">Cancelados</option>
+                            </select>
+                            <select id="filtroData" onchange="carregarAgendamentos()">
+                                <option value="todos">Todas as Datas</option>
+                                <option value="hoje">Hoje</option>
+                                <option value="semana">Esta Semana</option>
+                                <option value="mes">Este Mês</option>
+                            </select>
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchAgendamentos" placeholder="Pesquisar agendamentos..." onkeyup="filtrarAgendamentos(this.value)">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="listaAgendamentos" class="lista-agendamentos">
+                        <!-- Preenchido via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmação de Exclusão -->
+        <div id="deleteAccountModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Exclusão</h3>
+                    <button class="close-button" onclick="closeDeleteModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir esta conta?</p>
+                    <p class="warning-text">Esta ação é <strong>irreversível</strong> e irá:</p>
+                    <ul class="warning-list">
+                        <li>Excluir permanentemente todos os dados do usuário</li>
+                        <li>Remover todas as inscrições associadas</li>
+                        <li>Cancelar qualquer acesso ativo</li>
+                    </ul>
+                    <div class="confirmation-input">
+                        <label for="deleteConfirmation">Digite "EXCLUIR" para confirmar:</label>
+                        <input type="text" id="deleteConfirmation" placeholder="Digite EXCLUIR">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="cancel-button" onclick="closeDeleteModal()">Cancelar</button>
+                    <button class="delete-button" onclick="confirmDeleteAccount()" disabled>
+                        <i class="fas fa-trash"></i> Excluir Conta
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Edição de Conta -->
+        <div id="editAccountModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-edit"></i> Editar Conta</h3>
+                    <button class="close-button" onclick="closeEditModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editAccountId">
+                    <div class="form-group">
+                        <label for="editAccountName">Nome:</label>
+                        <input type="text" id="editAccountName" class="form-control" placeholder="Nome do usuário">
+                    </div>
+                    <div class="form-group">
+                        <label for="editAccountEmail">Email:</label>
+                        <input type="email" id="editAccountEmail" class="form-control" placeholder="Email do usuário">
+                    </div>
+                    <div class="form-group">
+                        <label for="editAccountType">Tipo de Conta:</label>
+                        <select id="editAccountType" class="account-type-select">
+                            <option value="gratuito">Conta Gratuita</option>
+                            <option value="premium_iniciante">Premium Iniciante</option>
+                            <option value="premium_avancado">Premium Avançado</option>
+                            <option value="premium_pro">Premium Pro</option>
+                            <option value="admin">Administrador</option>
+                            <option value="treinador">Treinador</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="cancel-button" onclick="closeEditModal()">Cancelar</button>
+                    <button class="edit-button" onclick="saveAccountChanges()">
+                        <i class="fas fa-save"></i> Salvar Alterações
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Adicionar antes do fechamento do body -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-edit"></i> Editar Perfil</h3>
+                <button class="close-button" onclick="closeEditProfileModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="editNome">Nome:</label>
+                    <input type="text" id="editNome" class="form-control" placeholder="Seu nome">
+                </div>
+                <div class="form-group">
+                    <label for="editEspecialidade">Especialidade:</label>
+                    <input type="text" id="editEspecialidade" class="form-control" placeholder="Sua especialidade">
+                </div>
+                <div class="form-group">
+                    <label for="avatarUpload">Foto de Perfil:</label>
+                    <div class="avatar-upload-container">
+                        <img id="avatarPreview" src="" alt="Preview" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+                        <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="previewImage(event)">
+                        <button class="action-button secondary" onclick="document.getElementById('avatarUpload').click()">
+                            <i class="fas fa-upload"></i> Escolher Imagem
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-button" onclick="closeEditProfileModal()">Cancelar</button>
+                <button class="edit-button" onclick="salvarPerfilTreinador()">
+                    <i class="fas fa-save"></i> Salvar Alterações
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Usuário</h2>
+            <form id="editForm">
+                <div class="form-group">
+                    <label for="editNome">Nome</label>
+                    <input type="text" id="editNome" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="editTipoConta">Tipo de Conta</label>
+                    <select id="editTipoConta" required>
+                        <option value="gratuito">Gratuito</option>
+                        <option value="premium_iniciante">Premium Iniciante</option>
+                        <option value="premium_avancado">Premium Avançado</option>
+                        <option value="premium_pro">Premium Pro</option>
+                        <option value="admin">Administrador</option>
+                        <option value="treinador">Treinador</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editDataCriacao">Data de Criação</label>
+                    <input type="datetime-local" id="editDataCriacao" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="save-button">Salvar Alterações</button>
+                    <button type="button" class="cancel-button" onclick="closeEditModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Inicializar Supabase (apenas se ainda não foi inicializado)
+        if (!window.supabaseClient) {
+            const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co'
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3dkZmlmaGhjcW10cG5ob3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTUzMDksImV4cCI6MjA2MDQzMTMwOX0.Q50xEMRQLTjuOKtn0f92GX5NKY9GgWWYVfHlmE5yhUs'
+            window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey)
+        }
+
+        // Verificar se o usuário é admin ou treinador
+        async function checkAdminAccess() {
+            try {
+                const { data: { user }, error } = await window.supabaseClient.auth.getUser()
+                if (error) throw error
+
+                if (!user) {
+                    window.location.href = '../login.html'
+                    return
+                }
+
+                const { data: userData, error: userError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('tipo_conta, nome')
+                    .eq('id', user.id)
+                    .single()
+
+                if (userError) throw userError
+
+                // Verificar se é admin ou treinador
+                if (userData.tipo_conta !== 'admin' && userData.tipo_conta !== 'treinador') {
+                    window.location.href = '../index.html'
+                    return
+                }
+
+                // Configurar interface baseado no tipo de conta
+                if (userData.tipo_conta === 'admin') {
+                    // Admin vê tudo
+                    document.querySelectorAll('.section-card').forEach(card => {
+                        card.style.display = 'block';
+                    });
+                    document.getElementById('adminLink').style.display = 'inline-block';
+                } else {
+                    // Treinador vê apenas sua seção
+                    document.querySelectorAll('.section-card').forEach(card => {
+                        if (card.querySelector('h2').textContent === 'Dashboard Treinadores') {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                    document.getElementById('adminLink').style.display = 'none';
+                }
+
+                const loginLink = document.getElementById('loginLink')
+                if (loginLink) {
+                    // Criar o menu do usuário com dropdown
+                    const userMenu = document.createElement('div')
+                    userMenu.className = 'user-menu'
+                    
+                    userMenu.innerHTML = `
+                        <div class="user-info">
+                            <span class="user-name">
+                                <i class="fas fa-${userData.tipo_conta === 'admin' ? 'cog' : 'chalkboard-teacher'}"></i>
+                                ${userData.tipo_conta === 'admin' ? 'Painel Admin' : 'Painel Treinador'}
+                            </span>
+                        </div>
+                        <div class="user-dropdown">
+                            <div class="dropdown-item">
+                                <span class="account-type">${userData.tipo_conta === 'admin' ? 'Administrador' : 'Treinador'}</span>
+                            </div>
+                            <div class="dropdown-item">
+                                <a href="perfil.html" style="text-decoration: none; color: inherit;">
+                                    <i class="fas fa-user"></i> Meu Perfil
+                                </a>
+                            </div>
+                            <div class="dropdown-item">
+                                <a href="configuracoes.html" style="text-decoration: none; color: inherit;">
+                                    <i class="fas fa-cog"></i> Configurações
+                                </a>
+                            </div>
+                            <div class="dropdown-item logout" onclick="handleLogout()">
+                                <i class="fas fa-sign-out-alt"></i> Sair
+                            </div>
+                        </div>
+                    `
+                    loginLink.parentElement.replaceChild(userMenu, loginLink)
+
+                    // Adicionar evento de clique para o dropdown
+                    const userInfo = userMenu.querySelector('.user-info')
+                    const dropdown = userMenu.querySelector('.user-dropdown')
+                    
+                    userInfo.addEventListener('click', (e) => {
+                        e.stopPropagation()
+                        dropdown.classList.toggle('active')
+                    })
+
+                    // Fechar dropdown quando clicar fora
+                    document.addEventListener('click', (e) => {
+                        if (!userMenu.contains(e.target)) {
+                            dropdown.classList.remove('active')
+                        }
+                    })
+                }
+
+                // Se for treinador, mostrar diretamente a seção de treinadores
+                if (userData.tipo_conta === 'treinador') {
+                    showSection('treinadores');
+                } else {
+                    // Se for admin, carregar estatísticas e contas
+                    loadStats();
+                    loadAccounts();
+                }
+            } catch (error) {
+                console.error('Erro ao verificar acesso:', error)
+                window.location.href = '../login.html'
+            }
+        }
+
+        // Carregar estatísticas
+        async function loadStats() {
+            try {
+                const { data: users, error: usersError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('tipo_conta');
+
+                if (usersError) {
+                    console.error('Erro ao carregar estatísticas:', usersError);
+                    return;
+                }
+
+                const stats = {
+                    total: users.length,
+                    premium_iniciante: users.filter(u => u.tipo_conta === 'premium_iniciante').length,
+                    premium_avancado: users.filter(u => u.tipo_conta === 'premium_avancado').length,
+                    premium_pro: users.filter(u => u.tipo_conta === 'premium_pro').length,
+                    admin: users.filter(u => u.tipo_conta === 'admin').length,
+                    treinador: users.filter(u => u.tipo_conta === 'treinador').length
+                };
+
+                // Atualizar contadores
+                document.getElementById('totalUsers').textContent = stats.total;
+                document.getElementById('premiumInicianteUsers').textContent = stats.premium_iniciante;
+                document.getElementById('premiumAvancadoUsers').textContent = stats.premium_avancado;
+                document.getElementById('premiumProUsers').textContent = stats.premium_pro;
+                document.getElementById('adminUsers').textContent = stats.admin;
+                document.getElementById('treinadorUsers').textContent = stats.treinador;
+            } catch (error) {
+                console.error('Erro ao carregar estatísticas:', error);
+            }
+        }
+
+        // Carregar contas
+        async function loadAccounts() {
+            try {
+                console.log('Iniciando carregamento de contas...');
+                const { data: accounts, error } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('*')
+                    .order('data_criacao', { ascending: false });
+
+                if (error) {
+                    console.error('Erro ao carregar contas:', error);
+                    showNotification('Erro ao carregar contas', 'error');
+                    return;
+                }
+
+                console.log('Contas carregadas:', accounts);
+
+                if (!accounts || accounts.length === 0) {
+                    console.log('Nenhuma conta encontrada');
+                    return;
+                }
+
+                const tbody = document.querySelector('#accountsTable tbody');
+                if (!tbody) {
+                    console.error('Elemento tbody não encontrado');
+                    return;
+                }
+
+                tbody.innerHTML = '';
+
+                accounts.forEach(account => {
+                    console.log('Processando conta:', account);
+                    const tr = document.createElement('tr');
+                    const tipoContaClass = `account-type-${account.tipo_conta}`;
+                    const tipoContaText = {
+                        'gratuito': 'Conta Gratuita',
+                        'premium_iniciante': 'Premium Iniciante',
+                        'premium_avancado': 'Premium Avançado',
+                        'premium_pro': 'Premium Pro',
+                        'admin': 'Administrador',
+                        'treinador': 'Treinador'
+                    }[account.tipo_conta] || account.tipo_conta;
+
+                    tr.innerHTML = `
+                        <td>${account.nome || '-'}</td>
+                        <td>${account.email || '-'}</td>
+                        <td><span class="account-type-badge ${tipoContaClass}">${tipoContaText}</span></td>
+                        <td>
+                            <button class="action-button edit-button" onclick="editAccount('${account.id}')">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="action-button delete-button" onclick="deleteAccount('${account.id}')">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                console.log('Contas carregadas com sucesso');
+            } catch (error) {
+                console.error('Erro ao carregar contas:', error);
+                showNotification('Erro ao carregar contas', 'error');
+            }
+        }
+
+        // Carregar formulários
+        async function loadForms() {
+            try {
+                const { data: forms, error } = await window.supabaseClient
+                    .from('formularios')
+                    .select('*')
+                    .order('data_criacao', { ascending: false });
+
+                if (error) {
+                    console.error('Erro ao carregar formulários:', error);
+                    showNotification('Erro ao carregar formulários', 'error');
+                    return;
+                }
+
+                const tbody = document.querySelector('#formsTable tbody');
+                if (!tbody) return;
+
+                tbody.innerHTML = '';
+
+                forms.forEach(form => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${form.nome || '-'}</td>
+                        <td>${form.email || '-'}</td>
+                        <td>${form.telefone || '-'}</td>
+                        <td>${form.mensagem || '-'}</td>
+                        <td>
+                            <button class="action-button delete-button" onclick="deleteForm('${form.id}')">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar formulários:', error);
+                showNotification('Erro ao carregar formulários', 'error');
+            }
+        }
+
+        // Verificar e criar tabela de agendamentos se necessário
+        async function verificarTabelaAgendamentos() {
+            try {
+                console.log('Verificando tabela de agendamentos...');
+                
+                // Verificar se a tabela existe
+                const { data: agendamentos, error } = await window.supabaseClient
+                    .from('agendamentos')
+                    .select('*')
+                    .limit(1);
+
+                if (error && error.code === '42P01') { // Tabela não existe
+                    console.log('Tabela de agendamentos não existe. Criando...');
+                    
+                    // Criar tabela de agendamentos
+                    const { error: createError } = await window.supabaseClient.rpc('create_agendamentos_table');
+                    
+                    if (createError) {
+                        console.error('Erro ao criar tabela de agendamentos:', createError);
+                        return;
+                    }
+                    
+                    console.log('Tabela de agendamentos criada com sucesso!');
+                } else if (error) {
+                    console.error('Erro ao verificar tabela de agendamentos:', error);
+                } else {
+                    console.log('Tabela de agendamentos já existe.');
+                }
+            } catch (error) {
+                console.error('Erro ao verificar/criar tabela de agendamentos:', error);
+            }
+        }
+
+        // Verificar acesso quando a página carregar
+        window.addEventListener('load', async () => {
+            await verificarTabelaTreinadores();
+            await verificarTabelaAgendamentos();
+            checkAdminAccess();
+            
+            // Adicionar evento de clique no card de contas
+            const accountsCard = document.querySelector('.section-card[onclick="showSection(\'accounts\')"]');
+            if (accountsCard) {
+                accountsCard.addEventListener('click', () => {
+                    console.log('Card de contas clicado');
+                    showSection('accounts');
+                });
+            }
+        });
+
+        // Função para abrir tab
+        function abrirTab(tabName) {
+            console.log('Abrindo aba:', tabName);
+            
+            // Remover classe active de todas as tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remover classe active de todos os botões
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Adicionar classe active na tab selecionada
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+                console.log('Aba selecionada:', tabName);
+            } else {
+                console.error('Aba não encontrada:', tabName);
+            }
+            
+            // Adicionar classe active no botão clicado
+            event.currentTarget.classList.add('active');
+            
+            // Se a aba de treinadores for aberta, carregar os dados
+            if (tabName === 'treinadores') {
+                console.log('Iniciando carregamento de dados do treinador...');
+                carregarDadosTreinador();
+            }
+        }
+
+        // Função para carregar dados do treinador
+        async function carregarDadosTreinador() {
+            console.log('Iniciando carregamento de dados do treinador...');
+            
+            const { data: { user }, error: userError } = await window.supabaseClient.auth.getUser();
+            
+            if (userError || !user) {
+                console.error('Erro ao obter usuário:', userError);
+                window.location.href = '../login.html?redirect=admin.html';
+                return;
+            }
+
+            console.log('Usuário autenticado:', user);
+
+            // Carregar informações do treinador
+            const { data: treinador, error: treinadorError } = await window.supabaseClient
+                .from('treinadores')
+                .select('*')
+                .eq('user_id', user.id)
+                .single();
+
+            if (treinadorError) {
+                console.error('Erro ao carregar dados do treinador:', treinadorError);
+                return;
+            }
+
+            console.log('Dados do treinador carregados:', treinador);
+
+            // Atualizar informações na interface
+            const avatarElement = document.getElementById('treinadorAvatar');
+            const nomeElement = document.getElementById('treinadorNome');
+            const especialidadeElement = document.getElementById('treinadorEspecialidade');
+
+            // Definir uma imagem padrão se não houver avatar_url
+            const defaultAvatar = 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + treinador.nome;
+            
+            if (avatarElement) {
+                avatarElement.src = treinador.avatar_url || defaultAvatar;
+                avatarElement.onerror = function() {
+                    // Se a imagem falhar ao carregar, usar a imagem padrão
+                    this.src = defaultAvatar;
+                };
+            }
+            if (nomeElement) nomeElement.textContent = treinador.nome;
+            if (especialidadeElement) especialidadeElement.textContent = treinador.especialidade;
+
+            // Carregar estatísticas
+            await carregarEstatisticas(user.id);
+            // Carregar próximas aulas
+            await carregarProximasAulas(user.id);
+            // Carregar agenda da semana
+            await carregarAgendaSemana(user.id);
+            // Carregar últimas avaliações
+            await carregarUltimasAvaliacoes(user.id);
+            // Carregar agendamentos
+            await carregarAgendamentos();
+        }
+
+        // Função para carregar estatísticas
+        async function carregarEstatisticas(treinadorId) {
+            try {
+                const { data: agendamentos, error } = await window.supabaseClient
+                    .from('agendamentos')
+                    .select('*')
+                    .eq('treinador_id', treinadorId);
+
+                if (error) throw error;
+
+                // Calcular estatísticas
+                const totalAulas = agendamentos.filter(a => a.status === 'confirmado').length;
+                const alunosUnicos = new Set(agendamentos.map(a => a.aluno_id)).size;
+                
+                // Atualizar interface
+                document.getElementById('totalAulas').textContent = totalAulas;
+                document.getElementById('totalAlunos').textContent = alunosUnicos;
+                // TODO: Implementar cálculo de avaliação média quando tivermos o sistema de avaliações
+                document.getElementById('avaliacaoMedia').textContent = '4.8';
+            } catch (error) {
+                console.error('Erro ao carregar estatísticas:', error);
+            }
+        }
+
+        // Função para carregar próximas aulas
+        async function carregarProximasAulas(treinadorId) {
+            try {
+                const hoje = new Date().toISOString().split('T')[0];
+                const { data: agendamentos, error } = await window.supabaseClient
+                    .from('agendamentos_com_alunos')
+                    .select('*')
+                    .eq('treinador_id', treinadorId)
+                    .eq('status', 'confirmado')
+                    .gte('data', hoje)
+                    .order('data', { ascending: true })
+                    .limit(3);
+
+                if (error) throw error;
+
+                const container = document.getElementById('proximasAulas');
+                if (!container) return;
+
+                if (!agendamentos || agendamentos.length === 0) {
+                    container.innerHTML = '<p class="no-data">Nenhuma aula agendada</p>';
+                    return;
+                }
+
+                container.innerHTML = agendamentos.map(aula => `
+                    <div class="aula-card">
+                        <div class="aula-info">
+                            <h4>${aula.aluno_nome}</h4>
+                            <p>${new Date(aula.data).toLocaleDateString('pt-BR')} às ${aula.hora}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar próximas aulas:', error);
+            }
+        }
+
+        // Função para carregar agenda da semana
+        async function carregarAgendaSemana(treinadorId) {
+            try {
+                const hoje = new Date();
+                const inicioSemana = new Date(hoje);
+                inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+                const fimSemana = new Date(inicioSemana);
+                fimSemana.setDate(inicioSemana.getDate() + 6);
+
+                const { data: agendamentos, error } = await window.supabaseClient
+                    .from('agendamentos_com_alunos')
+                    .select('*')
+                    .eq('treinador_id', treinadorId)
+                    .eq('status', 'confirmado')
+                    .gte('data', inicioSemana.toISOString().split('T')[0])
+                    .lte('data', fimSemana.toISOString().split('T')[0])
+                    .order('data', { ascending: true });
+
+                if (error) throw error;
+
+                const container = document.getElementById('agendaSemana');
+                if (!container) return;
+
+                if (!agendamentos || agendamentos.length === 0) {
+                    container.innerHTML = '<p class="no-data">Nenhuma aula agendada para esta semana</p>';
+                    return;
+                }
+
+                container.innerHTML = agendamentos.map(aula => `
+                    <div class="aula-card">
+                        <div class="aula-info">
+                            <h4>${aula.aluno_nome}</h4>
+                            <p>${new Date(aula.data).toLocaleDateString('pt-BR')} às ${aula.hora}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar agenda da semana:', error);
+            }
+        }
+
+        // Função para carregar últimas avaliações
+        async function carregarUltimasAvaliacoes(treinadorId) {
+            // TODO: Implementar quando tivermos o sistema de avaliações
+            const container = document.getElementById('ultimasAvaliacoes');
+            container.innerHTML = '<p class="no-data">Sistema de avaliações em desenvolvimento</p>';
+        }
+
+        let selectedFile = null;
+
+        // Função para visualizar a imagem antes de fazer upload
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                selectedFile = file;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('avatarPreview').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Função para editar perfil do treinador
+        async function editarPerfilTreinador() {
+            try {
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                if (!user) return;
+
+                // Buscar dados atuais do treinador
+                const { data: treinador, error } = await window.supabaseClient
+                    .from('treinadores')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .single();
+
+                if (error) throw error;
+
+                // Preencher o modal com os dados atuais
+                document.getElementById('editNome').value = treinador.nome || '';
+                document.getElementById('editEspecialidade').value = treinador.especialidade || '';
+                document.getElementById('avatarPreview').src = treinador.avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + treinador.nome;
+                selectedFile = null;
+
+                // Mostrar o modal
+                document.getElementById('editProfileModal').style.display = 'block';
+            } catch (error) {
+                console.error('Erro ao carregar dados do perfil:', error);
+                showNotification('Erro ao carregar dados do perfil', 'error');
+            }
+        }
+
+        // Função para fechar o modal de edição de perfil
+        function closeEditProfileModal() {
+            document.getElementById('editProfileModal').style.display = 'none';
+        }
+
+        // Função para salvar as alterações do perfil
+        async function salvarPerfilTreinador() {
+            try {
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                if (!user) return;
+
+                const nome = document.getElementById('editNome').value;
+                const especialidade = document.getElementById('editEspecialidade').value;
+
+                // Validar campos obrigatórios
+                if (!nome || !especialidade) {
+                    showNotification('Nome e especialidade são obrigatórios', 'error');
+                    return;
+                }
+
+                let avatar_url = document.getElementById('avatarPreview').src;
+
+                // Se uma nova imagem foi selecionada, fazer upload
+                if (selectedFile) {
+                    console.log('Iniciando upload da imagem...');
+                    const fileExt = selectedFile.name.split('.').pop();
+                    const fileName = `treinadores/${user.id}-${Date.now()}.${fileExt}`;
+
+                    // Upload da imagem
+                    const { data: uploadData, error: uploadError } = await window.supabaseClient.storage
+                        .from('images')
+                        .upload(fileName, selectedFile, {
+                            cacheControl: '3600',
+                            upsert: true
+                        });
+
+                    if (uploadError) {
+                        console.error('Erro no upload:', uploadError);
+                        throw uploadError;
+                    }
+
+                    console.log('Upload concluído:', uploadData);
+
+                    // Obter URL pública da imagem
+                    const { data } = window.supabaseClient.storage
+                        .from('images')
+                        .getPublicUrl(fileName);
+
+                    console.log('URL pública gerada:', data.publicUrl);
+                    avatar_url = data.publicUrl;
+                }
+
+                console.log('Atualizando perfil com URL:', avatar_url);
+
+                // Atualizar dados do treinador
+                const { data: updateData, error: updateError } = await window.supabaseClient
+                    .from('treinadores')
+                    .update({
+                        nome,
+                        especialidade,
+                        avatar_url,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('user_id', user.id)
+                    .select();
+
+                if (updateError) {
+                    console.error('Erro ao atualizar perfil:', updateError);
+                    throw updateError;
+                }
+
+                console.log('Perfil atualizado:', updateData);
+
+                showNotification('Perfil atualizado com sucesso!', 'success');
+                closeEditProfileModal();
+                
+                // Recarregar dados do treinador
+                await carregarDadosTreinador();
+            } catch (error) {
+                console.error('Erro ao salvar perfil:', error);
+                showNotification('Erro ao salvar alterações: ' + error.message, 'error');
+            }
+        }
+
+        // Função para gerar relatório
+        function gerarRelatorio() {
+            // TODO: Implementar geração de relatório
+            alert('Funcionalidade em desenvolvimento');
+        }
+
+        // Função para filtrar agendamentos
+        function filtrarAgendamentos(query) {
+            const cards = document.querySelectorAll('.agendamento-card');
+            query = query.toLowerCase();
+
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        // Função para carregar agendamentos
+        async function carregarAgendamentos() {
+            try {
+                console.log('Iniciando carregamento de agendamentos...');
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                console.log('Usuário autenticado:', user.email);
+
+                // Buscar o ID do treinador
+                const { data: treinador, error: treinadorError } = await window.supabaseClient
+                    .from('treinadores')
+                    .select('id')
+                    .eq('user_id', user.id)
+                    .single();
+
+                if (treinadorError) {
+                    console.error('Erro ao buscar ID do treinador:', treinadorError);
+                    return;
+                }
+
+                console.log('ID do treinador:', treinador.id);
+
+                // Buscar agendamentos de forma mais simples
+                const { data: agendamentos, error } = await window.supabaseClient
+                    .from('agendamentos')
+                    .select('*')
+                    .eq('treinador_id', treinador.id);
+
+                if (error) {
+                    console.error('Erro ao buscar agendamentos:', error);
+                    return;
+                }
+
+                console.log('Agendamentos encontrados:', agendamentos);
+
+                const container = document.getElementById('listaAgendamentos');
+                if (!container) return;
+
+                if (!agendamentos || agendamentos.length === 0) {
+                    container.innerHTML = '<p class="no-data">Nenhuma aula marcada</p>';
+                    return;
+                }
+
+                container.innerHTML = agendamentos.map(agendamento => `
+                    <div class="agendamento-card">
+                        <div class="agendamento-info">
+                            <h3>Aula #${agendamento.id.substring(0, 8)}</h3>
+                            <p>Data: ${new Date(agendamento.data).toLocaleDateString('pt-BR')}</p>
+                            <p>Hora: ${agendamento.hora}</p>
+                            <p>Duração: ${agendamento.duracao} minutos</p>
+                            <p>Status: ${agendamento.status}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar agendamentos:', error);
+            }
+        }
+
+        // Função para atualizar status do agendamento
+        async function atualizarStatus(agendamentoId, novoStatus) {
+            try {
+                console.log('Atualizando status do agendamento:', { agendamentoId, novoStatus });
+                
+                const { error } = await window.supabaseClient
+                    .from('agendamentos')
+                    .update({ status: novoStatus })
+                    .eq('id', agendamentoId);
+
+                if (error) {
+                    console.error('Erro ao atualizar status:', error);
+                    showNotification('Erro ao atualizar status do agendamento', 'error');
+                    return;
+                }
+
+                showNotification('Status atualizado com sucesso!', 'success');
+                await carregarAgendamentos();
+            } catch (error) {
+                console.error('Erro ao atualizar status:', error);
+                showNotification('Erro ao atualizar status do agendamento', 'error');
+            }
+        }
+
+        // Função para verificar e criar o bucket de imagens
+        async function verificarBucketImagens() {
+            try {
+                console.log('Verificando bucket de imagens...');
+                
+                // Primeiro, verificar se o usuário tem permissão
+                const { data: { user }, error: authError } = await window.supabaseClient.auth.getUser();
+                if (authError || !user) {
+                    throw new Error('Usuário não autenticado');
+                }
+
+                // Verificar se o usuário é admin
+                const { data: userData, error: userError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('tipo_conta')
+                    .eq('id', user.id)
+                    .single();
+
+                if (userError || userData.tipo_conta !== 'admin') {
+                    throw new Error('Sem permissão para gerenciar buckets');
+                }
+
+                // Tentar criar o bucket usando a função RPC
+                const { data: bucket, error: createError } = await window.supabaseClient.rpc('create_images_bucket');
+
+                if (createError) {
+                    console.error('Erro ao criar bucket:', createError);
+                    return;
+                }
+
+                console.log('Bucket images verificado/criado com sucesso:', bucket);
+            } catch (error) {
+                console.error('Erro ao verificar bucket:', error);
+            }
+        }
+
+        // Adicionar verificação do bucket quando a página carregar
+        window.addEventListener('load', async () => {
+            await verificarBucketImagens();
+            await verificarTabelaTreinadores();
+            await verificarTabelaAgendamentos();
+            checkAdminAccess();
+            
+            // Adicionar evento de clique no card de contas
+            const accountsCard = document.querySelector('.section-card[onclick="showSection(\'accounts\')"]');
+            if (accountsCard) {
+                accountsCard.addEventListener('click', () => {
+                    console.log('Card de contas clicado');
+                    showSection('accounts');
+                });
+            }
+        });
+
+        // Função para verificar e criar tabela de treinadores
+        async function verificarTabelaTreinadores() {
+            try {
+                console.log('Verificando tabela de treinadores...');
+                
+                // Verificar se a tabela existe
+                const { data: treinadores, error } = await window.supabaseClient
+                    .from('treinadores')
+                    .select('*')
+                    .limit(1);
+
+                if (error && error.code === '42P01') { // Tabela não existe
+                    console.log('Tabela de treinadores não existe. Criando...');
+                    
+                    // Criar tabela de treinadores
+                    const { error: createError } = await window.supabaseClient.rpc('create_treinadores_table');
+                    
+                    if (createError) {
+                        console.error('Erro ao criar tabela de treinadores:', createError);
+                        return;
+                    }
+                    
+                    console.log('Tabela de treinadores criada com sucesso!');
+                } else if (error) {
+                    console.error('Erro ao verificar tabela de treinadores:', error);
+                } else {
+                    console.log('Tabela de treinadores já existe.');
+                }
+            } catch (error) {
+                console.error('Erro ao verificar/criar tabela de treinadores:', error);
+            }
+        }
+
+        // Função para verificar e ajustar a estrutura da tabela treinadores
+        async function verificarEstruturaTabelaTreinadores() {
+            try {
+                console.log('Verificando estrutura da tabela treinadores...');
+                
+                // Primeiro, verificar se a tabela existe
+                const { data: treinadores, error: checkError } = await window.supabaseClient
+                    .from('treinadores')
+                    .select('*')
+                    .limit(1);
+
+                if (checkError && checkError.code === '42P01') {
+                    console.log('Tabela treinadores não existe. Criando...');
+                    
+                    // Criar a tabela com a estrutura correta
+                    const { error: createError } = await window.supabaseClient.rpc('create_treinadores_table');
+                    
+                    if (createError) {
+                        console.error('Erro ao criar tabela treinadores:', createError);
+                        return;
+                    }
+                    
+                    console.log('Tabela treinadores criada com sucesso!');
+                } else if (checkError) {
+                    console.error('Erro ao verificar tabela treinadores:', checkError);
+                    return;
+                }
+
+                // Verificar se o campo avatar_url existe e é do tipo text
+                const { data: columns, error: columnsError } = await window.supabaseClient.rpc('get_table_columns', {
+                    table_name: 'treinadores'
+                });
+
+                if (columnsError) {
+                    console.error('Erro ao verificar colunas:', columnsError);
+                    return;
+                }
+
+                const avatarUrlColumn = columns.find(col => col.column_name === 'avatar_url');
+                
+                if (!avatarUrlColumn || avatarUrlColumn.data_type !== 'text') {
+                    console.log('Ajustando tipo do campo avatar_url...');
+                    
+                    // Alterar o tipo da coluna para text
+                    const { error: alterError } = await window.supabaseClient.rpc('alter_column_type', {
+                        table_name: 'treinadores',
+                        column_name: 'avatar_url',
+                        new_type: 'text'
+                    });
+
+                    if (alterError) {
+                        console.error('Erro ao ajustar tipo da coluna:', alterError);
+                        return;
+                    }
+
+                    console.log('Tipo da coluna avatar_url ajustado com sucesso!');
+                }
+
+                console.log('Estrutura da tabela treinadores verificada e ajustada com sucesso!');
+            } catch (error) {
+                console.error('Erro ao verificar/ajustar estrutura da tabela:', error);
+            }
+        }
+
+        // Modificar o evento load para incluir a verificação da estrutura
+        window.addEventListener('load', async () => {
+            await verificarEstruturaTabelaTreinadores();
+            await verificarBucketImagens();
+            await verificarTabelaAgendamentos();
+            checkAdminAccess();
+            
+            // Adicionar evento de clique no card de contas
+            const accountsCard = document.querySelector('.section-card[onclick="showSection(\'accounts\')"]');
+            if (accountsCard) {
+                accountsCard.addEventListener('click', () => {
+                    console.log('Card de contas clicado');
+                    showSection('accounts');
+                });
+            }
+        });
+
+        // Função para abrir o modal de edição
+        function openEditModal(userId) {
+            const modal = document.getElementById('editModal');
+            modal.style.display = 'block';
+
+            // Buscar dados do usuário
+            fetchUserData(userId);
+        }
+
+        // Função para fechar o modal de edição
+        function closeEditModal() {
+            const modal = document.getElementById('editModal');
+            modal.style.display = 'none';
+        }
+
+        // Função para buscar dados do usuário
+        async function fetchUserData(userId) {
+            try {
+                const { data: userData, error } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('*')
+                    .eq('id', userId)
+                    .single();
+
+                if (error) throw error;
+
+                // Preencher o formulário com os dados do usuário
+                document.getElementById('editNome').value = userData.nome;
+                document.getElementById('editEmail').value = userData.email;
+                document.getElementById('editTipoConta').value = userData.tipo_conta;
+                document.getElementById('editDataCriacao').value = userData.data_criacao.slice(0, 16);
+
+                // Armazenar o ID do usuário para uso posterior
+                document.getElementById('editForm').dataset.userId = userId;
+            } catch (error) {
+                console.error('Erro ao buscar dados do usuário:', error);
+                alert('Erro ao carregar dados do usuário');
+            }
+        }
+
+        // Evento de submit do formulário de edição
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const userId = e.target.dataset.userId;
+            const nome = document.getElementById('editNome').value;
+            const email = document.getElementById('editEmail').value;
+            const tipoConta = document.getElementById('editTipoConta').value;
+            const dataCriacao = document.getElementById('editDataCriacao').value;
+
+            try {
+                const { error } = await window.supabaseClient
+                    .from('utilizadores')
+                    .update({
+                        nome,
+                        email,
+                        tipo_conta: tipoConta,
+                        data_criacao: dataCriacao
+                    })
+                    .eq('id', userId);
+
+                if (error) throw error;
+
+                alert('Usuário atualizado com sucesso!');
+                closeEditModal();
+                loadUsers(); // Recarregar a lista de usuários
+            } catch (error) {
+                console.error('Erro ao atualizar usuário:', error);
+                alert('Erro ao atualizar usuário');
+            }
+        });
+
+        // Fechar o modal quando clicar no X
+        document.querySelector('.close').addEventListener('click', closeEditModal);
+
+        // Fechar o modal quando clicar fora dele
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('editModal');
+            if (e.target === modal) {
+                closeEditModal();
+            }
+        });
+
+        // Mostrar seção específica
+        function showSection(section) {
+            console.log('Mostrando seção:', section);
+            
+            // Esconder o dashboard principal
+            const mainDashboard = document.getElementById('mainDashboard');
+            if (mainDashboard) {
+                mainDashboard.style.display = 'none';
+            }
+            
+            // Esconder todas as seções
+            const allSections = document.querySelectorAll('.content-section');
+            allSections.forEach(s => {
+                s.classList.remove('active');
+                s.style.display = 'none';
+            });
+            
+            // Mostrar a seção selecionada
+            const selectedSection = document.getElementById(section + 'Section');
+            if (selectedSection) {
+                selectedSection.classList.add('active');
+                selectedSection.style.display = 'block';
+                console.log('Seção selecionada:', selectedSection);
+
+                // Carregar dados específicos da seção
+                if (section === 'accounts') {
+                    console.log('Carregando contas...');
+                    loadAccounts();
+                    loadStats();
+                } else if (section === 'forms') {
+                    loadForms();
+                    loadStats();
+                } else if (section === 'treinadores') {
+                    carregarDadosTreinador();
+                }
+            } else {
+                console.error('Seção não encontrada:', section + 'Section');
+            }
+        }
+
+        // Mostrar dashboard principal
+        function showMainDashboard() {
+            const mainDashboard = document.getElementById('mainDashboard');
+            if (mainDashboard) {
+                mainDashboard.style.display = 'block';
+            }
+            
+            const allSections = document.querySelectorAll('.content-section');
+            allSections.forEach(s => {
+                s.classList.remove('active');
+                s.style.display = 'none';
+            });
+        }
+
+        // Função para mostrar notificação
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Mostrar a notificação
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Remover a notificação após 3 segundos
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Funções para gerenciar contas
+        async function editAccount(accountId) {
+            try {
+                console.log('Iniciando edição da conta:', accountId);
+                
+                const { data: account, error } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('*')
+                    .eq('id', accountId)
+                    .single();
+
+                if (error) {
+                    console.error('Erro ao buscar conta:', error);
+                    showNotification('Erro ao buscar conta', 'error');
+                    return;
+                }
+
+                console.log('Dados da conta carregados:', account);
+
+                // Verificar se os elementos existem
+                const modal = document.getElementById('editAccountModal');
+                const editAccountId = document.getElementById('editAccountId');
+                const editAccountName = document.getElementById('editAccountName');
+                const editAccountEmail = document.getElementById('editAccountEmail');
+                const editAccountType = document.getElementById('editAccountType');
+
+                if (!modal || !editAccountId || !editAccountName || !editAccountEmail || !editAccountType) {
+                    console.error('Elementos do modal não encontrados:', {
+                        modal: !!modal,
+                        editAccountId: !!editAccountId,
+                        editAccountName: !!editAccountName,
+                        editAccountEmail: !!editAccountEmail,
+                        editAccountType: !!editAccountType
+                    });
+                    showNotification('Erro ao abrir modal de edição', 'error');
+                    return;
+                }
+
+                // Preencher o modal com os dados da conta
+                editAccountId.value = account.id;
+                editAccountName.value = account.nome || '';
+                editAccountEmail.value = account.email || '';
+                editAccountType.value = account.tipo_conta || 'gratuito';
+
+                // Mostrar o modal
+                modal.style.display = 'block';
+                
+                console.log('Modal aberto com sucesso');
+            } catch (error) {
+                console.error('Erro ao editar conta:', error);
+                showNotification('Erro ao editar conta', 'error');
+            }
+        }
+
+        async function deleteAccount(accountId) {
+            if (!confirm('Tem certeza que deseja excluir esta conta?')) {
+                return;
+            }
+
+            try {
+                const { error } = await window.supabaseClient
+                    .from('utilizadores')
+                    .delete()
+                    .eq('id', accountId);
+
+                if (error) {
+                    console.error('Erro ao excluir conta:', error);
+                    showNotification('Erro ao excluir conta', 'error');
+                    return;
+                }
+
+                showNotification('Conta excluída com sucesso', 'success');
+                loadAccounts();
+                loadStats();
+            } catch (error) {
+                console.error('Erro ao excluir conta:', error);
+                showNotification('Erro ao excluir conta', 'error');
+            }
+        }
+
+        // Funções para gerenciar formulários
+        async function deleteForm(formId) {
+            if (!confirm('Tem certeza que deseja excluir este formulário?')) {
+                return;
+            }
+
+            try {
+                const { error } = await window.supabaseClient
+                    .from('formularios')
+                    .delete()
+                    .eq('id', formId);
+
+                if (error) {
+                    console.error('Erro ao excluir formulário:', error);
+                    showNotification('Erro ao excluir formulário', 'error');
+                    return;
+                }
+
+                showNotification('Formulário excluído com sucesso', 'success');
+                loadForms();
+            } catch (error) {
+                console.error('Erro ao excluir formulário:', error);
+                showNotification('Erro ao excluir formulário', 'error');
+            }
+        }
+
+        // Funções para gerenciar treinadores
+        async function carregarDadosTreinador() {
+            try {
+                const { data: treinadores, error } = await window.supabaseClient
+                    .from('treinadores')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error('Erro ao carregar treinadores:', error);
+                    showNotification('Erro ao carregar treinadores', 'error');
+                    return;
+                }
+
+                const tbody = document.querySelector('#treinadoresTable tbody');
+                if (!tbody) return;
+
+                tbody.innerHTML = '';
+
+                treinadores.forEach(treinador => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${treinador.nome || '-'}</td>
+                        <td>${treinador.especialidade || '-'}</td>
+                        <td>
+                            <button class="action-button edit-button" onclick="editarTreinador('${treinador.id}')">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="action-button delete-button" onclick="excluirTreinador('${treinador.id}')">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar treinadores:', error);
+                showNotification('Erro ao carregar treinadores', 'error');
+            }
+        }
+
+        async function editarTreinador(treinadorId) {
+            try {
+                const { data: treinador, error } = await window.supabaseClient
+                    .from('treinadores')
+                    .select('*')
+                    .eq('id', treinadorId)
+                    .single();
+
+                if (error) {
+                    console.error('Erro ao buscar treinador:', error);
+                    showNotification('Erro ao buscar treinador', 'error');
+                    return;
+                }
+
+                // Preencher o modal com os dados do treinador
+                document.getElementById('editTreinadorId').value = treinador.id;
+                document.getElementById('editTreinadorName').value = treinador.nome || '';
+                document.getElementById('editTreinadorEspecialidade').value = treinador.especialidade || '';
+
+                // Mostrar o modal
+                document.getElementById('editTreinadorModal').style.display = 'block';
+            } catch (error) {
+                console.error('Erro ao editar treinador:', error);
+                showNotification('Erro ao editar treinador', 'error');
+            }
+        }
+
+        async function excluirTreinador(treinadorId) {
+            if (!confirm('Tem certeza que deseja excluir este treinador?')) {
+                return;
+            }
+
+            try {
+                const { error } = await window.supabaseClient
+                    .from('treinadores')
+                    .delete()
+                    .eq('id', treinadorId);
+
+                if (error) {
+                    console.error('Erro ao excluir treinador:', error);
+                    showNotification('Erro ao excluir treinador', 'error');
+                    return;
+                }
+
+                showNotification('Treinador excluído com sucesso', 'success');
+                carregarDadosTreinador();
+            } catch (error) {
+                console.error('Erro ao excluir treinador:', error);
+                showNotification('Erro ao excluir treinador', 'error');
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Verificar se o usuário está autenticado
+                const { data: { user }, error: authError } = await window.supabaseClient.auth.getUser();
+                if (authError || !user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Verificar se o usuário é admin
+                const { data: userData, error: userError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('tipo_conta')
+                    .eq('id', user.id)
+                    .single();
+
+                if (userError || userData.tipo_conta !== 'admin') {
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                // Verificar tabela de treinadores
+                await verificarTabelaTreinadores();
+
+                // Verificar bucket de imagens
+                await verificarBucketImagens();
+
+                // Verificar tabela de agendamentos
+                await verificarTabelaAgendamentos();
+
+                // Carregar dados iniciais
+                await loadAccounts();
+                await loadForms();
+                await loadStats();
+                await loadSchedules();
+
+                // Configurar eventos
+                setupEventListeners();
+            } catch (error) {
+                console.error('Erro ao inicializar:', error);
+                showNotification('Erro ao inicializar o painel', 'error');
+            }
+        });
+
+        // Função para salvar as alterações da conta
+        async function saveAccountChanges() {
+            try {
+                const accountId = document.getElementById('editAccountId').value;
+                const accountData = {
+                    nome: document.getElementById('editAccountName').value,
+                    email: document.getElementById('editAccountEmail').value,
+                    tipo_conta: document.getElementById('editAccountType').value,
+                    updated_at: new Date().toISOString()
+                };
+
+                console.log('Salvando alterações:', { accountId, accountData });
+
+                // Primeiro, verificar se o usuário tem permissão
+                const { data: { user }, error: authError } = await window.supabaseClient.auth.getUser();
+                if (authError || !user) {
+                    throw new Error('Usuário não autenticado');
+                }
+
+                // Verificar se o usuário é admin
+                const { data: userData, error: userError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('tipo_conta')
+                    .eq('id', user.id)
+                    .single();
+
+                if (userError || userData.tipo_conta !== 'admin') {
+                    throw new Error('Sem permissão para atualizar contas');
+                }
+
+                // Tentar atualizar a conta
+                const { data, error } = await window.supabaseClient
+                    .from('utilizadores')
+                    .update(accountData)
+                    .eq('id', accountId)
+                    .select();
+
+                if (error) {
+                    console.error('Erro detalhado:', error);
+                    throw error;
+                }
+
+                showNotification('Conta atualizada com sucesso', 'success');
+                closeEditModal();
+                loadAccounts();
+                loadStats();
+            } catch (error) {
+                console.error('Erro ao salvar alterações:', error);
+                showNotification(`Erro ao salvar alterações: ${error.message}`, 'error');
+            }
+        }
+
+        // Função para fechar o modal de edição
+        function closeEditModal() {
+            const modal = document.getElementById('editAccountModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Adicionar event listeners para fechar o modal
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fechar modal ao clicar no botão de fechar
+            const closeButtons = document.querySelectorAll('.close-button');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', closeEditModal);
+            });
+
+            // Fechar modal ao clicar fora dele
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('editAccountModal');
+                if (event.target === modal) {
+                    closeEditModal();
+                }
+            });
+
+            // Fechar modal com a tecla ESC
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    const modal = document.getElementById('editAccountModal');
+                    if (modal && modal.style.display === 'block') {
+                        closeEditModal();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

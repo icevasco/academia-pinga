@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Avaliação - Academia Pinga</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="stylesheet" href="../CSS/user-menu.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../JS/user-menu.js"></script>
+    <link rel="icon" type="image/png" href="../IMG/favicon_sem_fundo.png">
+    <style>
+        .review-form {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .star-rating span {
+            color: #ddd;
+            transition: color 0.2s;
+        }
+
+        .star-rating span.active {
+            color: #ffd700;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-logo">
+                <img src="../IMG/academia_pinga_sem_fundo.png" alt="Academia Pinga" style="height: 50px; margin-right: 10px;">
+                Academia Pinga
+            </a>
+            <button class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="planos.html">Planos</a>
+                <a href="treinadores.html">Treinadores</a>
+                <a href="decks.html">Decks</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="avaliacoes.html">Avaliações</a>
+                <a href="outros-jogos.html">Outros Jogos</a>
+                <a href="../login.html" id="loginLink">Iniciar Sessão/Registo</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="review-form animate__animated animate__fadeIn">
+        <h1>Adicionar Avaliação</h1>
+        <form id="reviewForm">
+            <div class="form-group">
+                <label>Sua Avaliação</label>
+                <div class="star-rating" id="starRating">
+                    <span data-rating="1">★</span>
+                    <span data-rating="2">★</span>
+                    <span data-rating="3">★</span>
+                    <span data-rating="4">★</span>
+                    <span data-rating="5">★</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="reviewText">Sua Experiência</label>
+                <textarea id="reviewText" required placeholder="Conte-nos sobre sua experiência na Academia Pinga..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="trophies">Seus Troféus</label>
+                <input type="number" id="trophies" required min="0" max="9000" placeholder="Quantos troféus você tem?">
+            </div>
+            <button type="submit" class="submit-btn">Enviar Avaliação</button>
+        </form>
+    </div>
+
+    <script>
+        // Sistema de estrelas
+        const starRating = document.getElementById('starRating')
+        let selectedRating = 0
+
+        starRating.addEventListener('click', (e) => {
+            if (e.target.tagName === 'SPAN') {
+                selectedRating = parseInt(e.target.dataset.rating)
+                updateStars()
+            }
+        })
+
+        starRating.addEventListener('mouseover', (e) => {
+            if (e.target.tagName === 'SPAN') {
+                const rating = parseInt(e.target.dataset.rating)
+                highlightStars(rating)
+            }
+        })
+
+        starRating.addEventListener('mouseout', () => {
+            updateStars()
+        })
+
+        function highlightStars(rating) {
+            const stars = starRating.querySelectorAll('span')
+            stars.forEach((star, index) => {
+                star.classList.toggle('active', index < rating)
+            })
+        }
+
+        function updateStars() {
+            highlightStars(selectedRating)
+        }
+
+        // Envio do formulário
+        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+            e.preventDefault()
+
+            try {
+                const { data: { user } } = await window.supabaseClient.auth.getUser()
+                
+                if (!user) {
+                    alert('Por favor, faça login para adicionar uma avaliação.')
+                    window.location.href = '../login.html'
+                    return
+                }
+
+                const { data: userData } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('tipo_conta')
+                    .eq('id', user.id)
+                    .single()
+
+                if (!userData || userData.tipo_conta === 'gratuito') {
+                    alert('Apenas usuários com plano premium ou superior podem adicionar avaliações.')
+                    window.location.href = 'planos.html'
+                    return
+                }
+
+                const reviewText = document.getElementById('reviewText').value
+                const trophies = Math.min(parseInt(document.getElementById('trophies').value), 9000)
+
+                if (!selectedRating) {
+                    alert('Por favor, selecione uma avaliação com estrelas.')
+                    return
+                }
+
+                const { error } = await window.supabaseClient
+                    .from('avaliacoes')
+                    .insert([
+                        {
+                            user_id: user.id,
+                            nome: userData.nome,
+                            estrelas: selectedRating,
+                            texto: reviewText,
+                            trofeus: trophies,
+                            data: new Date().toISOString()
+                        }
+                    ])
+
+                if (error) {
+                    throw error
+                }
+
+                alert('Avaliação enviada com sucesso!')
+                window.location.href = 'avaliacoes.html'
+            } catch (error) {
+                console.error('Erro:', error)
+                alert('Erro ao enviar avaliação. Por favor, tente novamente.')
+            }
+        })
+
+        // Menu Mobile
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn')
+        const navLinks = document.querySelector('.nav-links')
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuBtn.classList.toggle('active')
+            navLinks.classList.toggle('active')
+            document.body.classList.toggle('menu-open')
+        })
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenuBtn.classList.remove('active')
+                navLinks.classList.remove('active')
+                document.body.classList.remove('menu-open')
+            })
+        })
+    </script>
+</body>
+</html> 
