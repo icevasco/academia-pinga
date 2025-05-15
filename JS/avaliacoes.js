@@ -1,7 +1,5 @@
-// Inicializar Supabase
-const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3dkZmlmaGhjcW10cG5ob3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTUzMDksImV4cCI6MjA2MDQzMTMwOX0.Q50xEMRQLTjuOKtn0f92GX5NKY9GgWWYVfHlmE5yhUs'
-const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey)
+// Usar o cliente Supabase já inicializado
+const supabaseClient = window.supabaseClient
 
 // Variável global para armazenar o ID da avaliação a ser excluída
 let avaliacaoParaExcluir = null;

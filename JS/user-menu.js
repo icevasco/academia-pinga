@@ -1,21 +1,23 @@
-// Adicionar link para o Font Awesome apenas se não existir
+// Adicionar Font Awesome se não existir
 if (!document.querySelector('link[href*="font-awesome"]')) {
-    const fontAwesomeLink = document.createElement('link')
-    fontAwesomeLink.rel = 'stylesheet'
-    fontAwesomeLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
-    document.head.appendChild(fontAwesomeLink)
+    const fontAwesome = document.createElement('link');
+    fontAwesome.rel = 'stylesheet';
+    fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
+    document.head.appendChild(fontAwesome);
 }
 
-// Inicialização do Supabase
-const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3dkZmlmaGhjcW10cG5ob3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTUzMDksImV4cCI6MjA2MDQzMTMwOX0.Q50xEMRQLTjuOKtn0f92GX5NKY9GgWWYVfHlmE5yhUs'
+// Inicializar Supabase apenas se ainda não foi inicializado
+if (!window.supabaseClient) {
+    const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3dkZmlmaGhjcW10cG5ob3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTUzMDksImV4cCI6MjA2MDQzMTMwOX0.Q50xEMRQLTjuOKtn0f92GX5NKY9GgWWYVfHlmE5yhUs';
 
-// Verificar se o objeto supabase já existe
-if (typeof window.supabase !== 'undefined') {
-    window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey)
-    console.log('Cliente Supabase inicializado com sucesso')
-} else {
-    console.error('Biblioteca Supabase não carregada')
+    // Verificar se o objeto supabase existe antes de criar o cliente
+    if (typeof supabase !== 'undefined') {
+        window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+        console.log('Cliente Supabase inicializado com sucesso!');
+    } else {
+        console.error('Biblioteca Supabase não carregada');
+    }
 }
 
 // Função para obter o caminho base

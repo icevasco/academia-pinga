@@ -101,10 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (!session) {
                     // Se não estiver logado, redirecionar para login
-                    window.location.href = `../login.html?redirect=HTML/inscricao.html&plano=${plano}`;
+                    window.location.href = `../login.html?redirect=inscricao.html&plano=${plano}`;
                 } else {
                     // Se estiver logado, redirecionar para inscrição
-                    window.location.href = `inscricao.html?plano=${plano}`;
+                    window.location.href = `../HTML/inscricao.html?plano=${plano}`;
                 }
             } catch (error) {
                 console.error('Erro ao verificar sessão:', error);

@@ -536,27 +536,31 @@
     </style>
 
     <script>
-        // Inicializar Supabase
-        const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co'
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3dkZmlmaGhjcW10cG5ob3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTUzMDksImV4cCI6MjA2MDQzMTMwOX0.Q50xEMRQLTjuOKtn0f92GX5NKY9GgWWYVfHlmE5yhUs'
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
-
         // Preencher automaticamente nome e email se o utilizador estiver autenticado
         document.addEventListener('DOMContentLoaded', async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
-                // Buscar nome e email na tabela utilizadores
-                const { data: userData } = await supabase
-                    .from('utilizadores')
-                    .select('nome, email')
-                    .eq('id', user.id)
-                    .single();
-                if (userData) {
-                    const nomeInput = document.querySelector('input[name="nome"]');
-                    const emailInput = document.querySelector('input[name="email"]');
-                    if (nomeInput) nomeInput.value = userData.nome || '';
-                    if (emailInput) emailInput.value = userData.email || '';
+            if (!window.supabaseClient) {
+                console.error('Cliente Supabase não inicializado');
+                return;
+            }
+
+            try {
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                if (user) {
+                    // Buscar nome e email na tabela utilizadores
+                    const { data: userData } = await window.supabaseClient
+                        .from('utilizadores')
+                        .select('nome, email')
+                        .eq('id', user.id)
+                        .single();
+                    if (userData) {
+                        const nomeInput = document.querySelector('input[name="nome"]');
+                        const emailInput = document.querySelector('input[name="email"]');
+                        if (nomeInput) nomeInput.value = userData.nome || '';
+                        if (emailInput) emailInput.value = userData.email || '';
+                    }
                 }
+            } catch (error) {
+                console.error('Erro ao buscar dados do usuário:', error);
             }
         });
 
@@ -666,7 +670,7 @@
 
             try {
                 // Verificar se o usuário já existe
-                const { data: existingUser, error: checkError } = await supabase
+                const { data: existingUser, error: checkError } = await window.supabaseClient
                     .from('utilizadores')
                     .select('id')
                     .eq('email', email)
@@ -678,7 +682,7 @@
 
                 if (existingUser) {
                     // Se o usuário já existe, verificar se é admin ou treinador
-                    const { data: userData, error: userError } = await supabase
+                    const { data: userData, error: userError } = await window.supabaseClient
                         .from('utilizadores')
                         .select('tipo_conta')
                         .eq('id', existingUser.id)
@@ -692,7 +696,7 @@
                         : 'premium';
 
                     // Atualizar os dados do usuário
-                    const { error: updateError } = await supabase
+                    const { error: updateError } = await window.supabaseClient
                         .from('utilizadores')
                         .update({
                             nome: nome,
@@ -703,7 +707,7 @@
                     if (updateError) throw updateError;
 
                     // Criar inscrição na tabela inscricoes
-                    const { error: inscricaoError } = await supabase
+                    const { error: inscricaoError } = await window.supabaseClient
                         .from('inscricoes')
                         .upsert({
                             utilizador_id: existingUser.id,
@@ -723,7 +727,7 @@
                 }
 
                 // Se o usuário não existe, cria um novo
-                const { data: authData, error: authError } = await supabase.auth.signUp({
+                const { data: authData, error: authError } = await window.supabaseClient.auth.signUp({
                     email: email,
                     password: Math.random().toString(36).slice(-8),
                     options: {
@@ -736,7 +740,7 @@
                 if (authError) throw authError;
 
                 // Criar registro na tabela utilizadores (apenas dados básicos)
-                const { error: insertError } = await supabase
+                const { error: insertError } = await window.supabaseClient
                     .from('utilizadores')
                     .insert({
                         id: authData.user.id,
@@ -748,7 +752,7 @@
                 if (insertError) throw insertError;
 
                 // Criar inscrição na tabela inscricoes
-                const { error: inscricaoError } = await supabase
+                const { error: inscricaoError } = await window.supabaseClient
                     .from('inscricoes')
                     .insert({
                         utilizador_id: authData.user.id,
