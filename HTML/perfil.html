@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - Academia Pinga</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../CSS/user-menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../JS/user-menu.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .profile-container {
+            max-width: 1200px;
+            margin: 140px auto 2rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #1a1a1a;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .profile-info h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #FFD700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-info p {
+            color: #fff;
+            opacity: 0.8;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card h3 {
+            color: #FFD700;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card p {
+            color: #fff;
+            opacity: 0.8;
+        }
+
+        .profile-section {
+            margin-bottom: 2rem;
+        }
+
+        .profile-section h2 {
+            color: #FFD700;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .activity-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .activity-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .activity-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .activity-item i {
+            color: #FFD700;
+            font-size: 1.2rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .activity-item .activity-info {
+            flex: 1;
+        }
+
+        .activity-item .activity-info h4 {
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-item .activity-info p {
+            color: #fff;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .activity-item .activity-date {
+            color: #fff;
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .profile-container {
+                margin: 100px 1rem 2rem;
+                padding: 1.5rem;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .activity-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .activity-item .activity-date {
+                margin-top: 0.5rem;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                font-size: 1.5rem;
+                color: #fff;
+                cursor: pointer;
+                z-index: 1000;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                height: 100vh;
+                background: rgba(33, 33, 33, 0.95);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                transition: right 0.3s ease;
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.2rem;
+            }
+
+            .mobile-menu-btn.active i::before {
+                content: "\f00d";
+            }
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 2rem;
+            background: linear-gradient(90deg, #1a237e 0%, #283593 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .logo {
+            height: 40px;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-logo">
+                <img src="../IMG/academia_pinga_sem_fundo.png" alt="Academia Pinga" style="height: 50px; margin-right: 10px;">
+                Academia Pinga
+            </a>
+            <button class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="planos.html">Planos</a>
+                <a href="treinadores.html">Treinadores</a>
+                <a href="decks.html">Decks</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="avaliacoes.html">Avaliações</a>
+                <a href="outros-jogos.html">Outros Jogos</a>
+                <a href="../login.html" id="loginLink">Iniciar Sessão/Registo</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-info">
+                <h1 id="userName">Carregando...</h1>
+                <p id="userEmail">Carregando...</p>
+            </div>
+        </div>
+
+        <div class="profile-stats">
+            <div class="stat-card">
+                <h3 id="trophiesCount">0</h3>
+                <p>Trofeus</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="winsCount">0</h3>
+                <p>Vitórias</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="decksCount">0</h3>
+                <p>Decks</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="trainingCount">0</h3>
+                <p>Treinos</p>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2>Atividade Recente</h2>
+            <div class="activity-list" id="activityList">
+                <!-- Atividades serão carregadas dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Menu mobile
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.classList.toggle('active');
+        });
+
+        // Fechar menu ao clicar em um link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+            });
+        });
+
+        async function loadUserData() {
+            try {
+                const { data: { session } } = await window.supabaseClient.auth.getSession()
+                if (!session) {
+                    window.location.href = 'login.html'
+                    return
+                }
+
+                const { data: userData, error: userError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('*')
+                    .eq('id', session.user.id)
+                    .single()
+
+                if (userError) throw userError
+
+                // Atualizar informações do perfil
+                document.getElementById('userName').textContent = userData.nome
+                document.getElementById('userEmail').textContent = session.user.email
+                document.getElementById('trophiesCount').textContent = userData.trofeus || 0
+                document.getElementById('winsCount').textContent = userData.vitorias || 0
+                document.getElementById('decksCount').textContent = userData.decks || 0
+                document.getElementById('trainingCount').textContent = userData.treinos || 0
+
+                // Carregar atividades recentes
+                const { data: activities, error: activitiesError } = await window.supabaseClient
+                    .from('atividades')
+                    .select('*')
+                    .eq('user_id', session.user.id)
+                    .order('created_at', { ascending: false })
+                    .limit(5)
+
+                if (activitiesError) throw activitiesError
+
+                const activityList = document.getElementById('activityList')
+                activityList.innerHTML = activities.map(activity => `
+                    <div class="activity-item">
+                        <i class="fas ${getActivityIcon(activity.tipo)}"></i>
+                        <div class="activity-info">
+                            <h4>${activity.titulo}</h4>
+                            <p>${activity.descricao}</p>
+                        </div>
+                        <div class="activity-date">
+                            ${new Date(activity.created_at).toLocaleDateString()}
+                        </div>
+                    </div>
+                `).join('')
+
+            } catch (error) {
+                console.error('Erro ao carregar dados do usuário:', error)
+                showNotification('Erro ao carregar dados do perfil', 'error')
+            }
+        }
+
+        function getActivityIcon(type) {
+            const icons = {
+                'vitoria': 'fa-trophy',
+                'treino': 'fa-dumbbell',
+                'deck': 'fa-layer-group',
+                'nivel': 'fa-star',
+                'default': 'fa-circle'
+            }
+            return icons[type] || icons.default
+        }
+
+        // Carregar dados quando a página carregar
+        window.addEventListener('load', loadUserData)
+    </script>
+</body>
+</html> 

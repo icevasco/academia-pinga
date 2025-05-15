@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações - Academia Pinga</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../CSS/user-menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../JS/user-menu.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .settings-container {
+            max-width: 800px;
+            margin: 140px auto 2rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .settings-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .settings-section h2 {
+            color: #FFD700;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #1a1a1a;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .notification-settings {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .notification-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .notification-item label {
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .notification-item input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+            accent-color: #FFD700;
+        }
+
+        .delete-account {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 12px;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+        }
+
+        .delete-account h3 {
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .delete-account p {
+            color: #fff;
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+                font-size: 1.5rem;
+                color: #fff;
+                cursor: pointer;
+                z-index: 1000;
+            }
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                height: 100vh;
+                background: rgba(33, 33, 33, 0.95);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                transition: right 0.3s ease;
+                z-index: 999;
+            }
+            .nav-links.active {
+                right: 0;
+            }
+            .nav-links a {
+                font-size: 1.2rem;
+            }
+            .mobile-menu-btn.active i::before {
+                content: "\f00d";
+            }
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 2rem;
+            background: transparent;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .logo {
+            height: 40px;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="../index.html" class="nav-logo">
+                <img src="../IMG/academia_pinga_sem_fundo.png" alt="Academia Pinga" style="height: 50px; margin-right: 10px;">
+                Academia Pinga
+            </a>
+            <button class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="planos.html">Planos</a>
+                <a href="treinadores.html">Treinadores</a>
+                <a href="decks.html">Decks</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="avaliacoes.html">Avaliações</a>
+                <a href="outros-jogos.html">Outros Jogos</a>
+                <a href="../login.html" id="loginLink">Iniciar Sessão/Registo</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="settings-container">
+        <div class="settings-section">
+            <h2>Informações Pessoais</h2>
+            <form id="personalInfoForm">
+                <div class="form-group">
+                    <label for="name">Nome</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required readonly>
+                </div>
+                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+            </form>
+        </div>
+
+        <div class="settings-section">
+            <h2>Alterar Senha</h2>
+            <form id="passwordForm">
+                <div class="form-group">
+                    <label for="currentPassword">Senha Atual</label>
+                    <input type="password" id="currentPassword" name="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">Nova Senha</label>
+                    <input type="password" id="newPassword" name="newPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Nova Senha</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Alterar Senha</button>
+            </form>
+        </div>
+
+        <div class="settings-section">
+            <h2>Notificações</h2>
+            <div class="notification-settings">
+                <div class="notification-item">
+                    <label>
+                        <input type="checkbox" id="emailNotifications" name="emailNotifications">
+                        Receber notificações por email
+                    </label>
+                </div>
+                <div class="notification-item">
+                    <label>
+                        <input type="checkbox" id="trainingReminders" name="trainingReminders">
+                        Lembretes de treino
+                    </label>
+                </div>
+                <div class="notification-item">
+                    <label>
+                        <input type="checkbox" id="deckUpdates" name="deckUpdates">
+                        Atualizações de decks
+                    </label>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="saveNotificationSettings()">Salvar Preferências</button>
+            </div>
+        </div>
+
+        <div class="delete-account">
+            <h3>Excluir Conta</h3>
+            <p>Ao excluir sua conta, todos os seus dados serão permanentemente removidos.</p>
+            <button type="button" class="btn btn-danger" onclick="deleteAccount()">Excluir Minha Conta</button>
+        </div>
+    </div>
+
+    <script>
+        // Menu mobile
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.classList.toggle('active');
+        });
+
+        // Fechar menu ao clicar em um link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+            });
+        });
+
+        async function loadUserData() {
+            try {
+                const { data: { session } } = await window.supabaseClient.auth.getSession()
+                if (!session) {
+                    window.location.href = 'login.html'
+                    return
+                }
+
+                const { data: userData, error: userError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('*')
+                    .eq('id', session.user.id)
+                    .single()
+
+                if (userError) throw userError
+
+                // Preencher formulário de informações pessoais
+                document.getElementById('name').value = userData.nome
+                document.getElementById('email').value = session.user.email
+
+                // Preencher preferências de notificação
+                document.getElementById('emailNotifications').checked = userData.notificacoes_email
+                document.getElementById('trainingReminders').checked = userData.lembretes_treino
+                document.getElementById('deckUpdates').checked = userData.atualizacoes_deck
+
+            } catch (error) {
+                console.error('Erro ao carregar dados do usuário:', error)
+                showNotification('Erro ao carregar dados do usuário', 'error')
+            }
+        }
+
+        async function updatePersonalInfo(event) {
+            event.preventDefault()
+            try {
+                const { data: { session } } = await window.supabaseClient.auth.getSession()
+                if (!session) throw new Error('Usuário não autenticado')
+
+                const { error } = await window.supabaseClient
+                    .from('utilizadores')
+                    .update({ nome: document.getElementById('name').value })
+                    .eq('id', session.user.id)
+
+                if (error) throw error
+
+                showNotification('Informações atualizadas com sucesso!', 'success')
+            } catch (error) {
+                console.error('Erro ao atualizar informações:', error)
+                showNotification('Erro ao atualizar informações', 'error')
+            }
+        }
+
+        async function updatePassword(event) {
+            event.preventDefault()
+            try {
+                const { data: { session } } = await window.supabaseClient.auth.getSession()
+                if (!session) throw new Error('Usuário não autenticado')
+
+                const currentPassword = document.getElementById('currentPassword').value
+                const newPassword = document.getElementById('newPassword').value
+                const confirmPassword = document.getElementById('confirmPassword').value
+
+                if (newPassword !== confirmPassword) {
+                    throw new Error('As senhas não coincidem')
+                }
+
+                const { error } = await window.supabaseClient.auth.updateUser({
+                    password: newPassword
+                })
+
+                if (error) throw error
+
+                showNotification('Senha atualizada com sucesso!', 'success')
+                document.getElementById('passwordForm').reset()
+            } catch (error) {
+                console.error('Erro ao atualizar senha:', error)
+                showNotification('Erro ao atualizar senha', 'error')
+            }
+        }
+
+        async function saveNotificationSettings() {
+            try {
+                const { data: { session } } = await window.supabaseClient.auth.getSession()
+                if (!session) throw new Error('Usuário não autenticado')
+
+                const { error } = await window.supabaseClient
+                    .from('utilizadores')
+                    .update({
+                        notificacoes_email: document.getElementById('emailNotifications').checked,
+                        lembretes_treino: document.getElementById('trainingReminders').checked,
+                        atualizacoes_deck: document.getElementById('deckUpdates').checked
+                    })
+                    .eq('id', session.user.id)
+
+                if (error) throw error
+
+                showNotification('Preferências salvas com sucesso!', 'success')
+            } catch (error) {
+                console.error('Erro ao salvar preferências:', error)
+                showNotification('Erro ao salvar preferências', 'error')
+            }
+        }
+
+        async function deleteAccount() {
+            if (!confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.')) {
+                return
+            }
+
+            try {
+                const { data: { session } } = await window.supabaseClient.auth.getSession()
+                if (!session) throw new Error('Usuário não autenticado')
+
+                const { error } = await window.supabaseClient
+                    .from('utilizadores')
+                    .delete()
+                    .eq('id', session.user.id)
+
+                if (error) throw error
+
+                await window.supabaseClient.auth.signOut()
+                window.location.href = '../index.html'
+            } catch (error) {
+                console.error('Erro ao excluir conta:', error)
+                showNotification('Erro ao excluir conta', 'error')
+            }
+        }
+
+        // Adicionar event listeners
+        document.getElementById('personalInfoForm').addEventListener('submit', updatePersonalInfo)
+        document.getElementById('passwordForm').addEventListener('submit', updatePassword)
+
+        // Carregar dados quando a página carregar
+        window.addEventListener('load', loadUserData)
+    </script>
+</body>
+</html> 
