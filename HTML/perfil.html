@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Perfil - Academia Pinga</title>
+    <title>Perfil | Academia Pinga</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../CSS/styles.css">
     <link rel="stylesheet" href="../CSS/user-menu.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -157,9 +157,6 @@
             font-size: 0.9rem;
         }
 
-        .mobile-menu-btn {
-            display: none;
-        }
         @media (max-width: 768px) {
             .profile-container {
                 margin: 100px 1rem 2rem;
@@ -183,68 +180,6 @@
             .activity-item .activity-date {
                 margin-top: 0.5rem;
             }
-
-            .mobile-menu-btn {
-                display: block;
-                font-size: 1.5rem;
-                color: #fff;
-                cursor: pointer;
-                z-index: 1000;
-            }
-
-            .nav-links {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 80%;
-                height: 100vh;
-                background: rgba(33, 33, 33, 0.95);
-                backdrop-filter: blur(10px);
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                gap: 2rem;
-                transition: right 0.3s ease;
-                z-index: 999;
-            }
-
-            .nav-links.active {
-                right: 0;
-            }
-
-            .nav-links a {
-                font-size: 1.2rem;
-            }
-
-            .mobile-menu-btn.active i::before {
-                content: "\f00d";
-            }
-        }
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.5rem 2rem;
-            background: linear-gradient(90deg, #1a237e 0%, #283593 100%);
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 100;
-        }
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .logo {
-            height: 40px;
-            width: auto;
         }
     </style>
 </head>
@@ -301,13 +236,6 @@
                 <p>Treinos</p>
             </div>
         </div>
-
-        <div class="profile-section">
-            <h2>Atividade Recente</h2>
-            <div class="activity-list" id="activityList">
-                <!-- Atividades serão carregadas dinamicamente -->
-            </div>
-        </div>
     </div>
 
     <script>
@@ -352,45 +280,10 @@
                 document.getElementById('decksCount').textContent = userData.decks || 0
                 document.getElementById('trainingCount').textContent = userData.treinos || 0
 
-                // Carregar atividades recentes
-                const { data: activities, error: activitiesError } = await window.supabaseClient
-                    .from('atividades')
-                    .select('*')
-                    .eq('user_id', session.user.id)
-                    .order('created_at', { ascending: false })
-                    .limit(5)
-
-                if (activitiesError) throw activitiesError
-
-                const activityList = document.getElementById('activityList')
-                activityList.innerHTML = activities.map(activity => `
-                    <div class="activity-item">
-                        <i class="fas ${getActivityIcon(activity.tipo)}"></i>
-                        <div class="activity-info">
-                            <h4>${activity.titulo}</h4>
-                            <p>${activity.descricao}</p>
-                        </div>
-                        <div class="activity-date">
-                            ${new Date(activity.created_at).toLocaleDateString()}
-                        </div>
-                    </div>
-                `).join('')
-
             } catch (error) {
                 console.error('Erro ao carregar dados do usuário:', error)
                 showNotification('Erro ao carregar dados do perfil', 'error')
             }
-        }
-
-        function getActivityIcon(type) {
-            const icons = {
-                'vitoria': 'fa-trophy',
-                'treino': 'fa-dumbbell',
-                'deck': 'fa-layer-group',
-                'nivel': 'fa-star',
-                'default': 'fa-circle'
-            }
-            return icons[type] || icons.default
         }
 
         // Carregar dados quando a página carregar

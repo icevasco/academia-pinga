@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurações - Academia Pinga</title>
+    <title>Configurações | Academia Pinga</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../CSS/styles.css">
     <link rel="stylesheet" href="../CSS/user-menu.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -20,6 +20,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        /* ====== MANTER APENAS ESTILOS DAS CONFIGURAÇÕES ====== */
         .settings-container {
             max-width: 800px;
             margin: 140px auto 2rem;
@@ -30,37 +31,31 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
         .settings-section {
             margin-bottom: 2rem;
             padding-bottom: 2rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-
         .settings-section:last-child {
             border-bottom: none;
             margin-bottom: 0;
             padding-bottom: 0;
         }
-
         .settings-section h2 {
             color: #FFD700;
             margin-bottom: 1.5rem;
             font-size: 1.5rem;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-
         .form-group {
             margin-bottom: 1.5rem;
         }
-
         .form-group label {
             display: block;
             color: #fff;
             margin-bottom: 0.5rem;
             font-weight: 500;
         }
-
         .form-group input {
             width: 100%;
             padding: 0.8rem;
@@ -71,13 +66,11 @@
             font-size: 1rem;
             transition: all 0.3s ease;
         }
-
         .form-group input:focus {
             outline: none;
             border-color: #FFD700;
             box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
         }
-
         .btn {
             padding: 0.8rem 1.5rem;
             border: none;
@@ -89,34 +82,28 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-
         .btn-primary {
             background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
             color: #1a1a1a;
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
         }
-
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
         }
-
         .btn-danger {
             background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
             color: #fff;
             box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
         }
-
         .btn-danger:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
         }
-
         .notification-settings {
             display: grid;
             gap: 1rem;
         }
-
         .notification-item {
             display: flex;
             align-items: center;
@@ -127,12 +114,10 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
-
         .notification-item:hover {
             transform: translateX(5px);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-
         .notification-item label {
             color: #fff;
             display: flex;
@@ -140,13 +125,11 @@
             gap: 0.5rem;
             cursor: pointer;
         }
-
         .notification-item input[type="checkbox"] {
             width: auto;
             margin: 0;
             accent-color: #FFD700;
         }
-
         .delete-account {
             text-align: center;
             padding: 2rem;
@@ -155,80 +138,27 @@
             margin-top: 2rem;
             border: 1px solid rgba(255, 107, 107, 0.2);
         }
-
         .delete-account h3 {
             color: #ff6b6b;
             margin-bottom: 1rem;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-
         .delete-account p {
             color: #fff;
             opacity: 0.8;
             margin-bottom: 1.5rem;
         }
-
-        .mobile-menu-btn {
-            display: none;
-        }
         @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: block;
-                font-size: 1.5rem;
-                color: #fff;
-                cursor: pointer;
-                z-index: 1000;
+            .settings-container {
+                margin: 100px 1rem 2rem;
+                padding: 1.5rem;
             }
-            .nav-links {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 80%;
-                height: 100vh;
-                background: rgba(33, 33, 33, 0.95);
-                backdrop-filter: blur(10px);
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                gap: 2rem;
-                transition: right 0.3s ease;
-                z-index: 999;
+            .settings-section {
+                padding: 1.5rem;
             }
-            .nav-links.active {
-                right: 0;
+            .form-group {
+                margin-bottom: 1rem;
             }
-            .nav-links a {
-                font-size: 1.2rem;
-            }
-            .mobile-menu-btn.active i::before {
-                content: "\f00d";
-            }
-        }
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.5rem 2rem;
-            background: transparent;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 100;
-        }
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .logo {
-            height: 40px;
-            width: auto;
         }
     </style>
 </head>
