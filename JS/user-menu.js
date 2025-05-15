@@ -175,11 +175,23 @@ async function handleLogout() {
             console.error('Cliente Supabase não inicializado')
             return
         }
-
+        // Verificar se existe sessão antes de tentar fazer logout
+        const { data: { session }, error: sessionError } = await window.supabaseClient.auth.getSession();
+        if (sessionError) throw sessionError;
+        if (!session) {
+            // Usuário já está deslogado
+            window.location.href = `${getBasePath()}login.html`;
+            return;
+        }
         const { error } = await window.supabaseClient.auth.signOut()
         if (error) throw error
         window.location.href = `${getBasePath()}login.html`
     } catch (error) {
+        // Se for erro de sessão ausente, apenas redireciona
+        if (error && error.name === 'AuthSessionMissingError') {
+            window.location.href = `${getBasePath()}login.html`;
+            return;
+        }
         console.error('Erro ao fazer logout:', error)
     }
 }

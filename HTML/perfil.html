@@ -265,12 +265,44 @@
             </div>
             <div class="stat-card">
                 <p>Tag do Clash Royale</p>
-                <h3 id="clashTag">Carregando...</h3>
+                <h3 id="clashTag" style="display: inline-block; vertical-align: middle;">Carregando...</h3>
+                <button id="editClashTagBtn" style="display:none; margin-left: 8px; padding: 4px 10px; border-radius: 5px; border: none; background: #FFD700; color: #1a1a1a; font-size: 0.95em; font-weight: bold; cursor: pointer; vertical-align: middle;">Editar</button>
+                <button id="setClashTagBtn" style="display:none; margin-top: 8px; padding: 6px 16px; border-radius: 6px; border: none; background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #1a1a1a; font-weight: bold; cursor: pointer;">Definir Tag do Clash Royale</button>
             </div>
         </div>
     </div>
 
+    <!-- Modal para definir tag -->
+    <div id="clashTagModal" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+      <div style="background: #222; padding: 2rem 1.5rem; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); min-width: 320px; max-width: 90vw; display: flex; flex-direction: column; align-items: center;">
+        <h2 style="color: #FFD700; margin-bottom: 1rem;">Definir Tag do Clash Royale</h2>
+        <input id="clashTagInput" type="text" maxlength="16" style="width: 90%; padding: 10px; border-radius: 6px; border: 1px solid #FFD700; font-size: 1.1rem; margin-bottom: 1.5rem;" value="#">
+        <div style="display: flex; gap: 1rem;">
+          <button id="saveClashTagBtn" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #1a1a1a; font-weight: bold; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer;">Salvar</button>
+          <button id="cancelClashTagBtn" style="background: #888; color: #fff; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer;">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de sucesso -->
+    <div id="successModal" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.3); z-index: 10000; align-items: center; justify-content: center;">
+      <div style="background: #222; padding: 2rem 2.5rem; border-radius: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); min-width: 320px; max-width: 90vw; display: flex; flex-direction: column; align-items: center; position: relative;">
+        <button id="closeSuccessModal" style="position: absolute; top: 10px; right: 10px; background: transparent; border: none; color: #FFD700; font-size: 1.5rem; cursor: pointer;">&times;</button>
+        <i class="fas fa-check-circle" style="color: #FFD700; font-size: 2.5rem; margin-bottom: 1rem;"></i>
+        <div id="successModalMsg" style="color: #FFD700; font-size: 1.2rem; text-align: center;"></div>
+      </div>
+    </div>
+
     <script>
+        // Definição global das variáveis de elementos
+        const clashTagElem = document.getElementById('clashTag');
+        const setClashTagBtn = document.getElementById('setClashTagBtn');
+        const editClashTagBtn = document.getElementById('editClashTagBtn');
+        const clashTagModal = document.getElementById('clashTagModal');
+        const clashTagInput = document.getElementById('clashTagInput');
+        const saveClashTagBtn = document.getElementById('saveClashTagBtn');
+        const cancelClashTagBtn = document.getElementById('cancelClashTagBtn');
+
         // Menu mobile
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const navLinks = document.querySelector('.nav-links');
@@ -384,20 +416,31 @@
                 document.getElementById('lastLogin').textContent = ultimoLoginFormatado;
 
                 // Tag do Clash Royale
-                let clashTag = 'Não definida';
+                let clashTag = null;
                 try {
-                    const { data: inscricao, error: inscricaoError } = await window.supabaseClient
-                        .from('inscricoes')
-                        .select('tag')
-                        .eq('user_id', session.user.id)
+                    const { data: userData, error: userError } = await window.supabaseClient
+                        .from('utilizadores')
+                        .select('tag_clash')
+                        .eq('id', session.user.id)
                         .single();
-                    if (!inscricaoError && inscricao && inscricao.tag) {
-                        clashTag = inscricao.tag;
+                    if (!userError && userData && userData.tag_clash) {
+                        clashTag = userData.tag_clash;
                     }
                 } catch (e) {
-                    // Se der erro, mantém 'Não definida'
+                    // Se der erro, mantém null
                 }
-                document.getElementById('clashTag').textContent = clashTag;
+                const clashTagElem = document.getElementById('clashTag');
+                const setClashTagBtn = document.getElementById('setClashTagBtn');
+                const editClashTagBtn = document.getElementById('editClashTagBtn');
+                if (clashTag) {
+                    clashTagElem.textContent = clashTag;
+                    setClashTagBtn.style.display = 'none';
+                    editClashTagBtn.style.display = 'inline-block';
+                } else {
+                    clashTagElem.textContent = '';
+                    setClashTagBtn.style.display = 'inline-block';
+                    editClashTagBtn.style.display = 'none';
+                }
 
                 // Atualizar foto de perfil
                 const profileImage = document.getElementById('profileImage');
@@ -430,6 +473,132 @@
 
         // Carregar dados quando a página carregar
         window.addEventListener('load', loadUserData)
+
+        // Função para definir a tag do Clash Royale
+        setClashTagBtn.addEventListener('click', () => {
+            clashTagInput.value = '#';
+            clashTagModal.style.display = 'flex';
+            setTimeout(() => {
+                clashTagInput.focus();
+                // Coloca o cursor logo após o #
+                clashTagInput.setSelectionRange(1, 1);
+            }, 100);
+        });
+        // Forçar letras maiúsculas no input
+        clashTagInput.addEventListener('input', function() {
+            // Mantém o # no início e força o resto para maiúsculas
+            if (!this.value.startsWith('#')) {
+                this.value = '#' + this.value.replace(/#/g, '');
+            }
+            // Só permite letras maiúsculas após o #
+            let before = this.value;
+            this.value = '#' + this.value.substring(1).toUpperCase();
+            // Mantém o cursor na posição correta
+            if (before !== this.value) {
+                this.setSelectionRange(this.value.length, this.value.length);
+            }
+        });
+        cancelClashTagBtn.addEventListener('click', () => {
+            clashTagModal.style.display = 'none';
+        });
+        // Botão de editar tag
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('editClashTagBtn').addEventListener('click', () => {
+                const clashTagElem = document.getElementById('clashTag');
+                const clashTagInput = document.getElementById('clashTagInput');
+                const clashTagModal = document.getElementById('clashTagModal');
+                // Preenche o input com a tag atual
+                clashTagInput.value = clashTagElem.textContent || '#';
+                clashTagModal.style.display = 'flex';
+                setTimeout(() => {
+                    clashTagInput.focus();
+                    // Coloca o cursor no final
+                    clashTagInput.setSelectionRange(clashTagInput.value.length, clashTagInput.value.length);
+                }, 100);
+            });
+        });
+        saveClashTagBtn.addEventListener('click', async () => {
+            const tag = clashTagInput.value.trim();
+            // Se só tiver #, apaga a tag
+            if (tag === '#') {
+                try {
+                    const { data: { session } } = await window.supabaseClient.auth.getSession();
+                    if (!session) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    // Remove a tag (define como null)
+                    const { error } = await window.supabaseClient
+                        .from('utilizadores')
+                        .update({ tag_clash: null })
+                        .eq('id', session.user.id);
+                    if (error) throw error;
+                    clashTagElem.textContent = '';
+                    setClashTagBtn.style.display = 'inline-block';
+                    editClashTagBtn.style.display = 'none';
+                    clashTagModal.style.display = 'none';
+                    showSuccessModal('Tag removida com sucesso!');
+                } catch (error) {
+                    console.error('Erro ao remover tag:', error);
+                    showNotification('Erro ao remover tag', 'error');
+                }
+                return;
+            }
+            // Validação: mínimo 3, máximo 9 após o #
+            if (!tag.startsWith('#') || tag.length < 4 || tag.length > 10) {
+                showNotification('A tag deve começar com # e ter entre 3 e 9 caracteres após o #', 'error');
+                return;
+            }
+            try {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if (!session) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                // Atualiza a tag diretamente na tabela utilizadores
+                const { error } = await window.supabaseClient
+                    .from('utilizadores')
+                    .update({ tag_clash: tag })
+                    .eq('id', session.user.id);
+                if (error) throw error;
+                clashTagElem.textContent = tag;
+                setClashTagBtn.style.display = 'none';
+                editClashTagBtn.style.display = 'inline-block';
+                clashTagModal.style.display = 'none';
+                showSuccessModal('Tag atualizada com sucesso!');
+            } catch (error) {
+                console.error('Erro ao definir tag:', error);
+                showNotification('Erro ao definir tag', 'error');
+            }
+        });
+        // Fechar modal ao clicar fora dele
+        clashTagModal.addEventListener('click', (e) => {
+            if (e.target === clashTagModal) {
+                clashTagModal.style.display = 'none';
+            }
+        });
+
+        // Função para mostrar modal de sucesso
+        function showSuccessModal(msg) {
+            const modal = document.getElementById('successModal');
+            const msgDiv = document.getElementById('successModalMsg');
+            msgDiv.textContent = msg;
+            modal.style.display = 'flex';
+            let timeout = setTimeout(() => {
+                modal.style.display = 'none';
+            }, 3000);
+            document.getElementById('closeSuccessModal').onclick = () => {
+                modal.style.display = 'none';
+                clearTimeout(timeout);
+            };
+            // Fechar ao clicar fora do conteúdo do modal
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    clearTimeout(timeout);
+                }
+            };
+        }
     </script>
 </body>
 </html> 
