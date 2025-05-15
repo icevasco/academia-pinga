@@ -281,31 +281,6 @@
             </form>
         </div>
 
-        <div class="settings-section">
-            <h2>Notificações</h2>
-            <div class="notification-settings">
-                <div class="notification-item">
-                    <label>
-                        <input type="checkbox" id="emailNotifications" name="emailNotifications">
-                        Receber notificações por email
-                    </label>
-                </div>
-                <div class="notification-item">
-                    <label>
-                        <input type="checkbox" id="trainingReminders" name="trainingReminders">
-                        Lembretes de treino
-                    </label>
-                </div>
-                <div class="notification-item">
-                    <label>
-                        <input type="checkbox" id="deckUpdates" name="deckUpdates">
-                        Atualizações de decks
-                    </label>
-                </div>
-                <button type="button" class="btn btn-primary" onclick="saveNotificationSettings()">Salvar Preferências</button>
-            </div>
-        </div>
-
         <div class="delete-account">
             <h3>Excluir Conta</h3>
             <p>Ao excluir sua conta, todos os seus dados serão permanentemente removidos.</p>
@@ -421,11 +396,6 @@
                 // Preencher formulário de informações pessoais
                 document.getElementById('name').value = userData.nome
                 document.getElementById('email').value = session.user.email
-
-                // Preencher preferências de notificação
-                document.getElementById('emailNotifications').checked = userData.notificacoes_email
-                document.getElementById('trainingReminders').checked = userData.lembretes_treino
-                document.getElementById('deckUpdates').checked = userData.atualizacoes_deck
 
                 // Mostrar foto de perfil se existir
                 if (userData.foto_perfil_url) {
@@ -563,29 +533,6 @@
             } catch (error) {
                 console.error('Erro ao atualizar senha:', error)
                 showNotification('Erro ao atualizar senha', 'error')
-            }
-        }
-
-        async function saveNotificationSettings() {
-            try {
-                const { data: { session } } = await window.supabaseClient.auth.getSession()
-                if (!session) throw new Error('Usuário não autenticado')
-
-                const { error } = await window.supabaseClient
-                    .from('utilizadores')
-                    .update({
-                        notificacoes_email: document.getElementById('emailNotifications').checked,
-                        lembretes_treino: document.getElementById('trainingReminders').checked,
-                        atualizacoes_deck: document.getElementById('deckUpdates').checked
-                    })
-                    .eq('id', session.user.id)
-
-                if (error) throw error
-
-                showNotification('Preferências salvas com sucesso!', 'success')
-            } catch (error) {
-                console.error('Erro ao salvar preferências:', error)
-                showNotification('Erro ao salvar preferências', 'error')
             }
         }
 
