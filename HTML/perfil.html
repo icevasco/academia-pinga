@@ -68,35 +68,52 @@
 
         .profile-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 2rem;
+            margin-top: 2rem;
         }
 
         .stat-card {
             background: rgba(255, 255, 255, 0.05);
             padding: 1.5rem;
-            border-radius: 15px;
+            border-radius: 12px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
         }
 
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .stat-card h3 {
-            color: #FFD700;
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .stat-card p {
+            color: #FFD700;
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            font-size: 1.2rem;
             color: #fff;
-            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .stat-card h3 i {
+            color: #FFD700;
+            font-size: 1.1em;
+        }
+
+        /* Removendo os estilos específicos de cores */
+        .stat-card h3 i.fa-crown,
+        .stat-card h3 i.fa-user-shield,
+        .stat-card h3 i.fa-chalkboard-teacher,
+        .stat-card h3 i.fa-user {
+            color: #FFD700;
         }
 
         .profile-section {
@@ -182,6 +199,19 @@
                 margin-top: 0.5rem;
             }
         }
+
+        .stat-card h3.cargo-admin, .stat-card h3.cargo-admin i {
+            color: #ff4444;
+        }
+        .stat-card h3.cargo-treinador, .stat-card h3.cargo-treinador i {
+            color: #4CAF50;
+        }
+        .stat-card h3.cargo-premium, .stat-card h3.cargo-premium i {
+            color: #FFD700;
+        }
+        .stat-card h3.cargo-gratuito, .stat-card h3.cargo-gratuito i {
+            color: #2196F3;
+        }
     </style>
 </head>
 <body>
@@ -234,8 +264,8 @@
                 <h3 id="lastLogin">Carregando...</h3>
             </div>
             <div class="stat-card">
-                <p>Status da Conta</p>
-                <h3 id="accountStatus">Carregando...</h3>
+                <p>Tag do Clash Royale</p>
+                <h3 id="clashTag">Carregando...</h3>
             </div>
         </div>
     </div>
@@ -279,9 +309,59 @@
                 document.getElementById('userEmail').textContent = session.user.email
 
                 // Atualizar estatísticas
-                const role = userData.tipo_conta === 'admin' ? 'Administrador' : 
-                            userData.tipo_conta === 'treinador' ? 'Treinador' : 'Aluno';
-                document.getElementById('userRole').textContent = role;
+                const getAccountTypeText = (tipoConta) => {
+                    switch(tipoConta) {
+                        case 'admin':
+                            return 'Administrador';
+                        case 'treinador':
+                            return 'Treinador';
+                        case 'premium_iniciante':
+                            return 'Premium Iniciante';
+                        case 'premium_avancado':
+                            return 'Premium Avançado';
+                        case 'premium_pro':
+                            return 'Premium Pro';
+                        default:
+                            return 'Conta Gratuita';
+                    }
+                }
+
+                const getAccountTypeIcon = (tipoConta) => {
+                    switch(tipoConta) {
+                        case 'admin':
+                            return 'user-shield';
+                        case 'treinador':
+                            return 'chalkboard-teacher';
+                        case 'premium_iniciante':
+                        case 'premium_avancado':
+                        case 'premium_pro':
+                            return 'crown';
+                        default:
+                            return 'user';
+                    }
+                }
+
+                const getAccountTypeClass = (tipoConta) => {
+                    switch(tipoConta) {
+                        case 'admin':
+                            return 'cargo-admin';
+                        case 'treinador':
+                            return 'cargo-treinador';
+                        case 'premium_iniciante':
+                        case 'premium_avancado':
+                        case 'premium_pro':
+                            return 'cargo-premium';
+                        default:
+                            return 'cargo-gratuito';
+                    }
+                }
+
+                const roleElement = document.getElementById('userRole');
+                roleElement.className = getAccountTypeClass(userData.tipo_conta);
+                roleElement.innerHTML = `
+                    <i class="fas fa-${getAccountTypeIcon(userData.tipo_conta)}"></i>
+                    ${getAccountTypeText(userData.tipo_conta)}
+                `;
 
                 // Formatar data de criação
                 const dataCriacao = new Date(userData.data_criacao);
@@ -303,11 +383,21 @@
                 });
                 document.getElementById('lastLogin').textContent = ultimoLoginFormatado;
 
-                // Status da conta
-                const status = userData.tipo_conta === 'admin' ? 'Premium' :
-                              userData.tipo_conta === 'treinador' ? 'Profissional' :
-                              userData.tipo_conta === 'gratuito' ? 'Gratuito' : 'Premium';
-                document.getElementById('accountStatus').textContent = status;
+                // Tag do Clash Royale
+                let clashTag = 'Não definida';
+                try {
+                    const { data: inscricao, error: inscricaoError } = await window.supabaseClient
+                        .from('inscricoes')
+                        .select('tag')
+                        .eq('user_id', session.user.id)
+                        .single();
+                    if (!inscricaoError && inscricao && inscricao.tag) {
+                        clashTag = inscricao.tag;
+                    }
+                } catch (e) {
+                    // Se der erro, mantém 'Não definida'
+                }
+                document.getElementById('clashTag').textContent = clashTag;
 
                 // Atualizar foto de perfil
                 const profileImage = document.getElementById('profileImage');

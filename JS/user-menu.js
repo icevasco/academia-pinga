@@ -74,6 +74,40 @@ async function checkUser() {
 
         if (userError) throw userError
 
+        // Função para obter o texto do tipo de conta
+        const getAccountTypeText = (tipoConta) => {
+            switch(tipoConta) {
+                case 'admin':
+                    return 'Administrador';
+                case 'treinador':
+                    return 'Treinador';
+                case 'premium_iniciante':
+                    return 'Premium Iniciante';
+                case 'premium_avancado':
+                    return 'Premium Avançado';
+                case 'premium_pro':
+                    return 'Premium Pro';
+                default:
+                    return 'Conta Gratuita';
+            }
+        }
+
+        // Função para obter o ícone do tipo de conta
+        const getAccountTypeIcon = (tipoConta) => {
+            switch(tipoConta) {
+                case 'admin':
+                    return 'user-shield';
+                case 'treinador':
+                    return 'chalkboard-teacher';
+                case 'premium_iniciante':
+                case 'premium_avancado':
+                case 'premium_pro':
+                    return 'crown';
+                default:
+                    return 'user';
+            }
+        }
+
         // Atualizar o menu do usuário
         const loginLink = document.getElementById('loginLink')
         if (loginLink) {
@@ -85,7 +119,10 @@ async function checkUser() {
                     <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="user-dropdown">
-                    <div class="account-type">${userData.tipo_conta === 'admin' ? 'Administrador' : userData.tipo_conta === 'treinador' ? 'Treinador' : 'Aluno'}</div>
+                    <div class="account-type">
+                        <i class="fas fa-${getAccountTypeIcon(userData.tipo_conta)}"></i>
+                        ${getAccountTypeText(userData.tipo_conta)}
+                    </div>
                     ${userData.tipo_conta === 'admin' || userData.tipo_conta === 'treinador' ? `
                         <a href="${getBasePath()}HTML/admin.html" class="dropdown-item">
                             <i class="fas fa-user-shield"></i> Painel Admin
