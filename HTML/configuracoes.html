@@ -160,6 +160,54 @@
                 margin-bottom: 1rem;
             }
         }
+        #profileImagePreviewContainer {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1rem;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #FFD700;
+            background: #fff;
+        }
+
+        #profileImagePreview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #profileAvatar {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #1a1a1a;
+            font-size: 3rem;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .form-group[style*="text-align:center"] {
+            margin: 2rem 0;
+        }
+
+        #chooseImageBtn {
+            margin-top: 1rem;
+        }
+
+        #fileName {
+            display: block;
+            margin-top: 0.5rem;
+            color: #FFD700;
+        }
     </style>
 </head>
 <body>
@@ -200,15 +248,15 @@
                 </div>
                 <div class="form-group" style="text-align:center;">
                     <label for="profileImage">Foto de Perfil</label>
-                    <div id="profileImagePreviewContainer" style="margin-bottom: 1rem;">
-                        <div id="profileAvatar" class="profile-avatar" style="display: flex; align-items: center; justify-content: center; width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #1a1a1a; font-size: 3rem; margin: 0 auto; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);">
+                    <div id="profileImagePreviewContainer">
+                        <div id="profileAvatar" class="profile-avatar">
                             <i class="fas fa-user"></i>
                         </div>
-                        <img id="profileImagePreview" src="" alt="Foto de Perfil" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #FFD700; background: #fff; display: none; margin: 0 auto;">
+                        <img id="profileImagePreview" src="" alt="Foto de Perfil">
                     </div>
                     <input type="file" id="profileImage" name="profileImage" accept="image/*" style="display:none;">
                     <button type="button" class="btn btn-primary" id="chooseImageBtn">Escolher Foto</button>
-                    <span id="fileName" style="margin-left: 1rem; color: #FFD700;"></span>
+                    <span id="fileName"></span>
                 </div>
                 <button type="submit" class="btn btn-primary">Salvar Alterações</button>
             </form>
@@ -274,6 +322,8 @@
     </div>
 
     <script>
+        console.log('Script iniciado');
+
         // Menu mobile
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const navLinks = document.querySelector('.nav-links');
@@ -298,19 +348,37 @@
         const chooseImageBtn = document.getElementById('chooseImageBtn');
         const fileNameSpan = document.getElementById('fileName');
 
-        chooseImageBtn.addEventListener('click', () => profileImageInput.click());
-        profileImageInput.addEventListener('change', () => {
+        console.log('Elementos do DOM:', {
+            profileImageInput,
+            profileImagePreview,
+            profileAvatar,
+            chooseImageBtn,
+            fileNameSpan
+        });
+
+        chooseImageBtn.addEventListener('click', () => {
+            console.log('Botão de escolher imagem clicado');
+            profileImageInput.click();
+        });
+
+        profileImageInput.addEventListener('change', (event) => {
+            console.log('Arquivo selecionado:', event.target.files[0]);
             if (profileImageInput.files && profileImageInput.files[0]) {
                 const file = profileImageInput.files[0];
                 fileNameSpan.textContent = file.name;
                 const reader = new FileReader();
                 reader.onload = e => {
+                    console.log('Arquivo lido com sucesso');
                     profileImagePreview.src = e.target.result;
                     profileImagePreview.style.display = 'block';
                     profileAvatar.style.display = 'none';
                 };
+                reader.onerror = error => {
+                    console.error('Erro ao ler arquivo:', error);
+                };
                 reader.readAsDataURL(file);
             } else {
+                console.log('Nenhum arquivo selecionado');
                 fileNameSpan.textContent = '';
                 profileImagePreview.src = '';
                 profileImagePreview.style.display = 'none';
@@ -318,10 +386,21 @@
             }
         });
 
+        // Função para mostrar o modal de feedback
+        function showModal(message) {
+            console.log('Mostrando modal:', message);
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('feedbackModal').style.display = 'flex';
+        }
+
         async function loadUserData() {
+            console.log('Iniciando carregamento de dados do usuário');
             try {
                 const { data: { session } } = await window.supabaseClient.auth.getSession()
+                console.log('Sessão:', session);
+                
                 if (!session) {
+                    console.log('Usuário não autenticado, redirecionando para login');
                     window.location.href = 'login.html'
                     return
                 }
@@ -332,7 +411,12 @@
                     .eq('id', session.user.id)
                     .single()
 
-                if (userError) throw userError
+                if (userError) {
+                    console.error('Erro ao buscar dados do usuário:', userError);
+                    throw userError;
+                }
+
+                console.log('Dados do usuário carregados:', userData);
 
                 // Preencher formulário de informações pessoais
                 document.getElementById('name').value = userData.nome
@@ -345,24 +429,31 @@
 
                 // Mostrar foto de perfil se existir
                 if (userData.foto_perfil_url) {
+                    console.log('URL da foto de perfil:', userData.foto_perfil_url);
                     profileImagePreview.src = userData.foto_perfil_url;
                     profileImagePreview.style.display = 'block';
                     profileAvatar.style.display = 'none';
+                    
+                    // Verificar se a imagem carregou corretamente
+                    profileImagePreview.onload = () => {
+                        console.log('Imagem carregada com sucesso');
+                    };
+                    profileImagePreview.onerror = (error) => {
+                        console.error('Erro ao carregar imagem:', error);
+                        // Se houver erro ao carregar a imagem, mostrar o avatar padrão
+                        profileImagePreview.style.display = 'none';
+                        profileAvatar.style.display = 'flex';
+                    };
                 } else {
+                    console.log('Nenhuma foto de perfil encontrada');
                     profileImagePreview.src = '';
                     profileImagePreview.style.display = 'none';
                     profileAvatar.style.display = 'flex';
                 }
             } catch (error) {
                 console.error('Erro ao carregar dados do usuário:', error)
-                showNotification('Erro ao carregar dados do usuário', 'error')
+                showModal('Erro ao carregar dados do usuário: ' + error.message)
             }
-        }
-
-        // Função para mostrar o modal de feedback
-        function showModal(message) {
-            document.getElementById('modalMessage').textContent = message;
-            document.getElementById('feedbackModal').style.display = 'flex';
         }
 
         // Atualizar informações pessoais e foto de perfil
@@ -370,7 +461,9 @@
             event.preventDefault();
             try {
                 const { data: { session } } = await window.supabaseClient.auth.getSession();
-                if (!session) throw new Error('Usuário não autenticado');
+                if (!session) {
+                    throw new Error('Usuário não autenticado');
+                }
 
                 let foto_perfil_url = null;
                 // Se o utilizador selecionou uma nova imagem
@@ -378,35 +471,70 @@
                     const file = profileImageInput.files[0];
                     const fileExt = file.name.split('.').pop();
                     const filePath = `${session.user.id}.${fileExt}`;
+
                     // Upload para o Supabase Storage
-                    let { error: uploadError } = await window.supabaseClient.storage.from('avatars').upload(filePath, file, { upsert: true });
-                    if (uploadError) throw uploadError;
+                    const { error: uploadError } = await window.supabaseClient
+                        .storage
+                        .from('avatars')
+                        .upload(filePath, file, {
+                            upsert: true,
+                            cacheControl: '3600',
+                            contentType: file.type
+                        });
+
+                    if (uploadError) {
+                        console.error('Erro detalhado no upload:', uploadError);
+                        throw uploadError;
+                    }
+
                     // Obter URL público
-                    const { data } = window.supabaseClient.storage.from('avatars').getPublicUrl(filePath);
-                    foto_perfil_url = data.publicUrl;
+                    const { data: urlData } = window.supabaseClient
+                        .storage
+                        .from('avatars')
+                        .getPublicUrl(filePath);
+
+                    foto_perfil_url = urlData.publicUrl;
+                    console.log('Nova URL da foto de perfil:', foto_perfil_url);
                 }
 
                 // Atualizar nome e foto no perfil
                 const updateData = { nome: document.getElementById('name').value };
-                if (foto_perfil_url) updateData.foto_perfil_url = foto_perfil_url;
+                if (foto_perfil_url) {
+                    updateData.foto_perfil_url = foto_perfil_url;
+                    console.log('Atualizando foto de perfil com URL:', foto_perfil_url);
+                }
 
-                const { error } = await window.supabaseClient
+                const { error: updateError } = await window.supabaseClient
                     .from('utilizadores')
                     .update(updateData)
                     .eq('id', session.user.id);
 
-                if (error) throw error;
+                if (updateError) {
+                    console.error('Erro na atualização:', updateError);
+                    throw updateError;
+                }
 
                 showModal('Alterações salvas com sucesso!');
+                
                 // Atualizar preview se a foto mudou
                 if (foto_perfil_url) {
                     profileImagePreview.src = foto_perfil_url;
                     profileImagePreview.style.display = 'block';
                     profileAvatar.style.display = 'none';
+                    
+                    // Verificar se a nova imagem carregou corretamente
+                    profileImagePreview.onload = () => {
+                        console.log('Nova imagem carregada com sucesso');
+                    };
+                    profileImagePreview.onerror = (error) => {
+                        console.error('Erro ao carregar nova imagem:', error);
+                        profileImagePreview.style.display = 'none';
+                        profileAvatar.style.display = 'flex';
+                    };
                 }
             } catch (error) {
                 console.error('Erro ao atualizar informações:', error);
-                showModal('Erro ao salvar alterações: ' + (error.message || 'Tente novamente.'));
+                showModal('Erro ao salvar alterações: ' + error.message);
             }
         }
 
@@ -486,11 +614,21 @@
         }
 
         // Adicionar event listeners
-        document.getElementById('personalInfoForm').addEventListener('submit', updatePersonalInfo)
-        document.getElementById('passwordForm').addEventListener('submit', updatePassword)
+        document.getElementById('personalInfoForm').addEventListener('submit', (event) => {
+            console.log('Formulário de informações pessoais submetido');
+            updatePersonalInfo(event);
+        });
+
+        document.getElementById('passwordForm').addEventListener('submit', (event) => {
+            console.log('Formulário de senha submetido');
+            updatePassword(event);
+        });
 
         // Carregar dados quando a página carregar
-        window.addEventListener('load', loadUserData)
+        window.addEventListener('load', () => {
+            console.log('Página carregada, iniciando carregamento de dados');
+            loadUserData();
+        });
     </script>
 </body>
 </html> 

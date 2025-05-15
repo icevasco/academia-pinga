@@ -211,7 +211,8 @@
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-avatar">
-                <i class="fas fa-user"></i>
+                <img id="profileImage" src="" alt="Foto de Perfil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: none;">
+                <i class="fas fa-user" id="defaultAvatar"></i>
             </div>
             <div class="profile-info">
                 <h1 id="userName">Carregando...</h1>
@@ -280,6 +281,29 @@
                 document.getElementById('winsCount').textContent = userData.vitorias || 0
                 document.getElementById('decksCount').textContent = userData.decks || 0
                 document.getElementById('trainingCount').textContent = userData.treinos || 0
+
+                // Atualizar foto de perfil
+                const profileImage = document.getElementById('profileImage');
+                const defaultAvatar = document.getElementById('defaultAvatar');
+                
+                if (userData.foto_perfil_url) {
+                    profileImage.src = userData.foto_perfil_url;
+                    profileImage.style.display = 'block';
+                    defaultAvatar.style.display = 'none';
+                    
+                    // Verificar se a imagem carregou corretamente
+                    profileImage.onload = () => {
+                        console.log('Imagem de perfil carregada com sucesso');
+                    };
+                    profileImage.onerror = () => {
+                        console.error('Erro ao carregar imagem de perfil');
+                        profileImage.style.display = 'none';
+                        defaultAvatar.style.display = 'block';
+                    };
+                } else {
+                    profileImage.style.display = 'none';
+                    defaultAvatar.style.display = 'block';
+                }
 
             } catch (error) {
                 console.error('Erro ao carregar dados do usuário:', error)
