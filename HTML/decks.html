@@ -51,9 +51,6 @@
             <div class="search-bar">
                 <input type="text" id="deckSearch" placeholder="Pesquisar decks...">
                 <button class="search-button">Pesquisar</button>
-                <button id="createDeckBtn" class="create-deck-button" style="display: none;">
-                    <i class="fas fa-plus"></i> Criar Deck
-                </button>
             </div>
         </div>
 
@@ -1666,78 +1663,12 @@
         </div>
     </div>
 
-    <!-- Create Deck Modal -->
-    <div class="modal" id="createDeckModal">
-        <div class="modal-content">
-            <span class="modal-close">&times;</span>
-            <div class="modal-header">
-                <h2 class="modal-title">Criar Novo Deck</h2>
-            </div>
-            <div class="modal-body">
-                <div class="deck-creation-steps">
-                    <div class="step-indicator">
-                        <div class="step active" data-step="1">
-                            <span class="step-number">1</span>
-                            <span class="step-text">Evoluídas</span>
-                        </div>
-                        <div class="step" data-step="2">
-                            <span class="step-number">2</span>
-                            <span class="step-text">Completar Deck</span>
-                        </div>
-                    </div>
-                    
-                    <div class="step-content" id="step1">
-                        <h3>Selecione 2 Cartas Evoluídas</h3>
-                        <div class="cards-grid evolved-cards">
-                            <!-- Evolved cards will be loaded here -->
-                        </div>
-                    </div>
-                    
-                    <div class="step-content" id="step2" style="display: none;">
-                        <h3>Complete seu Deck (6 cartas restantes)</h3>
-                        <div class="selected-evolved-cards">
-                            <h4>Cartas Evoluídas Selecionadas:</h4>
-                            <div class="selected-cards-grid">
-                                <!-- Selected evolved cards will be shown here -->
-                            </div>
-                        </div>
-                        <div class="cards-grid remaining-cards">
-                            <!-- Remaining cards will be loaded here -->
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="modal-footer">
-                    <button class="next-step-button" style="display: none;">Próximo</button>
-                    <button class="create-deck-button" style="display: none;">Criar Deck</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
         // Filtros de deck
         const filterButtons = document.querySelectorAll('.filter-button');
         const deckCards = document.querySelectorAll('.deck-card');
         const searchInput = document.getElementById('deckSearch');
         const sortSelect = document.getElementById('sortDecks');
-
-        // Create Deck Variables
-        const createDeckBtn = document.getElementById('createDeckBtn');
-        const createDeckModal = document.getElementById('createDeckModal');
-        const closeCreateDeckModal = createDeckModal.querySelector('.modal-close');
-        const nextStepBtn = createDeckModal.querySelector('.next-step-button');
-        const createDeckFinalBtn = createDeckModal.querySelector('.create-deck-button');
-        const step1 = document.getElementById('step1');
-        const step2 = document.getElementById('step2');
-        const evolvedCardsGrid = document.querySelector('.evolved-cards');
-        const remainingCardsGrid = document.querySelector('.remaining-cards');
-        const selectedCardsGrid = document.querySelector('.selected-cards-grid');
-
-        let selectedEvolvedCards = [];
-        let selectedRemainingCards = [];
-        let allCards = [];
-        let evolvedCards = [];
 
         // Verificar se o usuário é treinador ou admin
         async function checkUserRole() {

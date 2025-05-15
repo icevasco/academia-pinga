@@ -119,10 +119,7 @@ async function checkUser() {
                     <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="user-dropdown">
-                    <div class="account-type">
-                        <i class="fas fa-${getAccountTypeIcon(userData.tipo_conta)}"></i>
-                        ${getAccountTypeText(userData.tipo_conta)}
-                    </div>
+                    <div class="account-type">${userData.tipo_conta === 'admin' ? 'Administrador' : userData.tipo_conta === 'treinador' ? 'Treinador' : 'Aluno'}</div>
                     ${userData.tipo_conta === 'admin' || userData.tipo_conta === 'treinador' ? `
                         <a href="${getBasePath()}HTML/admin.html" class="dropdown-item">
                             <i class="fas fa-user-shield"></i> Painel Admin
@@ -145,23 +142,23 @@ async function checkUser() {
             const userInfo = userMenu.querySelector('.user-info')
             const dropdown = userMenu.querySelector('.user-dropdown')
             const chevron = userInfo.querySelector('.fa-chevron-down')
-            
             let isDropdownOpen = false
-
             userInfo.addEventListener('click', (e) => {
                 e.stopPropagation()
                 isDropdownOpen = !isDropdownOpen
                 dropdown.classList.toggle('active')
                 chevron.style.transform = isDropdownOpen ? 'rotate(180deg)' : 'rotate(0)'
+                console.log('Dropdown toggled:', isDropdownOpen)
             })
-
             document.addEventListener('click', (e) => {
                 if (!userMenu.contains(e.target) && isDropdownOpen) {
                     isDropdownOpen = false
                     dropdown.classList.remove('active')
                     chevron.style.transform = 'rotate(0)'
+                    console.log('Dropdown fechado')
                 }
             })
+            console.log('Menu do utilizador criado com dropdown')
         }
     } catch (error) {
         console.error('Erro ao verificar usuário:', error)

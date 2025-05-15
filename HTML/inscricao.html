@@ -37,8 +37,8 @@
     </nav>
 
     <div class="container">
-        <h1>Inscreva-se na Academia</h1>
-        <p>Comece sua jornada para se tornar um jogador profissional</p>
+        <h1 style="color: #FFD700; text-shadow: 1px 1px 8px #222;">Inscreve-te na Academia</h1>
+        <p style="color: #fff; font-weight: 500; text-shadow: 1px 1px 8px #000;">Começa a tua jornada para te tornares um jogador profissional</p>
 
         <form id="inscricaoForm">
             <div class="form-group">
@@ -206,6 +206,9 @@
             max-width: 1200px;
             margin: 50px auto;
             padding: 20px;
+            overflow: visible !important;
+            position: relative !important;
+            z-index: 1;
         }
 
         .form-group {
@@ -524,6 +527,11 @@
 
         .tutorial-content::-webkit-scrollbar-thumb:hover {
             background: #1976D2;
+        }
+
+        .user-menu, .user-dropdown {
+            z-index: 99999 !important;
+            position: relative !important;
         }
     </style>
 

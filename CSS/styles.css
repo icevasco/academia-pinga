@@ -54,9 +54,15 @@
     box-sizing: border-box;
 }
 
+body, html {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+}
+section {
+    background: transparent !important;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f5f5;
     color: var(--text-color);
     line-height: 1.6;
     padding-top: 60px; /* Reduzido de 70px para 60px */
@@ -1085,42 +1091,50 @@ body {
 }
 
 .cta-section {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    padding: 6rem 2rem;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
     text-align: center;
-    color: white;
+    padding: 60px 0;
+    border-radius: 15px;
+    margin: 60px 0;
+    border: none !important;
 }
-
-.cta-content {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.cta-content h2 {
-    font-size: 3rem;
+.cta-section h2 {
+    color: #FFD700;
+    text-shadow: 1px 1px 6px #000, 0 2px 8px #222;
+    font-weight: 800;
+    font-size: 2.5rem;
     margin-bottom: 1rem;
 }
-
-.cta-content p {
-    font-size: 1.25rem;
+.cta-section p {
+    color: #fff !important;
+    font-size: 1.2rem;
     margin-bottom: 2rem;
+    opacity: 1 !important;
+    text-shadow: 0 1px 4px #000 !important;
 }
-
-.cta-buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
+.cta-section .cta-button {
+    color: #23272f;
+    background: #FFD700;
+    border: none;
+    font-weight: bold;
+    border-radius: 30px;
+    padding: 16px 36px;
+    margin: 0 10px;
+    font-size: 1.1rem;
+    transition: background 0.2s, color 0.2s;
 }
-
-.cta-button.secondary {
+.cta-section .cta-button.secondary {
     background: transparent;
-    border: 2px solid var(--accent-color);
-    color: var(--accent-color);
+    color: #FFD700;
+    border: 2px solid #FFD700;
 }
-
-.cta-button.secondary:hover {
-    background: var(--accent-color);
-    color: var(--primary-color);
+.cta-section .cta-button:hover {
+    background: #FFC300;
+    color: #111;
+}
+.cta-section .cta-button.secondary:hover {
+    background: #FFD700;
+    color: #23272f;
 }
 
 /* Ajustes para o grid de decks */
@@ -2540,7 +2554,7 @@ body {
     padding: 50px 20px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: none !important;
 }
 
 .cta-section h2 {
@@ -3675,4 +3689,10 @@ body {
   #step2 .cards-grid.remaining-cards .card-item {
     min-width: 90px;
   }
+}
+
+/* Melhorar contraste ao selecionar texto */
+::selection, ::-moz-selection {
+    background: #FFD700 !important;
+    color: #1a1a1a !important;
 }
