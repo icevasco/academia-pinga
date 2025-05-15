@@ -43,16 +43,13 @@
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     min-width: 220px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: none;
     z-index: 9999 !important;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    pointer-events: none;
 }
 
 .user-dropdown.active {
+    display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
     pointer-events: auto !important;

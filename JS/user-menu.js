@@ -6,21 +6,16 @@ if (!document.querySelector('link[href*="font-awesome"]')) {
     document.head.appendChild(fontAwesomeLink)
 }
 
-// Inicialização do Supabase apenas se não existir
-if (!window.supabaseClient) {
-    const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co'
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3dkZmlmaGhjcW10cG5ob3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTUzMDksImV4cCI6MjA2MDQzMTMwOX0.Q50xEMRQLTjuOKtn0f92GX5NKY9GgWWYVfHlmE5yhUs'
-    
-    try {
-        // Verificar se o objeto supabase já existe
-        if (typeof supabase === 'undefined') {
-            console.error('Biblioteca Supabase não carregada')
-        } else {
-            window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
-        }
-    } catch (error) {
-        console.error('Erro ao inicializar Supabase:', error)
-    }
+// Inicialização do Supabase
+const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3dkZmlmaGhjcW10cG5ob3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTUzMDksImV4cCI6MjA2MDQzMTMwOX0.Q50xEMRQLTjuOKtn0f92GX5NKY9GgWWYVfHlmE5yhUs'
+
+// Verificar se o objeto supabase já existe
+if (typeof window.supabase !== 'undefined') {
+    window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey)
+    console.log('Cliente Supabase inicializado com sucesso')
+} else {
+    console.error('Biblioteca Supabase não carregada')
 }
 
 // Função para obter o caminho base
@@ -74,40 +69,6 @@ async function checkUser() {
 
         if (userError) throw userError
 
-        // Função para obter o texto do tipo de conta
-        const getAccountTypeText = (tipoConta) => {
-            switch(tipoConta) {
-                case 'admin':
-                    return 'Administrador';
-                case 'treinador':
-                    return 'Treinador';
-                case 'premium_iniciante':
-                    return 'Premium Iniciante';
-                case 'premium_avancado':
-                    return 'Premium Avançado';
-                case 'premium_pro':
-                    return 'Premium Pro';
-                default:
-                    return 'Conta Gratuita';
-            }
-        }
-
-        // Função para obter o ícone do tipo de conta
-        const getAccountTypeIcon = (tipoConta) => {
-            switch(tipoConta) {
-                case 'admin':
-                    return 'user-shield';
-                case 'treinador':
-                    return 'chalkboard-teacher';
-                case 'premium_iniciante':
-                case 'premium_avancado':
-                case 'premium_pro':
-                    return 'crown';
-                default:
-                    return 'user';
-            }
-        }
-
         // Atualizar o menu do usuário
         const loginLink = document.getElementById('loginLink')
         if (loginLink) {
@@ -142,23 +103,19 @@ async function checkUser() {
             const userInfo = userMenu.querySelector('.user-info')
             const dropdown = userMenu.querySelector('.user-dropdown')
             const chevron = userInfo.querySelector('.fa-chevron-down')
-            let isDropdownOpen = false
+            
             userInfo.addEventListener('click', (e) => {
                 e.stopPropagation()
-                isDropdownOpen = !isDropdownOpen
                 dropdown.classList.toggle('active')
-                chevron.style.transform = isDropdownOpen ? 'rotate(180deg)' : 'rotate(0)'
-                console.log('Dropdown toggled:', isDropdownOpen)
+                chevron.style.transform = dropdown.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0)'
             })
+
             document.addEventListener('click', (e) => {
-                if (!userMenu.contains(e.target) && isDropdownOpen) {
-                    isDropdownOpen = false
+                if (!userMenu.contains(e.target) && dropdown.classList.contains('active')) {
                     dropdown.classList.remove('active')
                     chevron.style.transform = 'rotate(0)'
-                    console.log('Dropdown fechado')
                 }
             })
-            console.log('Menu do utilizador criado com dropdown')
         }
     } catch (error) {
         console.error('Erro ao verificar usuário:', error)
@@ -172,23 +129,10 @@ async function handleLogout() {
             console.error('Cliente Supabase não inicializado')
             return
         }
-        // Verificar se existe sessão antes de tentar fazer logout
-        const { data: { session }, error: sessionError } = await window.supabaseClient.auth.getSession();
-        if (sessionError) throw sessionError;
-        if (!session) {
-            // Usuário já está deslogado
-            window.location.href = `${getBasePath()}login.html`;
-            return;
-        }
         const { error } = await window.supabaseClient.auth.signOut()
         if (error) throw error
         window.location.href = `${getBasePath()}login.html`
     } catch (error) {
-        // Se for erro de sessão ausente, apenas redireciona
-        if (error && error.name === 'AuthSessionMissingError') {
-            window.location.href = `${getBasePath()}login.html`;
-            return;
-        }
         console.error('Erro ao fazer logout:', error)
     }
 }
