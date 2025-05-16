@@ -67,17 +67,18 @@ async function carregarAvaliacoes() {
         return;
     }
 
-    // Para cada avaliação, buscar o tipo de conta do usuário
+    // Para cada avaliação, buscar o tipo de conta e o nome do usuário
     const avaliacoesComTipoConta = await Promise.all(avaliacoes.map(async (avaliacao) => {
         const { data: userData } = await supabaseClient
             .from('utilizadores')
-            .select('tipo_conta')
+            .select('tipo_conta, nome')
             .eq('id', avaliacao.user_id)
             .single();
         
         return {
             ...avaliacao,
-            tipo_conta: userData?.tipo_conta || 'gratuito'
+            tipo_conta: userData?.tipo_conta || 'gratuito',
+            nome: userData?.nome || 'Usuário'
         };
     }));
 
@@ -186,7 +187,7 @@ function criarCardAvaliacao(avaliacao, tipoConta) {
         <div class="review-meta">
             <span class="trophies">
                 <span class="trophy-icon">🏆</span>
-                ${avaliacao.trofeus} Troféus
+                ${(avaliacao.trofeus !== undefined && avaliacao.trofeus !== null) ? avaliacao.trofeus : 0} Troféus
             </span>
             <span class="verified-badge">${formatarTipoConta(avaliacao.tipo_conta)}</span>
         </div>
@@ -657,11 +658,11 @@ async function enviarAvaliacao(event) {
             .from('avaliacoes')
             .insert([{
                 user_id: user.id,
-                nome: userData.nome,
+                treinador_id: treinadorIdAtual,
                 texto: texto,
                 estrelas: estrelas,
-                data: new Date().toISOString(),
-                trofeus: trofeus
+                trofeus: trofeus,
+                data: new Date().toISOString()
             }]);
 
         if (error) {
@@ -688,7 +689,7 @@ async function atualizarAvaliacoesExistentes() {
 
         if (error) throw error;
 
-        // Para cada avaliação, buscar o nome do usuário e atualizar
+        // Para cada avaliação, buscar o nome do usuário e logar
         for (const avaliacao of avaliacoes) {
             const { data: userData, error: userError } = await supabaseClient
                 .from('utilizadores')
@@ -701,15 +702,8 @@ async function atualizarAvaliacoesExistentes() {
                 continue;
             }
 
-            // Atualizar a avaliação com o nome do usuário
-            const { error: updateError } = await supabaseClient
-                .from('avaliacoes')
-                .update({ nome: userData.nome })
-                .eq('id', avaliacao.id);
-
-            if (updateError) {
-                console.error(`Erro ao atualizar avaliação ${avaliacao.id}:`, updateError);
-            }
+            // Apenas logar o nome do usuário
+            console.log(`Usuário: ${userData.nome} para avaliação ${avaliacao.id}`);
         }
 
         console.log('Atualização de avaliações concluída');

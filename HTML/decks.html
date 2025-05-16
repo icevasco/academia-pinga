@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Decks Mais Famosos - Academia Pinga</title>
+    <title>Melhores Decks - Academia Pinga</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="../CSS/styles.css">
     <link rel="stylesheet" href="../CSS/user-menu.css">
@@ -11,14 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../JS/user-menu.js" defer></script>
     <link rel="icon" type="image/png" href="../IMG/favicon_sem_fundo.png">
-    <style>
-        .animate__animated {
-            animation-duration: 0.5s !important;
-        }
-        .deck-card {
-            animation-delay: calc(var(--i, 0) * 0.1s) !important;
-        }
-    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -46,31 +38,31 @@
 
     <div class="decks-container">
         <div class="decks-header animate__animated animate__fadeInDown">
-            <h1>Decks Mais Famosos</h1>
-            <p>Descubra os decks mais populares e eficientes do Clash Royale</p>
+            <h1 style="color: #FFD700; text-shadow: 0 0 10px rgba(255,215,0,0.5), 0 0 20px rgba(255,215,0,0.3), 0 0 30px rgba(255,215,0,0.2); font-size: 3.5rem; font-weight: 800; letter-spacing: 2px; background: linear-gradient(45deg, #FFD700, #FFA500); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem;">Decks Mais Famosos</h1>
+            <p>Descobre os baralhos mais populares e eficientes do Clash Royale</p>
             <div class="search-bar">
-                <input type="text" id="deckSearch" placeholder="Pesquisar decks...">
+                <input type="text" id="deckSearch" placeholder="Pesquisar baralhos...">
                 <button class="search-button">Pesquisar</button>
             </div>
         </div>
 
         <div class="deck-filters animate__animated animate__fadeIn">
             <button class="filter-button active" data-filter="all">Todos</button>
-            <button class="filter-button" data-filter="control">Control</button>
+            <button class="filter-button" data-filter="control">Controlo</button>
             <button class="filter-button" data-filter="beatdown">Beatdown</button>
-            <button class="filter-button" data-filter="cycle">Cycle</button>
+            <button class="filter-button" data-filter="cycle">Ciclo</button>
             <button class="filter-button" data-filter="bridge-spam">Bridge Spam</button>
             <button class="filter-button" data-filter="log-bait">Log Bait</button>
-            <button class="filter-button" data-filter="siege">Siege</button>
+            <button class="filter-button" data-filter="siege">Cerco</button>
             <button class="filter-button" data-filter="chip">Chip</button>
-            <button class="filter-button" data-filter="dual-lane">Dual Lane</button>
+            <button class="filter-button" data-filter="dual-lane">Dupla Pista</button>
             <button class="filter-button" data-filter="splash">Splash</button>
-            <button class="filter-button" data-filter="miner">Miner</button>
-            <button class="filter-button" data-filter="heavy-control">Heavy Control</button>
+            <button class="filter-button" data-filter="miner">Mineiro</button>
+            <button class="filter-button" data-filter="heavy-control">Controlo Pesado</button>
             <div class="sort-options">
                 <select id="sortDecks">
-                    <option value="winrate">Win Rate</option>
-                    <option value="usage">Usos</option>
+                    <option value="winrate">Taxa de Vitória</option>
+                    <option value="usage">Utilizações</option>
                     <option value="elixir">Elixir</option>
                 </select>
             </div>

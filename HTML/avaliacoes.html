@@ -37,10 +37,10 @@
         </div>
     </nav>
 
-    <div class="reviews-container">
-        <div class="reviews-header animate__animated animate__fadeInDown">
-            <h1>Avaliações dos Nossos Alunos</h1>
-            <p>Descubra o que nossos alunos dizem sobre sua experiência na Academia CR</p>
+    <div class="reviews-container" style="background: none; box-shadow: none;">
+        <div class="reviews-header animate__animated animate__fadeInDown" style="background: none; box-shadow: none;">
+            <h1 style="color: #FFD700; text-shadow: 0 0 20px #FFD700, 0 0 40px #FFA500; font-size: 3.5rem; font-weight: 800; letter-spacing: 2px; margin-bottom: 1.5rem; background: none;">Avaliações dos Nossos Alunos</h1>
+            <p style="color: #fff; font-size: 1.2rem; max-width: 700px; margin: 0 auto 2.5rem auto; text-align: center;">Descobre o que os nossos alunos dizem sobre a sua experiência na Academia CR</p>
         </div>
 
         <div class="stats-bar animate__animated animate__fadeIn">
@@ -77,7 +77,7 @@
                 <button class="close-button" onclick="fecharModalExclusao()">&times;</button>
             </div>
             <div class="modal-body">
-                <p>Tem certeza que deseja eliminar esta avaliação?</p>
+                <p>Tem a certeza que deseja eliminar esta avaliação?</p>
                 <p class="warning-text">Esta ação é <strong>irreversível</strong>.</p>
             </div>
             <div class="modal-footer">
@@ -99,8 +99,8 @@
             <div class="modal-body">
                 <form id="addReviewForm" onsubmit="enviarAvaliacao(event)">
                     <div class="form-group">
-                        <label for="reviewText">Sua Avaliação:</label>
-                        <textarea id="reviewText" name="texto" required rows="4" placeholder="Conte-nos sua experiência..."></textarea>
+                        <label for="reviewText">A sua Avaliação:</label>
+                        <textarea id="reviewText" name="texto" required rows="4" placeholder="Conte-nos a sua experiência..."></textarea>
                     </div>
                     <div class="form-group">
                         <label>Avaliação:</label>

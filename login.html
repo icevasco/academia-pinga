@@ -163,7 +163,7 @@
         <div class="left-side">
             <div class="welcome-text">
                 <h1>Bem-vindo de volta!</h1>
-                <p>Entre para acessar sua conta e continuar sua jornada de aprendizado.</p>
+                <p>Inicie sessão para aceder à sua conta e continuar a sua jornada de aprendizagem.</p>
             </div>
             <div class="features">
                 <div class="feature-item">
@@ -176,24 +176,24 @@
                 </div>
                 <div class="feature-item">
                     <i class="fas fa-check-circle"></i>
-                    <span>Suporte personalizado</span>
+                    <span>Apoio personalizado</span>
                 </div>
             </div>
         </div>
         <div class="right-side">
             <form id="loginForm">
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email">E-mail</label>
                     <input type="email" id="email" name="email" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">Senha</label>
+                    <label for="password">Palavra-passe</label>
                     <input type="password" id="password" name="password" required>
                 </div>
-                <button type="submit" class="btn">Entrar</button>
+                <button type="submit" class="btn">Iniciar sessão</button>
                 <div id="errorMessage" class="error-message"></div>
                 <div class="register-link">
-                    <a href="registo.html">Não tem uma conta? Registre-se</a>
+                    <a href="registo.html">Não tem conta? Registe-se</a>
                 </div>
             </form>
         </div>
@@ -266,7 +266,7 @@
                 window.location.href = 'index.html'
             } catch (error) {
                 console.error('Erro no login:', error)
-                errorMessage.textContent = error.message || 'Erro ao fazer login. Por favor, tente novamente.'
+                errorMessage.textContent = error.message || 'Erro ao iniciar sessão. Por favor, tente novamente.'
             }
         })
     </script>

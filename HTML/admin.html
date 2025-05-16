@@ -1112,7 +1112,7 @@
         }
 
         .treinador-header {
-            background: rgba(24, 24, 24, 0.95); /* fundo ainda mais escuro e opaco */
+            background: rgba(24, 24, 24, 0.95);
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 30px;
@@ -1286,97 +1286,6 @@
             font-size: 12px;
         }
 
-        .agendamento-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 10px;
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 20px;
-            align-items: center;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .agendamento-info h3 {
-            margin: 0 0 10px 0;
-            color: #fff;
-        }
-
-        .agendamento-info p {
-            margin: 5px 0;
-            color: #fff;
-            opacity: 0.8;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 500;
-            margin-top: 10px;
-        }
-
-        .status-pendente {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .status-confirmado {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-cancelado {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .agendamento-acoes {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-confirmar, .btn-cancelar {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .btn-confirmar {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-confirmar:hover {
-            background: #218838;
-            transform: translateY(-2px);
-        }
-
-        .btn-cancelar {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-cancelar:hover {
-            background: #c82333;
-            transform: translateY(-2px);
-        }
-
-        .no-data {
-            text-align: center;
-            color: #fff;
-            opacity: 0.6;
-            padding: 20px;
-        }
-
         @media (max-width: 768px) {
             .treinador-header {
                 flex-direction: column;
@@ -1391,14 +1300,6 @@
             .treinador-stats {
                 flex-direction: column;
                 align-items: center;
-            }
-
-            .agendamento-card {
-                grid-template-columns: 1fr;
-            }
-
-            .agendamento-acoes {
-                justify-content: center;
             }
         }
 
@@ -2033,34 +1934,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Seção de Agendamentos -->
-                <div class="agendamentos-section">
-                    <div class="section-header">
-                        <h2>Agendamentos</h2>
-                        <div class="filtros-agendamentos">
-                            <select id="filtroStatus" onchange="carregarAgendamentos()">
-                                <option value="todos">Todos os Status</option>
-                                <option value="pendente">Pendentes</option>
-                                <option value="confirmado">Confirmados</option>
-                                <option value="cancelado">Cancelados</option>
-                            </select>
-                            <select id="filtroData" onchange="carregarAgendamentos()">
-                                <option value="todos">Todas as Datas</option>
-                                <option value="hoje">Hoje</option>
-                                <option value="semana">Esta Semana</option>
-                                <option value="mes">Este Mês</option>
-                            </select>
-                            <div class="search-box">
-                                <i class="fas fa-search"></i>
-                                <input type="text" id="searchAgendamentos" placeholder="Pesquisar agendamentos..." onkeyup="filtrarAgendamentos(this.value)">
-                            </div>
-                        </div>
-                    </div>
-                    <div id="listaAgendamentos" class="lista-agendamentos">
-                        <!-- Preenchido via JavaScript -->
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -2296,32 +2169,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="agendamentos-section">
-                            <div class="section-header">
-                                <h2>Agendamentos</h2>
-                                <div class="filtros-agendamentos">
-                                    <select id="filtroStatus" onchange="carregarAgendamentos()">
-                                        <option value="todos">Todos os Status</option>
-                                        <option value="pendente">Pendentes</option>
-                                        <option value="confirmado">Confirmados</option>
-                                        <option value="cancelado">Cancelados</option>
-                                    </select>
-                                    <select id="filtroData" onchange="carregarAgendamentos()">
-                                        <option value="todos">Todas as Datas</option>
-                                        <option value="hoje">Hoje</option>
-                                        <option value="semana">Esta Semana</option>
-                                        <option value="mes">Este Mês</option>
-                                    </select>
-                                    <div class="search-box">
-                                        <i class="fas fa-search"></i>
-                                        <input type="text" id="searchAgendamentos" placeholder="Pesquisar agendamentos..." onkeyup="filtrarAgendamentos(this.value)">
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="listaAgendamentos" class="lista-agendamentos">
-                                <div class="no-data">Sem agendamentos para este treinador.</div>
-                            </div>
-                        </div>
+                        
                     `;
                 }
                 loadTreinadorDashboard();
@@ -2443,50 +2291,67 @@
             async function checkAdminAccess() {
                 try {
                     console.log('Iniciando verificação de acesso...');
-                    const { data: { user }, error } = await window.supabaseClient.auth.getUser();
                     
-                    if (error) {
-                        console.error('Erro ao obter usuário:', error);
+                    // Verificar se o cliente Supabase está inicializado
+                    if (!window.supabaseClient) {
+                        console.error('Cliente Supabase não inicializado');
+                        window.location.href = '../login.html';
+                        return;
+                    }
+
+                    // Obter usuário atual
+                    const { data: { user }, error: authError } = await window.supabaseClient.auth.getUser();
+                    
+                    if (authError) {
+                        console.error('Erro ao obter usuário:', authError);
+                        showNotification('Erro ao verificar autenticação', 'error');
                         window.location.href = '../login.html';
                         return;
                     }
 
                     if (!user) {
-                        console.error('Nenhum usuário encontrado');
+                        console.error('Nenhum usuário autenticado encontrado');
+                        showNotification('Por favor, faça login para continuar', 'error');
                         window.location.href = '../login.html';
                         return;
                     }
 
                     console.log('Usuário encontrado:', user);
 
-                    const { data: userData, error: userError } = await window.supabaseClient
+                    // Buscar dados do usuário
+                    const { data: userData, error: dbError } = await window.supabaseClient
                         .from('utilizadores')
                         .select('tipo_conta, nome')
                         .eq('id', user.id)
                         .single();
 
-                    if (userError) {
-                        console.error('Erro ao buscar dados do usuário:', userError);
+                    if (dbError) {
+                        console.error('Erro ao buscar dados do usuário:', dbError);
+                        showNotification('Erro ao carregar dados do usuário', 'error');
+                        window.location.href = '../login.html';
+                        return;
+                    }
+
+                    if (!userData) {
+                        console.error('Dados do usuário não encontrados');
+                        showNotification('Dados do usuário não encontrados', 'error');
                         window.location.href = '../login.html';
                         return;
                     }
 
                     console.log('Dados do usuário:', userData);
 
-                    if (!userData) {
-                        console.error('Dados do usuário não encontrados');
-                        window.location.href = '../login.html';
-                        return;
-                    }
-
+                    // Verificar tipo de conta
                     if (userData.tipo_conta !== 'admin' && userData.tipo_conta !== 'treinador') {
                         console.error('Tipo de conta não permitido:', userData.tipo_conta);
+                        showNotification('Acesso não autorizado', 'error');
                         window.location.href = '../index.html';
                         return;
                     }
 
                     console.log('Acesso permitido. Tipo de conta:', userData.tipo_conta);
 
+                    // Configurar interface baseada no tipo de conta
                     if (userData.tipo_conta === 'admin') {
                         console.log('Configurando interface de admin');
                         setupAdminInterface();
@@ -2495,10 +2360,18 @@
                         setupTreinadorInterface();
                     }
 
-                    loadStats();
-                    loadAccounts();
+                    // Carregar dados iniciais
+                    await Promise.all([
+                        loadStats(),
+                        loadAccounts()
+                    ]).catch(error => {
+                        console.error('Erro ao carregar dados iniciais:', error);
+                        showNotification('Erro ao carregar alguns dados', 'error');
+                    });
+
                 } catch (error) {
                     console.error('Erro na verificação de acesso:', error);
+                    showNotification('Erro ao verificar acesso', 'error');
                     window.location.href = '../login.html';
                 }
             }
@@ -3055,14 +2928,24 @@
 
                 const { data: treinador, error: treinadorError } = await window.supabaseClient
                     .from('utilizadores')
-                    .select('nome, especialidade, avatar_url')
+                    .select('nome, tipo_conta, foto_perfil_url')
                     .eq('id', user.id)
                     .single();
                     
                 console.log('Dados do treinador:', treinador);
                 
-                if (treinadorError || !treinador) {
+                if (treinadorError) {
                     console.error('Erro ao buscar dados do treinador:', treinadorError);
+                    if (elementos.treinadorNome) elementos.treinadorNome.textContent = 'Erro ao carregar dados do treinador.';
+                    if (elementos.treinadorEspecialidade) elementos.treinadorEspecialidade.textContent = '';
+                    if (elementos.treinadorAvatar) elementos.treinadorAvatar.src = '../IMG/avatar_default.png';
+                    if (elementos.proximasAulas) elementos.proximasAulas.innerHTML = '<div class="no-data">Sem dados de aulas.</div>';
+                    if (elementos.ultimasAvaliacoes) elementos.ultimasAvaliacoes.innerHTML = '<div class="no-data">Sem dados de avaliações.</div>';
+                    return;
+                }
+
+                if (!treinador) {
+                    console.error('Nenhum dado de treinador encontrado');
                     if (elementos.treinadorNome) elementos.treinadorNome.textContent = 'Ainda não existem dados de treinador para este utilizador.';
                     if (elementos.treinadorEspecialidade) elementos.treinadorEspecialidade.textContent = '';
                     if (elementos.treinadorAvatar) elementos.treinadorAvatar.src = '../IMG/avatar_default.png';
@@ -3073,13 +2956,16 @@
 
                 // Atualizar informações do treinador
                 if (elementos.treinadorNome) elementos.treinadorNome.textContent = treinador.nome || 'Nome não definido';
-                if (elementos.treinadorEspecialidade) elementos.treinadorEspecialidade.textContent = treinador.especialidade || 'Especialidade não definida';
-                if (elementos.treinadorAvatar) elementos.treinadorAvatar.src = treinador.avatar_url || '../IMG/avatar_default.png';
+                if (elementos.treinadorEspecialidade) elementos.treinadorEspecialidade.textContent = treinador.tipo_conta === 'treinador' ? 'Treinador Profissional' : 'Administrador';
+                if (elementos.treinadorAvatar) {
+                    const avatarUrl = treinador.foto_perfil_url || '../IMG/avatar_default.png';
+                    elementos.treinadorAvatar.src = avatarUrl.startsWith('http') ? avatarUrl : `${window.supabaseUrl}/storage/v1/object/public/avatars/${avatarUrl}`;
+                }
 
                 // Buscar avaliações
                 const { data: avals, error: avalsError } = await window.supabaseClient
-                    .from('avaliacoes')
-                    .select('nota')
+                    .from('avaliacoes_treinadores')
+                    .select('estrelas')
                     .eq('treinador_id', user.id);
                 console.log('Avaliações encontradas:', avals);
                 if (avalsError) {
@@ -3087,30 +2973,37 @@
                 }
                 let media = 0;
                 if (avals && avals.length > 0) {
-                    media = (avals.reduce((acc, a) => acc + (a.nota || 0), 0) / avals.length).toFixed(1);
+                    media = (avals.reduce((acc, a) => acc + (a.estrelas || 0), 0) / avals.length).toFixed(1);
                 }
                 if (elementos.mediaAvaliacoes) elementos.mediaAvaliacoes.textContent = media;
 
                 // Buscar próximas aulas
+                console.log('Buscando aulas para o treinador ID:', user.id);
                 const { data: aulas, error: aulasError } = await window.supabaseClient
                     .from('agendamentos')
-                    .select('*')
+                    .select('*, utilizadores!agendamentos_aluno_id_fkey(nome)')
                     .eq('treinador_id', user.id)
                     .gte('data', new Date().toISOString())
                     .order('data', { ascending: true });
-                console.log('Aulas encontradas:', aulas);
+                
+                console.log('Resultado da busca de aulas:', { aulas, error: aulasError });
+                
                 if (aulasError) {
                     console.error('Erro ao buscar aulas:', aulasError);
-                }
-                if (elementos.proximasAulas) {
+                    elementos.proximasAulas.innerHTML = '<div class="no-data">Erro ao carregar aulas. Por favor, tente novamente.</div>';
+                } else if (elementos.proximasAulas) {
                     if (aulas && aulas.length > 0) {
                         elementos.proximasAulas.innerHTML = '';
                         aulas.forEach(aula => {
-                            elementos.proximasAulas.innerHTML += `<div class="aula-card">
-                                <h4>${aula.titulo || 'Aula'}</h4>
-                                <p>Data: ${new Date(aula.data).toLocaleString()}</p>
-                                <p>Aluno: ${aula.nome_aluno || ''}</p>
-                            </div>`;
+                            const dataAula = new Date(aula.data);
+                            const alunoNome = aula.utilizadores?.nome || 'Aluno não especificado';
+                            elementos.proximasAulas.innerHTML += `
+                                <div class="aula-card">
+                                    <h4>${aula.titulo || 'Aula'}</h4>
+                                    <p>Data: ${dataAula.toLocaleString('pt-BR')}</p>
+                                    <p>Aluno: ${alunoNome}</p>
+                                    ${aula.objetivos ? `<p>Objetivos: ${aula.objetivos}</p>` : ''}
+                                </div>`;
                         });
                     } else {
                         elementos.proximasAulas.innerHTML = '<div class="no-data">Sem aulas agendadas para este treinador.</div>';
@@ -3119,10 +3012,10 @@
 
                 // Buscar últimas avaliações
                 const { data: avaliacoes, error: avaliacoesError } = await window.supabaseClient
-                    .from('avaliacoes')
-                    .select('nota, comentario, aluno_nome, created_at')
+                    .from('avaliacoes_treinadores')
+                    .select('estrelas, texto, data')
                     .eq('treinador_id', user.id)
-                    .order('created_at', { ascending: false })
+                    .order('data', { ascending: false })
                     .limit(5);
                 console.log('Avaliações detalhadas encontradas:', avaliacoes);
                 if (avaliacoesError) {
@@ -3134,9 +3027,9 @@
                         avaliacoes.forEach(av => {
                             elementos.ultimasAvaliacoes.innerHTML += `<div class="avaliacao-card">
                                 <h4>${av.aluno_nome || 'Aluno'}</h4>
-                                <div class="estrelas">${'★'.repeat(av.nota || 0)}</div>
-                                <p>${av.comentario || ''}</p>
-                                <small>${new Date(av.created_at).toLocaleDateString()}</small>
+                                <div class="estrelas">${'★'.repeat(av.estrelas || 0)}</div>
+                                <p>${av.texto || ''}</p>
+                                <small>${new Date(av.data).toLocaleDateString()}</small>
                             </div>`;
                         });
                     } else {
