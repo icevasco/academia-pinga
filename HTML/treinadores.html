@@ -44,7 +44,7 @@
             <div class="coaches-filters">
                 <div class="filter-group">
                     <label>Especialidade:</label>
-                    <select id="specialtyFilter">
+                    <select id="specialtyFilter" onchange="filtrarTreinadores()">
                         <option value="todos">Todos</option>
                         <option value="golem">Golem</option>
                         <option value="ciclo">Ciclo Rápido</option>
@@ -54,7 +54,7 @@
                 </div>
                 <div class="filter-group">
                     <label>Nível:</label>
-                    <select id="levelFilter">
+                    <select id="levelFilter" onchange="filtrarTreinadores()">
                         <option value="todos">Todos</option>
                         <option value="pro">Pro Player</option>
                         <option value="top1000">Top 1000</option>
@@ -63,7 +63,7 @@
                 </div>
                 <div class="filter-group">
                     <label>Preço:</label>
-                    <select id="priceFilter">
+                    <select id="priceFilter" onchange="filtrarTreinadores()">
                         <option value="todos">Todos</option>
                         <option value="baixo">€20-€40</option>
                         <option value="medio">€41-€60</option>
@@ -73,150 +73,8 @@
             </div>
         </div>
         
-        <div class="coaches-grid">
-            <div class="coach-card animate__animated animate__fadeInUp">
-                <div class="coach-avatar">
-                    <img src="../IMG/joao-silva-coach.png" alt="João Silva">
-                    <div class="online-status"></div>
-                </div>
-                <div class="coach-content">
-                    <h2 class="coach-name">João Silva</h2>
-                    <p class="coach-specialty">Especialista em decks de Golem e beatdown</p>
-                    <div class="coach-badges">
-                        <span class="coach-badge pro">Pro Player</span>
-                        <span class="coach-badge top1000">Top 1000 Global</span>
-                    </div>
-                    <div class="coach-stats">
-                        <div class="stat-item">
-                            <div class="stat-value">9000</div>
-                            <div class="stat-label">Troféus</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">4001</div>
-                            <div class="stat-label">Max Liga</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">70+</div>
-                            <div class="stat-label">Alunos</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="rating">
-                                <span class="rating-stars">★★★★★</span>
-                                <span>4.9</span>
-                            </div>
-                            <div class="stat-label">Avaliação</div>
-                        </div>
-                    </div>
-                    <div class="coach-availability">
-                        <span class="availability-dot"></span>
-                        Disponível agora
-                    </div>
-                    <div class="coach-actions">
-                        <button class="action-button primary-button" onclick="agendarAula('joao-silva')">
-                            <i class="fas fa-calendar-plus"></i> Agendar Aula
-                        </button>
-                        <button class="action-button secondary-button" onclick="verPerfil('joao-silva')">
-                            <i class="fas fa-user"></i> Ver Perfil
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="coach-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
-                <div class="coach-avatar">
-                    <img src="../IMG/manoel-pinga-coach.png" alt="Manoel Pinga">
-                    <div class="online-status"></div>
-                </div>
-                <div class="coach-content">
-                    <h2 class="coach-name">Manoel Pinga</h2>
-                    <p class="coach-specialty">Especialista em decks de ciclo rápido e controle</p>
-                    <div class="coach-badges">
-                        <span class="coach-badge pro">Melhor do Mundo</span>
-                        <span class="coach-badge top1">Top 1 Mundial</span>
-                    </div>
-                    <div class="coach-stats">
-                        <div class="stat-item">
-                            <div class="stat-value">9000</div>
-                            <div class="stat-label">Troféus</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">Top 1</div>
-                            <div class="stat-label">Global</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">100+</div>
-                            <div class="stat-label">Alunos</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="rating">
-                                <span class="rating-stars">★★★★★</span>
-                                <span>5.0</span>
-                            </div>
-                            <div class="stat-label">Avaliação</div>
-                        </div>
-                    </div>
-                    <div class="coach-availability">
-                        <span class="availability-dot"></span>
-                        Disponível agora
-                    </div>
-                    <div class="coach-actions">
-                        <button class="action-button primary-button" onclick="agendarAula('manoel-pinga')">
-                            <i class="fas fa-calendar-plus"></i> Agendar Aula
-                        </button>
-                        <button class="action-button secondary-button" onclick="verPerfil('manoel-pinga')">
-                            <i class="fas fa-user"></i> Ver Perfil
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="coach-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
-                <div class="coach-avatar">
-                    <img src="../IMG/pedro-costa-coach.png" alt="Pedro Costa">
-                    <div class="online-status offline"></div>
-                </div>
-                <div class="coach-content">
-                    <h2 class="coach-name">Pedro Costa</h2>
-                    <p class="coach-specialty">Especialista em decks de bait e controle</p>
-                    <div class="coach-badges">
-                        <span class="coach-badge pro">Finalista CRL</span>
-                        <span class="coach-badge top100">Top 100 EU</span>
-                    </div>
-                    <div class="coach-stats">
-                        <div class="stat-item">
-                            <div class="stat-value">9000</div>
-                            <div class="stat-label">Troféus</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">3531</div>
-                            <div class="stat-label">Max Liga</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">100+</div>
-                            <div class="stat-label">Alunos</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="rating">
-                                <span class="rating-stars">★★★★★</span>
-                                <span>4.7</span>
-                            </div>
-                            <div class="stat-label">Avaliação</div>
-                        </div>
-                    </div>
-                    <div class="coach-availability">
-                        <span class="availability-dot offline"></span>
-                        Indisponível
-                    </div>
-                    <div class="coach-actions">
-                        <button class="action-button primary-button" onclick="agendarAula('pedro-costa')">
-                            <i class="fas fa-calendar-plus"></i> Agendar Aula
-                        </button>
-                        <button class="action-button secondary-button" onclick="verPerfil('pedro-costa')">
-                            <i class="fas fa-user"></i> Ver Perfil
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div class="coaches-grid" id="coachesGrid">
+            <!-- Os treinadores serão carregados dinamicamente aqui -->
         </div>
     </div>
 
@@ -258,6 +116,45 @@
                 <div class="modal-buttons">
                     <button class="btn-secondary" onclick="fecharModalAgendamento()">Cancelar</button>
                     <button class="btn-primary" onclick="confirmarAgendamento()">Confirmar Agendamento</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Avaliações -->
+    <div id="avaliacoesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalAvaliacoes()">&times;</span>
+            <h2>Avaliações do Treinador</h2>
+            <div id="avaliacoesList" class="avaliacoes-list">
+                <!-- As avaliações serão carregadas dinamicamente aqui -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Nova Avaliação -->
+    <div id="novaAvaliacaoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalNovaAvaliacao()">&times;</span>
+            <h2>Avaliar Treinador</h2>
+            <div class="avaliacao-form">
+                <div class="form-group">
+                    <label>Avaliação:</label>
+                    <div class="rating-input">
+                        <i class="fas fa-star" data-rating="1"></i>
+                        <i class="fas fa-star" data-rating="2"></i>
+                        <i class="fas fa-star" data-rating="3"></i>
+                        <i class="fas fa-star" data-rating="4"></i>
+                        <i class="fas fa-star" data-rating="5"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="avaliacaoTexto">Comentário:</label>
+                    <textarea id="avaliacaoTexto" rows="3" placeholder="Conte sua experiência com o treinador..."></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button class="btn-secondary" onclick="fecharModalNovaAvaliacao()">Cancelar</button>
+                    <button class="btn-primary" onclick="enviarAvaliacao()">Enviar Avaliação</button>
                 </div>
             </div>
         </div>
@@ -474,7 +371,7 @@
         }
 
         .rating-stars {
-            color: #FFD700;
+            color: #FFD700 !important;
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
@@ -545,6 +442,17 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        .tertiary-button {
+            background: #FFD700;
+            color: #1a1a1a;
+        }
+
+        .tertiary-button:hover {
+            background: #FFC107;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+        }
+
         @media (max-width: 768px) {
             .coaches-filters {
                 flex-direction: column;
@@ -574,6 +482,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
         }
 
         .modal-content {
@@ -582,9 +491,21 @@
             padding: 25px;
             border-radius: 15px;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             position: relative;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .close {
@@ -596,6 +517,7 @@
             color: #666;
             cursor: pointer;
             transition: color 0.3s ease;
+            z-index: 1;
         }
 
         .close:hover {
@@ -689,6 +611,58 @@
             .btn-secondary {
                 width: 100%;
             }
+            .avaliacoes-list {
+                max-height: 60vh;
+                min-height: 100px;
+                padding: 0 0 20px 0;
+                width: 100%;
+            }
+            .avaliacao-item {
+                padding: 10px;
+                font-size: 0.95em;
+                width: 100%;
+            }
+            .avaliacao-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .avaliacao-nome {
+                font-size: 1em;
+            }
+            .avaliacao-data {
+                font-size: 0.9em;
+            }
+            .avaliacao-estrelas {
+                font-size: 1.1em;
+            }
+            .avaliacao-texto {
+                font-size: 0.98em;
+            }
+            #avaliacoesModal .modal-content {
+                width: 98vw;
+                max-width: 99vw;
+                min-width: unset;
+            }
+        }
+        @media (max-width: 480px) {
+            .avaliacao-item {
+                padding: 7px;
+                font-size: 0.92em;
+                width: 100%;
+            }
+            .avaliacao-header {
+                font-size: 0.98em;
+            }
+            .avaliacao-estrelas {
+                font-size: 1em;
+            }
+            .avaliacao-texto {
+                font-size: 0.95em;
+            }
+            #avaliacoesModal .modal-content {
+                padding: 10px;
+            }
         }
 
         /* Adicionar estilos para a mensagem de sucesso */
@@ -746,232 +720,345 @@
         .dashboard-link:hover {
             color: #1976D2;
         }
+
+        .avaliacoes-list {
+            max-height: 60vh;
+            min-height: 100px;
+            overflow-y: auto;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        .avaliacao-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .avaliacao-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .avaliacao-nome {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .avaliacao-data {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .avaliacao-estrelas {
+            color: #FFD700 !important;
+            margin: 10px 0;
+            font-size: 1.2em;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .avaliacao-texto {
+            color: #444;
+            font-size: 1em;
+            line-height: 1.5;
+            margin-top: 10px;
+        }
+
+        /* Estilo para a barra de rolagem */
+        .avaliacoes-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .avaliacoes-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .avaliacoes-list::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .avaliacoes-list::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .rating-input i {
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .rating-input i.active {
+            color: #FFD700 !important;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .rating-num-dourado {
+            color: #FFD700 !important;
+            font-weight: bold;
+            margin-left: 4px;
+        }
     </style>
 
     <script>
-        // Inicialização do Supabase
+        // Inicializar Supabase
         const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co'
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3dkZmlmaGhjcW10cG5ob3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTUzMDksImV4cCI6MjA2MDQzMTMwOX0.Q50xEMRQLTjuOKtn0f92GX5NKY9GgWWYVfHlmE5yhUs'
-        window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
+        
+        // Usar a instância global do Supabase se já existir
+        const supabase = window.supabaseClient || window.supabase.createClient(supabaseUrl, supabaseKey)
 
-        // Menu Mobile
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const navLinks = document.querySelector('.nav-links');
+        // Função para carregar os treinadores
+        async function carregarTreinadores() {
+            try {
+                const { data: treinadores, error } = await supabase
+                    .from('utilizadores')
+                    .select('*')
+                    .in('tipo_conta', ['treinador', 'admin']);
 
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenuBtn.classList.toggle('active');
-            navLinks.classList.toggle('active');
-            document.body.classList.toggle('menu-open');
-        });
+                if (error) {
+                    console.error('Erro ao buscar treinadores:', error);
+                    throw error;
+                }
 
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenuBtn.classList.remove('active');
-                navLinks.classList.remove('active');
-                document.body.classList.remove('menu-open');
-            });
-        });
+                console.log('Treinadores encontrados:', treinadores);
 
-        // Filtros de deck
-        const filterButtons = document.querySelectorAll('.filter-button');
-        const deckCards = document.querySelectorAll('.deck-card');
-        const searchInput = document.getElementById('deckSearch');
-        const sortSelect = document.getElementById('sortDecks');
+                if (!treinadores || treinadores.length === 0) {
+                    console.log('Nenhum treinador encontrado');
+                    const coachesGrid = document.getElementById('coachesGrid');
+                    coachesGrid.innerHTML = '<div class="no-coaches">Nenhum treinador disponível no momento.</div>';
+                    return;
+                }
 
-        // Função para filtrar decks por categoria
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                // Remover classe active de todos os botões
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                // Adicionar classe active ao botão clicado
-                button.classList.add('active');
+                // Buscar avaliações para cada treinador
+                const treinadoresComAvaliacoes = await Promise.all(treinadores.map(async (treinador) => {
+                    const { data: avaliacoes, error: avaliacoesError } = await supabase
+                        .from('avaliacoes_treinadores')
+                        .select('estrelas')
+                        .eq('treinador_id', treinador.id);
 
-                const filter = button.getAttribute('data-filter');
-                console.log('Filtro selecionado:', filter); // Debug
-
-                deckCards.forEach(card => {
-                    const category = card.getAttribute('data-category');
-                    console.log('Categoria do deck:', category); // Debug
-
-                    if (filter === 'all') {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = category === filter ? 'block' : 'none';
+                    if (avaliacoesError) {
+                        console.error(`Erro ao buscar avaliações do treinador ${treinador.id}:`, avaliacoesError);
+                        return { ...treinador, avaliacao_media: 0 };
                     }
+
+                    console.log(`Avaliações para o treinador ${treinador.nome}:`, avaliacoes);
+
+                    const media = avaliacoes && avaliacoes.length > 0
+                        ? avaliacoes.reduce((acc, curr) => acc + curr.estrelas, 0) / avaliacoes.length
+                        : 0;
+
+                    return { ...treinador, avaliacao_media: media.toFixed(1) };
+                }));
+
+                const coachesGrid = document.getElementById('coachesGrid');
+                coachesGrid.innerHTML = '';
+
+                treinadoresComAvaliacoes.forEach((treinador, index) => {
+                    const card = document.createElement('div');
+                    card.className = `coach-card animate__animated animate__fadeInUp`;
+                    card.style.animationDelay = `${index * 0.2}s`;
+
+                    // Buscar a URL do avatar do bucket do Supabase
+                    const defaultAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${treinador.nome}`;
+                    const avatarUrl = treinador.foto_perfil_url 
+                        ? treinador.foto_perfil_url.startsWith('http') 
+                            ? treinador.foto_perfil_url 
+                            : `${supabaseUrl}/storage/v1/object/public/avatars/${treinador.foto_perfil_url}`
+                        : defaultAvatar;
+
+                    // Calcular estrelas cheias e vazias
+                    const media = parseFloat(treinador.avaliacao_media) || 0;
+                    const estrelasCheias = Math.floor(media);
+                    const estrelasVazias = 5 - estrelasCheias;
+
+                    card.innerHTML = `
+                        <div class="coach-avatar">
+                            <img src="${avatarUrl}" alt="${treinador.nome}" onerror="this.onerror=null; this.src='${defaultAvatar}';">
+                            <div class="online-status"></div>
+                        </div>
+                        <div class="coach-content">
+                            <h2 class="coach-name">${treinador.nome}</h2>
+                            <p class="coach-specialty">${treinador.especialidade || 'Treinador Profissional'}</p>
+                            <div class="coach-badges">
+                                <span class="coach-badge pro">${treinador.tipo_conta === 'admin' ? 'Administrador' : 'Treinador'}</span>
+                                ${treinador.nivel ? `<span class="coach-badge top1000">${treinador.nivel}</span>` : ''}
+                            </div>
+                            <div class="coach-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">${treinador.trofeus || 'N/A'}</div>
+                                    <div class="stat-label">Troféus</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">${treinador.max_liga || 'N/A'}</div>
+                                    <div class="stat-label">Max Liga</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">${treinador.total_alunos || '0'}+</div>
+                                    <div class="stat-label">Alunos</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="rating" data-treinador-id="${treinador.id}" style="cursor: pointer;">
+                                        <span class="rating-stars">${'★'.repeat(estrelasCheias)}${'☆'.repeat(estrelasVazias)}</span>
+                                        <span class="rating-num-dourado">${treinador.avaliacao_media || '0.0'}</span>
+                                    </div>
+                                    <div class="stat-label">Avaliação</div>
+                                </div>
+                            </div>
+                            <div class="coach-availability">
+                                <span class="availability-dot"></span>
+                                Disponível agora
+                            </div>
+                            <div class="coach-actions">
+                                <button class="action-button primary-button" onclick="agendarAula('${treinador.id}')">
+                                    <i class="fas fa-calendar-plus"></i> Agendar Aula
+                                </button>
+                                <button class="action-button secondary-button" onclick="verPerfil('${treinador.id}')">
+                                    <i class="fas fa-user"></i> Ver Perfil
+                                </button>
+                                <button class="action-button tertiary-button" onclick="avaliarTreinador('${treinador.id}')">
+                                    <i class="fas fa-star"></i> Avaliar
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    coachesGrid.appendChild(card);
                 });
-            });
-        });
 
-        // Função de pesquisa
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            deckCards.forEach(card => {
-                const title = card.querySelector('.deck-title').textContent.toLowerCase();
-                const description = card.querySelector('.deck-description').textContent.toLowerCase();
-                if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-
-        // Função de ordenação
-        sortSelect.addEventListener('change', (e) => {
-            const sortBy = e.target.value;
-            const deckGrid = document.querySelector('.deck-grid');
-            const decks = Array.from(deckCards);
-
-            decks.sort((a, b) => {
-                if (sortBy === 'winrate') {
-                    const aRate = parseInt(a.querySelector('.win-rate span').textContent);
-                    const bRate = parseInt(b.querySelector('.win-rate span').textContent);
-                    return bRate - aRate;
-                } else if (sortBy === 'usage') {
-                    const aUsage = parseInt(a.querySelector('.usage span').textContent.replace(/[^0-9]/g, ''));
-                    const bUsage = parseInt(b.querySelector('.usage span').textContent.replace(/[^0-9]/g, ''));
-                    return bUsage - aUsage;
-                } else if (sortBy === 'elixir') {
-                    const aElixir = parseFloat(a.querySelector('.elixir-cost').textContent.replace(/[^0-9.]/g, ''));
-                    const bElixir = parseFloat(b.querySelector('.elixir-cost').textContent.replace(/[^0-9.]/g, ''));
-                    return aElixir - bElixir;
-                }
-            });
-
-            decks.forEach(deck => deckGrid.appendChild(deck));
-        });
-
-        // Animações ao scroll
-        const observerOptions = {
-            threshold: 0.1
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate');
-                }
-            });
-        }, observerOptions);
-
-        deckCards.forEach(card => observer.observe(card));
-
-        // Verificar se o usuário está logado ao carregar a página
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof checkUser === 'function') {
-                checkUser();
-            } else {
-                console.error('Função checkUser não encontrada. Verifique se user-menu.js está carregado corretamente.');
-            }
-        });
-
-        // Filtros
-        const specialtyFilter = document.getElementById('specialtyFilter');
-        const levelFilter = document.getElementById('levelFilter');
-        const priceFilter = document.getElementById('priceFilter');
-
-        function filterCoaches() {
-            const specialty = specialtyFilter.value;
-            const level = levelFilter.value;
-            const price = priceFilter.value;
-
-            document.querySelectorAll('.coach-card').forEach(card => {
-                let show = true;
-
-                // Filtrar por especialidade
-                if (specialty !== 'todos') {
-                    const specialtyText = card.querySelector('.coach-specialty').textContent.toLowerCase();
-                    if (!specialtyText.includes(specialty)) {
-                        show = false;
-                    }
-                }
-
-                // Filtrar por nível
-                if (level !== 'todos') {
-                    const badges = card.querySelectorAll('.coach-badge');
-                    let hasLevel = false;
-                    badges.forEach(badge => {
-                        if (badge.textContent.toLowerCase().includes(level)) {
-                            hasLevel = true;
-                        }
+                // Adicionar eventos de clique para as avaliações
+                document.querySelectorAll('.rating').forEach(rating => {
+                    rating.addEventListener('click', function() {
+                        const treinadorId = this.dataset.treinadorId;
+                        console.log('Clique nas estrelas do treinador:', treinadorId);
+                        verAvaliacoes(treinadorId);
                     });
-                    if (!hasLevel) {
-                        show = false;
-                    }
+                });
+
+            } catch (error) {
+                console.error('Erro ao carregar treinadores:', error);
+                showNotification('Erro ao carregar treinadores', 'error');
+            }
+        }
+
+        // Função para filtrar treinadores
+        function filtrarTreinadores() {
+            const especialidade = document.getElementById('specialtyFilter').value;
+            const nivel = document.getElementById('levelFilter').value;
+            const preco = document.getElementById('priceFilter').value;
+
+            const cards = document.querySelectorAll('.coach-card');
+            cards.forEach(card => {
+                const especialidadeCard = card.querySelector('.coach-specialty').textContent.toLowerCase();
+                const nivelCard = card.querySelector('.coach-badge').textContent.toLowerCase();
+                
+                let mostrar = true;
+
+                if (especialidade !== 'todos' && !especialidadeCard.includes(especialidade)) {
+                    mostrar = false;
                 }
 
-                // Filtrar por preço
-                if (price !== 'todos') {
-                    const priceValue = parseInt(card.querySelector('.price-value').textContent.replace('€', ''));
-                    if (price === 'baixo' && priceValue > 40) show = false;
-                    if (price === 'medio' && (priceValue < 41 || priceValue > 60)) show = false;
-                    if (price === 'alto' && priceValue < 61) show = false;
+                if (nivel !== 'todos' && !nivelCard.includes(nivel)) {
+                    mostrar = false;
                 }
 
-                card.style.display = show ? 'block' : 'none';
+                card.style.display = mostrar ? '' : 'none';
             });
         }
 
-        specialtyFilter.addEventListener('change', filterCoaches);
-        levelFilter.addEventListener('change', filterCoaches);
-        priceFilter.addEventListener('change', filterCoaches);
+        // Função para mostrar notificação
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
 
-        // Variáveis globais
-        let treinadorAtual = null;
-
-        // Função para abrir o modal de agendamento
-        function agendarAula(coachId) {
-            // Verificar se o usuário está logado
-            const loginLink = document.getElementById('loginLink');
-            if (loginLink) {
+        // Função para agendar aula
+        async function agendarAula(treinadorId) {
+            try {
+                const { data: { user }, error: userError } = await supabase.auth.getUser();
+                
+                if (userError || !user) {
                 window.location.href = '../login.html?redirect=treinadores.html';
                 return;
             }
 
-            treinadorAtual = coachId;
             const modal = document.getElementById('agendamentoModal');
             modal.style.display = 'block';
-
-            // Definir data mínima como hoje
-            const dataInput = document.getElementById('dataAula');
-            const hoje = new Date().toISOString().split('T')[0];
-            dataInput.min = hoje;
-            dataInput.value = hoje;
+                modal.dataset.treinadorId = treinadorId;
+            } catch (error) {
+                console.error('Erro ao verificar autenticação:', error);
+                showNotification('Erro ao verificar autenticação', 'error');
+            }
         }
 
-        // Função para fechar o modal
+        // Função para ver perfil
+        function verPerfil(treinadorId) {
+            window.location.href = `perfil.html?id=${treinadorId}&view=true`;
+        }
+
+        // Função para fechar modal de agendamento
         function fecharModalAgendamento() {
             const modal = document.getElementById('agendamentoModal');
             modal.style.display = 'none';
-            treinadorAtual = null;
         }
 
-        // Função para confirmar o agendamento
+        // Função para confirmar agendamento
         async function confirmarAgendamento() {
-            const data = document.getElementById('dataAula').value;
-            const hora = document.getElementById('horaAula').value;
-            const duracao = document.getElementById('duracaoAula').value;
-            const objetivos = document.getElementById('objetivosAula').value;
-
-            if (!data || !hora || !duracao) {
-                alert('Por favor, preencha todos os campos obrigatórios.');
-                return;
-            }
-
             try {
-                // Verificar se o usuário está autenticado
-                const { data: { user }, error: userError } = await window.supabaseClient.auth.getUser();
+                const { data: { user }, error: userError } = await supabase.auth.getUser();
                 
                 if (userError || !user) {
                     window.location.href = '../login.html?redirect=treinadores.html';
                     return;
                 }
 
-                // Salvar o agendamento no banco de dados
-                const { data: agendamento, error } = await window.supabaseClient
+                const modal = document.getElementById('agendamentoModal');
+                const treinadorId = modal.dataset.treinadorId;
+            const data = document.getElementById('dataAula').value;
+            const hora = document.getElementById('horaAula').value;
+            const duracao = document.getElementById('duracaoAula').value;
+            const objetivos = document.getElementById('objetivosAula').value;
+
+            if (!data || !hora || !duracao) {
+                    showNotification('Por favor, preencha todos os campos obrigatórios', 'error');
+                return;
+            }
+
+                const { data: agendamento, error } = await supabase
                     .from('agendamentos')
                     .insert({
-                        treinador_id: treinadorAtual,
+                        treinador_id: treinadorId,
                         aluno_id: user.id,
                         data: data,
                         hora: hora,
@@ -982,37 +1069,40 @@
 
                 if (error) throw error;
 
-                // Mostrar mensagem de sucesso
-                const mensagemSucesso = document.createElement('div');
-                mensagemSucesso.className = 'mensagem-sucesso';
-                mensagemSucesso.innerHTML = `
-                    <div class="mensagem-conteudo">
-                        <i class="fas fa-check-circle"></i>
-                        <p>Aula agendada com sucesso!</p>
-                    </div>
-                `;
-                document.body.appendChild(mensagemSucesso);
-
-                // Fechar o modal
+                showNotification('Aula agendada com sucesso!', 'success');
                 fecharModalAgendamento();
-
-                // Remover a mensagem após 3 segundos
-                setTimeout(() => {
-                    mensagemSucesso.remove();
-                }, 3000);
-
             } catch (error) {
                 console.error('Erro ao agendar aula:', error);
-                alert('Erro ao agendar aula. Por favor, tente novamente.');
+                showNotification('Erro ao agendar aula', 'error');
             }
         }
 
-        // Função para ver perfil do treinador
-        function verPerfil(coachId) {
-            window.location.href = `perfil-treinador.html?id=${coachId}`;
-        }
+        // Inicializar a página
+        function initializePage() {
+            // Carregar treinadores
+            carregarTreinadores();
 
-        // Fechar modal ao clicar fora
+            // Configurar menu mobile
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+
+            if (mobileMenuBtn && navLinks) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenuBtn.classList.toggle('active');
+                    navLinks.classList.toggle('active');
+                    document.body.classList.toggle('menu-open');
+                });
+
+                document.querySelectorAll('.nav-links a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenuBtn.classList.remove('active');
+                        navLinks.classList.remove('active');
+                        document.body.classList.remove('menu-open');
+                    });
+                });
+            }
+
+            // Configurar fechamento do modal
         window.onclick = function(event) {
             const modal = document.getElementById('agendamentoModal');
             if (event.target === modal) {
@@ -1020,10 +1110,259 @@
             }
         }
 
-        // Fechar modal com a tecla ESC
+            // Configurar fechamento do modal com ESC
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 fecharModalAgendamento();
+            }
+        });
+        }
+
+        // Inicializar quando o DOM estiver pronto
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializePage);
+        } else {
+            initializePage();
+        }
+
+        let treinadorIdAtual = null;
+        let avaliacaoSelecionada = 0;
+
+        // Função para ver avaliações
+        async function verAvaliacoes(treinadorId) {
+            try {
+                console.log('Iniciando verAvaliacoes para o treinador:', treinadorId);
+                
+                // Primeiro, verificar se o usuário está autenticado
+                const { data: { user }, error: userError } = await supabase.auth.getUser();
+                if (userError) {
+                    console.error('Erro ao verificar autenticação:', userError);
+                    showNotification('Por favor, faça login para ver as avaliações', 'error');
+                    return;
+                }
+
+                console.log('Usuário autenticado, buscando avaliações...');
+
+                // Buscar as avaliações
+                const { data: avaliacoes, error } = await supabase
+                    .from('avaliacoes_treinadores')
+                    .select('*')
+                    .eq('treinador_id', treinadorId)
+                    .order('data', { ascending: false });
+
+                if (error) {
+                    console.error('Erro na consulta:', error);
+                    throw error;
+                }
+
+                console.log('Avaliações encontradas:', avaliacoes);
+
+                // Buscar os nomes dos usuários
+                const userIds = avaliacoes.map(a => a.user_id);
+                const { data: usuarios, error: usuariosError } = await supabase
+                    .from('utilizadores')
+                    .select('id, nome')
+                    .in('id', userIds);
+
+                if (usuariosError) {
+                    console.error('Erro ao buscar usuários:', usuariosError);
+                    throw usuariosError;
+                }
+
+                // Criar um mapa de usuários para fácil acesso
+                const usuariosMap = usuarios.reduce((acc, user) => {
+                    acc[user.id] = user.nome;
+                    return acc;
+                }, {});
+
+                const modal = document.getElementById('avaliacoesModal');
+                const avaliacoesList = document.getElementById('avaliacoesList');
+                
+                if (!modal || !avaliacoesList) {
+                    console.error('Elementos do modal não encontrados');
+                    return;
+                }
+
+                avaliacoesList.innerHTML = '';
+
+                if (avaliacoes && avaliacoes.length > 0) {
+                    avaliacoes.forEach(avaliacao => {
+                        const avaliacaoItem = document.createElement('div');
+                        avaliacaoItem.className = 'avaliacao-item';
+                        
+                        // Formatar a data
+                        const data = new Date(avaliacao.data);
+                        const dataFormatada = data.toLocaleDateString('pt-BR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+
+                        avaliacaoItem.innerHTML = `
+                            <div class="avaliacao-header">
+                                <span class="avaliacao-nome">${usuariosMap[avaliacao.user_id] || 'Usuário Anônimo'}</span>
+                                <span class="avaliacao-data">${dataFormatada}</span>
+                            </div>
+                            <div class="avaliacao-estrelas">
+                                ${'★'.repeat(avaliacao.estrelas)}${'☆'.repeat(5 - avaliacao.estrelas)}
+                            </div>
+                            <div class="avaliacao-texto">${avaliacao.texto}</div>
+                        `;
+                        avaliacoesList.appendChild(avaliacaoItem);
+                    });
+                } else {
+                    avaliacoesList.innerHTML = '<p>Nenhuma avaliação disponível.</p>';
+                }
+
+                console.log('Exibindo modal de avaliações');
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            } catch (error) {
+                console.error('Erro ao carregar avaliações:', error);
+                showNotification('Erro ao carregar avaliações', 'error');
+            }
+        }
+
+        // Função para avaliar treinador
+        async function avaliarTreinador(treinadorId) {
+            try {
+                const { data: { user }, error: userError } = await supabase.auth.getUser();
+                
+                if (userError || !user) {
+                    window.location.href = '../login.html?redirect=treinadores.html';
+                    return;
+                }
+
+                // Verificar se o usuário tem plano premium
+                const { data: userData, error: userDataError } = await supabase
+                    .from('utilizadores')
+                    .select('tipo_conta')
+                    .eq('id', user.id)
+                    .single();
+
+                if (userDataError) throw userDataError;
+
+                if (userData.tipo_conta === 'gratuito') {
+                    showNotification('Você precisa ter um plano premium para avaliar treinadores', 'error');
+                    return;
+                }
+
+                treinadorIdAtual = treinadorId;
+                const modal = document.getElementById('novaAvaliacaoModal');
+                modal.style.display = 'block';
+
+                // Configurar eventos das estrelas SEMPRE que abrir o modal
+                const stars = document.querySelectorAll('.rating-input i');
+                stars.forEach(star => {
+                    star.classList.remove('active');
+                    star.onclick = null;
+                    star.addEventListener('click', function() {
+                        const rating = parseInt(this.dataset.rating);
+                        avaliacaoSelecionada = rating;
+                        stars.forEach(s => {
+                            s.classList.toggle('active', parseInt(s.dataset.rating) <= rating);
+                        });
+                    });
+                });
+            } catch (error) {
+                console.error('Erro ao abrir modal de avaliação:', error);
+                showNotification('Erro ao abrir modal de avaliação', 'error');
+            }
+        }
+
+        // Função para enviar avaliação
+        async function enviarAvaliacao() {
+            try {
+                if (avaliacaoSelecionada === 0) {
+                    showNotification('Por favor, selecione uma avaliação', 'error');
+                    return;
+                }
+
+                const { data: { user }, error: userError } = await supabase.auth.getUser();
+                if (userError) throw userError;
+
+                const texto = document.getElementById('avaliacaoTexto').value.trim();
+                if (!texto) {
+                    showNotification('Por favor, escreva um comentário', 'error');
+                    return;
+                }
+
+                const { error } = await supabase
+                    .from('avaliacoes_treinadores')
+                    .insert({
+                        treinador_id: treinadorIdAtual,
+                        user_id: user.id,
+                        estrelas: avaliacaoSelecionada,
+                        texto: texto,
+                        data: new Date().toISOString()
+                    });
+
+                if (error) throw error;
+
+                showNotification('Avaliação enviada com sucesso!', 'success');
+                fecharModalNovaAvaliacao();
+                carregarTreinadores(); // Recarregar para atualizar a média
+            } catch (error) {
+                console.error('Erro ao enviar avaliação:', error);
+                showNotification('Erro ao enviar avaliação', 'error');
+            }
+        }
+
+        // Função para fechar modal de avaliações
+        function fecharModalAvaliacoes() {
+            const modal = document.getElementById('avaliacoesModal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = ''; // Restaura rolagem do body
+            }
+        }
+
+        // Função para fechar modal de nova avaliação
+        function fecharModalNovaAvaliacao() {
+            const modal = document.getElementById('novaAvaliacaoModal');
+            modal.style.display = 'none';
+            avaliacaoSelecionada = 0;
+            document.getElementById('avaliacaoTexto').value = '';
+            document.querySelectorAll('.rating-input i').forEach(star => {
+                star.classList.remove('active');
+            });
+        }
+
+        // Fechar modais ao clicar fora do conteúdo
+        window.addEventListener('click', function(event) {
+            // Modal de avaliações
+            const avaliacoesModal = document.getElementById('avaliacoesModal');
+            if (avaliacoesModal && avaliacoesModal.style.display === 'block') {
+                const content = avaliacoesModal.querySelector('.modal-content');
+                if (event.target === avaliacoesModal && !content.contains(event.target)) {
+                    fecharModalAvaliacoes();
+                }
+            }
+            // Modal de nova avaliação
+            const novaAvaliacaoModal = document.getElementById('novaAvaliacaoModal');
+            if (novaAvaliacaoModal && novaAvaliacaoModal.style.display === 'block') {
+                const content = novaAvaliacaoModal.querySelector('.modal-content');
+                if (event.target === novaAvaliacaoModal && !content.contains(event.target)) {
+                    fecharModalNovaAvaliacao();
+                }
+            }
+            // Modal de agendamento
+            const agendamentoModal = document.getElementById('agendamentoModal');
+            if (agendamentoModal && agendamentoModal.style.display === 'block') {
+                const content = agendamentoModal.querySelector('.modal-content');
+                if (event.target === agendamentoModal && !content.contains(event.target)) {
+                    fecharModalAgendamento();
+                }
+            }
+        });
+
+        // Fechar modais com ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                fecharModalAvaliacoes();
+                fecharModalNovaAvaliacao();
             }
         });
     </script>

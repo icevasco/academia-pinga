@@ -12,8 +12,8 @@ if (!window.supabaseClient) {
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3dkZmlmaGhjcW10cG5ob3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTUzMDksImV4cCI6MjA2MDQzMTMwOX0.Q50xEMRQLTjuOKtn0f92GX5NKY9GgWWYVfHlmE5yhUs';
 
     // Verificar se o objeto supabase existe antes de criar o cliente
-    if (typeof supabase !== 'undefined') {
-        window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+    if (typeof window.supabase !== 'undefined') {
+        window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
         console.log('Cliente Supabase inicializado com sucesso!');
     } else {
         console.error('Biblioteca Supabase não carregada');
