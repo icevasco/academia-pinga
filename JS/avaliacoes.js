@@ -626,7 +626,7 @@ async function enviarAvaliacao(event) {
     }
 
     const form = event.target;
-    const texto = form.texto.value;
+    const texto = form.texto.value.trim();
     const estrelas = parseInt(form.estrelas.value);
     const trofeus = parseInt(form.trofeus.value);
 
@@ -635,8 +635,18 @@ async function enviarAvaliacao(event) {
         return;
     }
 
+    if (!texto) {
+        alert('Por favor, escreva uma avaliação.');
+        return;
+    }
+
     try {
-        const { data: { user } } = await supabaseClient.auth.getUser();
+        const { data: { user }, error: userAuthError } = await supabaseClient.auth.getUser();
+        
+        if (userAuthError) {
+            console.error('Erro ao obter usuário autenticado:', userAuthError);
+            throw new Error('Erro ao obter usuário autenticado');
+        }
         
         if (!user) {
             alert('Por favor, faça login para adicionar uma avaliação.');
@@ -651,30 +661,65 @@ async function enviarAvaliacao(event) {
             .single();
 
         if (userError) {
+            console.error('Erro ao buscar dados do usuário:', userError);
             throw new Error('Erro ao buscar dados do usuário');
         }
 
-        const { error } = await supabaseClient
-            .from('avaliacoes')
-            .insert([{
-                user_id: user.id,
-                treinador_id: treinadorIdAtual,
-                texto: texto,
-                estrelas: estrelas,
-                trofeus: trofeus,
-                data: new Date().toISOString()
-            }]);
-
-        if (error) {
-            console.error('Erro ao inserir avaliação:', error);
-            throw error;
+        if (!userData || !userData.nome) {
+            console.error('Nome do usuário não encontrado');
+            throw new Error('Nome do usuário não encontrado');
         }
+
+        // Preparar os dados da avaliação
+        const avaliacaoData = {
+            user_id: user.id,
+            nome: userData.nome,
+            texto: texto,
+            estrelas: estrelas || 0,
+            trofeus: trofeus || 0,
+            data: new Date().toISOString()
+        };
+
+        console.log('Tentando inserir avaliação com dados:', avaliacaoData);
+
+        // Tentar inserir a avaliação
+        const { data: insertedData, error: insertError } = await supabaseClient
+            .from('avaliacoes')
+            .insert([avaliacaoData])
+            .select();
+
+        if (insertError) {
+            console.error('Erro ao inserir avaliação:', insertError);
+            console.error('Detalhes do erro:', {
+                code: insertError.code,
+                message: insertError.message,
+                details: insertError.details,
+                hint: insertError.hint
+            });
+
+            // Verificar se é um erro de permissão
+            if (insertError.code === '42501') {
+                alert('Você não tem permissão para adicionar avaliações.');
+                return;
+            }
+
+            // Verificar se é um erro de dados inválidos
+            if (insertError.code === '22P02') {
+                alert('Dados inválidos. Por favor, verifique os valores inseridos.');
+                return;
+            }
+
+            throw insertError;
+        }
+
+        console.log('Avaliação inserida com sucesso:', insertedData);
 
         fecharModalAdicionar();
         carregarAvaliacoes();
         abrirModalSucesso();
     } catch (error) {
         console.error('Erro ao enviar avaliação:', error);
+        console.error('Stack trace:', error.stack);
         alert('Erro ao enviar avaliação. Por favor, tente novamente.');
     }
 }
@@ -713,7 +758,7 @@ async function atualizarAvaliacoesExistentes() {
 }
 
 // Inicializar eventos das estrelas
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     carregarAvaliacoes();
     atualizarAvaliacoesExistentes(); // Atualizar avaliações existentes ao carregar a página
     
