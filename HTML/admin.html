@@ -1600,6 +1600,191 @@
             max-width: 1000px !important;
             width: 95% !important;
         }
+       .confirm-modal-small {
+            max-width: 350px !important;
+            width: 95% !important;
+            padding: 20px 10px !important;
+        }
+        .confirm-modal-small {
+            max-width: 240px !important;
+            width: 90% !important;
+            padding: 10px 5px !important;
+            font-size: 14px !important;
+        }
+        #confirmActionModal .modal-content h3 {
+            font-size: 16px !important;
+        }
+        #confirmActionModal .modal-content p {
+            font-size: 13px !important;
+        }
+        #confirmActionModal .modal-footer button {
+            font-size: 13px !important;
+            padding: 6px 14px !important;
+        }
+        .confirm-modal-small {
+            max-width: 240px !important;
+            width: 90% !important;
+            padding: 4px 5px 4px 5px !important;
+            font-size: 13px !important;
+            max-height: 300px !important;
+            margin: 0 auto !important;
+        }
+        #confirmActionModal .modal-content h3 {
+            font-size: 15px !important;
+            margin: 8px 0 4px 0 !important;
+        }
+        #confirmActionModal .modal-content p {
+            font-size: 12px !important;
+            margin: 4px 0 8px 0 !important;
+        }
+        #confirmActionModal .modal-footer {
+            margin-top: 6px !important;
+            padding-top: 6px !important;
+            gap: 6px !important;
+        }
+        #confirmActionModal .modal-footer button {
+            font-size: 12px !important;
+            padding: 4px 10px !important;
+        }
+        #confirmActionModal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        #confirmActionModal.active {
+            display: flex !important;
+        }
+        #confirmActionModal .modal-content.confirm-modal-small {
+            position: relative;
+            top: unset;
+            left: unset;
+            right: unset;
+            bottom: unset;
+            margin: 0 auto !important;
+            transform: none !important;
+        }
+        #successModal .modal-content {
+            background-color: #4CAF50 !important;
+            color: white !important;
+        }
+        #successModal .modal-content h3 {
+            color: white !important;
+        }
+        #successModal .modal-content p {
+            color: white !important;
+        }
+        #successModal .modal-footer button {
+            background-color: white !important;
+            color: #4CAF50 !important;
+        }
+        #successModal .modal-footer button:hover {
+            background-color: #e0e0e0 !important;
+        }
+        #successModal .modal-footer button:active {
+            background-color: #c0c0c0 !important;
+        }
+        #successModal .close {
+            color: white !important;
+        }
+        #successModal .close:hover {
+            color: #FFA500 !important;
+        }
+        #successModal .close:active {
+            color: #FFD700 !important;
+        }
+        #successModal .modal-content.confirm-modal-small {
+            max-width: 350px !important;
+            width: 95% !important;
+            padding: 20px 10px !important;
+        }
+        #successModal .modal-content h3 {
+            font-size: 16px !important;
+        }
+        #successModal .modal-content p {
+            font-size: 13px !important;
+        }
+        #successModal .modal-footer button {
+            font-size: 13px !important;
+            padding: 6px 14px !important;
+        }
+        #successModal .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 6px !important;
+            padding-top: 6px !important;
+            gap: 6px !important;
+        }
+        #successModal .modal-footer button {
+            font-size: 12px !important;
+            padding: 4px 10px !important;
+        }
+        #successModal .modal-content.confirm-modal-small {
+            position: relative;
+            top: unset;
+            left: unset;
+            right: unset;
+            bottom: unset;
+            margin: 0 auto !important;
+            transform: none !important;
+        }
+        #confirmActionModal .modal-content p {
+            color: #fff !important;
+        }
+
+        .section-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .section-card::after {
+            content: 'Clique para acessar';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 8px;
+            text-align: center;
+            font-size: 12px;
+            color: #FFD700;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .section-card:hover::after {
+            opacity: 1;
+        }
+
+        .section-card i {
+            font-size: 32px;
+            color: #FFD700;
+            margin-bottom: 15px;
+        }
+
+        .section-card h2 {
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+
+        .section-card p {
+            color: #fff;
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -1684,7 +1869,7 @@
                 </div>
                 <div class="section-card" onclick="showSection('forms')">
                     <i class="fas fa-file-alt"></i>
-                    <h2>Formulários de Curso</h2>
+                    <h2>Inscrições Cursos</h2>
                     <p>Visualize e gerencie inscrições em cursos</p>
                 </div>
                 <div class="section-card" onclick="showSection('treinadores')">
@@ -1700,6 +1885,9 @@
                 <i class="fas fa-arrow-left"></i> Voltar
             </button>
             <h2>Todas as Contas</h2>
+            <div style="margin-bottom: 20px;">
+                <input type="text" id="searchAccountsInput" placeholder="Pesquisar por nome ou email..." style="width: 100%; max-width: 350px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+            </div>
             <div class="table-container">
                 <table id="accountsTable">
                     <thead>
@@ -1719,12 +1907,11 @@
             <button class="back-button" onclick="showMainDashboard()">
                 <i class="fas fa-arrow-left"></i> Voltar
             </button>
-            <h2>Formulários de Curso</h2>
+            <h2>Inscrições Cursos</h2>
             
             <div class="admin-container">
                 <div class="admin-tabs">
-                    <button class="tab-button active" onclick="abrirTab('formularios')">Formulários</button>
-                    <button class="tab-button" onclick="abrirTab('vistos')">Vistos</button>
+                    <!-- Tabs removidas -->
                 </div>
 
                 <div id="formularios" class="tab-content active">
@@ -1772,6 +1959,7 @@
                     </div>
 
                     <div id="vistosTab" class="form-tab">
+                        <h3 style="color:#FFD700; margin-bottom: 10px;">Inscrições Vistas</h3>
                         <div class="table-container">
                             <table id="vistosTable">
                                 <thead>
@@ -1783,13 +1971,13 @@
                                         <th>Troféus</th>
                                         <th>Nível</th>
                                         <th>Status</th>
-                                        <th>Tipo de Conta</th>
                                         <th>Data</th>
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>
+                            <div id="vistosEmptyMsg" style="display:none; color:#fff; text-align:center; padding:20px;">Sem inscrições vistas.</div>
                         </div>
                     </div>
                 </div>
@@ -2017,9 +2205,43 @@
         </div>
     </div>
 
+    <!-- Modal de Confirmação de Aprovação/Rejeição -->
+    <div id="confirmActionModal" class="modal">
+        <div class="modal-content confirm-modal-small">
+            <div class="modal-header">
+                <h3 id="confirmActionTitle"></h3>
+                <button class="close-button" onclick="closeConfirmActionModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmActionText"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-button" onclick="closeConfirmActionModal()">Cancelar</button>
+                <button class="edit-button" id="confirmActionBtn">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Sucesso -->
+    <div id="successModal" class="modal">
+        <div class="modal-content confirm-modal-small">
+            <div class="modal-header">
+                <h3 id="successModalTitle">Sucesso!</h3>
+                <button class="close-button" onclick="closeSuccessModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="successModalText"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="edit-button" onclick="closeSuccessModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Funções globais
         function showSection(section) {
+            console.log('Mostrando seção:', section);
             document.getElementById('mainDashboard').style.display = 'none';
             document.getElementById('accountsSection').classList.remove('active');
             document.getElementById('formsSection').classList.remove('active');
@@ -2030,8 +2252,79 @@
                 loadAccounts();
             } else if (section === 'forms') {
                 document.getElementById('formsSection').classList.add('active');
+                loadForms();
             } else if (section === 'treinadores') {
                 document.getElementById('treinadoresSection').classList.add('active');
+                const dashboard = document.querySelector('.treinadores-dashboard');
+                if (dashboard) {
+                    dashboard.style.display = 'block';
+                    // Renderizar sempre o HTML base da dashboard
+                    dashboard.innerHTML = `
+                        <div class="treinador-header">
+                            <div class="treinador-info">
+                                <img src="../IMG/avatar_default.png" alt="Avatar do Treinador" class="treinador-avatar" id="treinadorAvatar">
+                                <div class="treinador-detalhes">
+                                    <h2 id="treinadorNome">Nome do Treinador</h2>
+                                    <p id="treinadorEspecialidade">Especialidade</p>
+                                    <div class="treinador-stats">
+                                        <div class="stat-item">
+                                            <i class="fas fa-star"></i>
+                                            <span id="mediaAvaliacoes">0.0</span>
+                                            <label>Média Avaliações</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard-cards">
+                            <div class="dashboard-card">
+                                <div class="card-header">
+                                    <i class="fas fa-calendar"></i>
+                                    <h3>Próximas Aulas</h3>
+                                </div>
+                                <div class="card-content" id="proximasAulas">
+                                    <div class="no-data">Sem aulas agendadas para este treinador.</div>
+                                </div>
+                            </div>
+                            <div class="dashboard-card">
+                                <div class="card-header">
+                                    <i class="fas fa-star"></i>
+                                    <h3>Últimas Avaliações</h3>
+                                </div>
+                                <div class="card-content" id="ultimasAvaliacoes">
+                                    <div class="no-data">Sem avaliações recentes para este treinador.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="agendamentos-section">
+                            <div class="section-header">
+                                <h2>Agendamentos</h2>
+                                <div class="filtros-agendamentos">
+                                    <select id="filtroStatus" onchange="carregarAgendamentos()">
+                                        <option value="todos">Todos os Status</option>
+                                        <option value="pendente">Pendentes</option>
+                                        <option value="confirmado">Confirmados</option>
+                                        <option value="cancelado">Cancelados</option>
+                                    </select>
+                                    <select id="filtroData" onchange="carregarAgendamentos()">
+                                        <option value="todos">Todas as Datas</option>
+                                        <option value="hoje">Hoje</option>
+                                        <option value="semana">Esta Semana</option>
+                                        <option value="mes">Este Mês</option>
+                                    </select>
+                                    <div class="search-box">
+                                        <i class="fas fa-search"></i>
+                                        <input type="text" id="searchAgendamentos" placeholder="Pesquisar agendamentos..." onkeyup="filtrarAgendamentos(this.value)">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="listaAgendamentos" class="lista-agendamentos">
+                                <div class="no-data">Sem agendamentos para este treinador.</div>
+                            </div>
+                        </div>
+                    `;
+                }
+                loadTreinadorDashboard();
             }
         }
 
@@ -2149,12 +2442,22 @@
             // Verificação de acesso
             async function checkAdminAccess() {
                 try {
+                    console.log('Iniciando verificação de acesso...');
                     const { data: { user }, error } = await window.supabaseClient.auth.getUser();
                     
-                    if (error || !user) {
+                    if (error) {
+                        console.error('Erro ao obter usuário:', error);
                         window.location.href = '../login.html';
                         return;
                     }
+
+                    if (!user) {
+                        console.error('Nenhum usuário encontrado');
+                        window.location.href = '../login.html';
+                        return;
+                    }
+
+                    console.log('Usuário encontrado:', user);
 
                     const { data: userData, error: userError } = await window.supabaseClient
                         .from('utilizadores')
@@ -2162,26 +2465,40 @@
                         .eq('id', user.id)
                         .single();
 
-                    if (userError || !userData) {
+                    if (userError) {
+                        console.error('Erro ao buscar dados do usuário:', userError);
+                        window.location.href = '../login.html';
+                        return;
+                    }
+
+                    console.log('Dados do usuário:', userData);
+
+                    if (!userData) {
+                        console.error('Dados do usuário não encontrados');
                         window.location.href = '../login.html';
                         return;
                     }
 
                     if (userData.tipo_conta !== 'admin' && userData.tipo_conta !== 'treinador') {
+                        console.error('Tipo de conta não permitido:', userData.tipo_conta);
                         window.location.href = '../index.html';
                         return;
                     }
 
+                    console.log('Acesso permitido. Tipo de conta:', userData.tipo_conta);
+
                     if (userData.tipo_conta === 'admin') {
+                        console.log('Configurando interface de admin');
                         setupAdminInterface();
                     } else {
+                        console.log('Configurando interface de treinador');
                         setupTreinadorInterface();
                     }
 
                     loadStats();
                     loadAccounts();
                 } catch (error) {
-                    console.error('Erro ao verificar acesso:', error);
+                    console.error('Erro na verificação de acesso:', error);
                     window.location.href = '../login.html';
                 }
             }
@@ -2204,8 +2521,33 @@
             }
 
             function setupTreinadorInterface() {
-                document.getElementById('mainDashboard').style.display = 'none';
-                document.getElementById('treinadoresSection').classList.add('active');
+                console.log('Iniciando setup da interface de treinador');
+                // Esconder dashboard principal
+                const mainDashboard = document.getElementById('mainDashboard');
+                if (mainDashboard) {
+                    mainDashboard.style.display = 'none';
+                    console.log('Dashboard principal escondida');
+                } else {
+                    console.error('Elemento mainDashboard não encontrado');
+                }
+                // Mostrar seção de treinadores
+                const treinadoresSection = document.getElementById('treinadoresSection');
+                if (treinadoresSection) {
+                    treinadoresSection.classList.add('active');
+                    console.log('Seção de treinadores ativada');
+                } else {
+                    console.error('Elemento treinadoresSection não encontrado');
+                }
+                // Mostrar dashboard de treinadores
+                const treinadoresDashboard = document.querySelector('.treinadores-dashboard');
+                if (treinadoresDashboard) {
+                    treinadoresDashboard.style.display = 'block';
+                    console.log('Dashboard de treinadores exibida');
+                } else {
+                    console.error('Elemento treinadores-dashboard não encontrado');
+                }
+                console.log('Carregando dashboard do treinador');
+                loadTreinadorDashboard();
             }
 
             function setupModalListeners() {
@@ -2401,12 +2743,23 @@
 
         async function loadForms() {
             try {
-                const { data: forms, error } = await window.supabaseClient
-                    .from('formularios_curso')
+                console.log('A carregar inscrições de cursos...');
+                // Buscar todas as inscrições
+                const { data: inscricoes, error: inscricoesError } = await window.supabaseClient
+                    .from('inscricoes')
                     .select('*')
                     .order('created_at', { ascending: false });
+                if (inscricoesError) throw inscricoesError;
 
-                if (error) throw error;
+                // Buscar todos os utilizadores
+                const { data: utilizadores, error: utilizadoresError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('id, nome, email');
+                if (utilizadoresError) throw utilizadoresError;
+
+                // Criar um mapa de utilizadores por id
+                const utilizadoresMap = {};
+                utilizadores.forEach(u => utilizadoresMap[u.id] = u);
 
                 const pendentesTable = document.querySelector('#pendentesTable tbody');
                 const vistosTable = document.querySelector('#vistosTable tbody');
@@ -2417,34 +2770,55 @@
                 let pendentesCount = 0;
                 let vistosCount = 0;
 
-                forms.forEach(form => {
-                    const row = `
-                        <tr>
-                            <td>${form.nome || ''}</td>
-                            <td>${form.email || ''}</td>
+                if (!inscricoes || inscricoes.length === 0) {
+                    console.log('Nenhuma inscrição encontrada na base de dados.');
+                }
+
+                inscricoes.forEach(form => {
+                    const user = utilizadoresMap[form.utilizador_id] || {};
+                    const nome = user.nome || '';
+                    const email = user.email || '';
+                    const idLimpo = (form.id || '').toString().trim();
+                    const status = (form.status || '').trim().toLowerCase();
+                    if (status === 'pendente') {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${nome}</td>
+                            <td>${email}</td>
                             <td>${form.tag || ''}</td>
                             <td>${form.plano || ''}</td>
                             <td>${form.trofeus || 0}</td>
                             <td>${form.nivel || 0}</td>
-                            <td>${new Date(form.created_at).toLocaleDateString()}</td>
+                            <td></td>
+                            <td>${new Date(form.data_inscricao || form.created_at).toLocaleDateString()}</td>
                             <td>
-                                <div class="action-buttons">
-                                    <button class="approve-button" onclick="aprovarFormulario('${form.id}')">
-                                        <i class="fas fa-check"></i> Aprovar
-                                    </button>
-                                    <button class="reject-button" onclick="rejeitarFormulario('${form.id}')">
-                                        <i class="fas fa-times"></i> Rejeitar
-                                    </button>
-                                </div>
+                                <button class="approve-button" data-id="${idLimpo}">
+                                    <i class="fas fa-check"></i> Aprovar
+                                </button>
+                                <button class="reject-button" data-id="${idLimpo}">
+                                    <i class="fas fa-times"></i> Rejeitar
+                                </button>
                             </td>
-                        </tr>
-                    `;
-
-                    if (form.status === 'pendente') {
-                        pendentesTable.innerHTML += row;
+                        `;
+                        pendentesTable.appendChild(row);
                         pendentesCount++;
                     } else {
-                        vistosTable.innerHTML += row;
+                        const badge = status === 'aprovado'
+                            ? '<span style="background:#4CAF50;color:#fff;padding:4px 10px;border-radius:12px;font-size:12px;">Aprovado</span>'
+                            : '<span style="background:#f44336;color:#fff;padding:4px 10px;border-radius:12px;font-size:12px;">Rejeitado</span>';
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${nome}</td>
+                            <td>${email}</td>
+                            <td>${form.tag || ''}</td>
+                            <td>${form.plano || ''}</td>
+                            <td>${form.trofeus || 0}</td>
+                            <td>${form.nivel || 0}</td>
+                            <td>${badge}</td>
+                            <td>${new Date(form.data_inscricao || form.created_at).toLocaleDateString()}</td>
+                            <td></td>
+                        `;
+                        vistosTable.appendChild(row);
                         vistosCount++;
                     }
                 });
@@ -2452,45 +2826,116 @@
                 document.getElementById('pendentesCount').textContent = pendentesCount;
                 document.getElementById('vistosCount').textContent = vistosCount;
 
+                // Adicionar eventos aos botões
+                addAprovarRejeitarListeners();
             } catch (error) {
-                console.error('Erro ao carregar formulários:', error);
-                showNotification('Erro ao carregar formulários', 'error');
+                console.error('Erro ao carregar inscrições:', error);
+                showNotification('Erro ao carregar inscrições', 'error');
             }
         }
 
-        async function aprovarFormulario(id) {
+        // Modal de confirmação
+        let actionToConfirm = null;
+        let actionIdToConfirm = null;
+
+        function showConfirmActionModal(action, id) {
+            actionToConfirm = action;
+            actionIdToConfirm = id;
+            const modal = document.getElementById('confirmActionModal');
+            const title = document.getElementById('confirmActionTitle');
+            const text = document.getElementById('confirmActionText');
+            if (action === 'aprovar') {
+                title.textContent = 'Confirmar Aprovação';
+                text.textContent = 'Tem a certeza que deseja aprovar esta inscrição?';
+            } else {
+                title.textContent = 'Confirmar Rejeição';
+                text.textContent = 'Tem a certeza que deseja rejeitar esta inscrição?';
+            }
+            modal.classList.add('active');
+        }
+
+        function closeConfirmActionModal() {
+            document.getElementById('confirmActionModal').classList.remove('active');
+            actionToConfirm = null;
+            actionIdToConfirm = null;
+        }
+
+        document.getElementById('confirmActionBtn').onclick = async function() {
+            if (actionToConfirm && actionIdToConfirm) {
+                if (actionToConfirm === 'aprovar') {
+                    await aprovarFormulario(actionIdToConfirm, true);
+                } else {
+                    await rejeitarFormulario(actionIdToConfirm, true);
+                }
+                closeConfirmActionModal();
+            }
+        };
+
+        // Alterar listeners dos botões para abrir o modal
+        function addAprovarRejeitarListeners() {
+            document.querySelectorAll('.approve-button').forEach(btn => {
+                btn.onclick = function() { showConfirmActionModal('aprovar', this.getAttribute('data-id')); };
+            });
+            document.querySelectorAll('.reject-button').forEach(btn => {
+                btn.onclick = function() { showConfirmActionModal('rejeitar', this.getAttribute('data-id')); };
+            });
+        }
+
+        // Chamar addAprovarRejeitarListeners() no final do loadForms
+        // ... existing code ...
+        // Alterar funções aprovarFormulario e rejeitarFormulario para aceitar um segundo argumento (skipConfirm)
+        async function aprovarFormulario(id, skipConfirm) {
+            if (!skipConfirm) {
+                showConfirmActionModal('aprovar', id);
+                return;
+            }
             try {
-                const { error } = await window.supabaseClient
-                    .from('formularios_curso')
+                const idStr = String(id).trim();
+                console.log('ID usado no update aprovado:', idStr);
+                const { data, error } = await window.supabaseClient
+                    .from('inscricoes')
                     .update({ status: 'aprovado' })
-                    .eq('id', id);
-
+                    .eq('id', idStr)
+                    .select();
+                console.log('Update aprovado:', { data, error });
                 if (error) throw error;
-
-                showNotification('Formulário aprovado com sucesso!', 'success');
-                loadForms();
+                if (!data || data.length === 0) {
+                    alert('Nenhuma inscrição foi atualizada! O id pode não corresponder ao da base de dados.');
+                    return;
+                }
+                showSuccessModal('Inscrição aprovada com sucesso!');
             } catch (error) {
-                console.error('Erro ao aprovar formulário:', error);
-                showNotification('Erro ao aprovar formulário', 'error');
+                console.error('Erro ao aprovar inscrição:', error);
+                showNotification('Erro ao aprovar inscrição', 'error');
             }
         }
 
-        async function rejeitarFormulario(id) {
+        async function rejeitarFormulario(id, skipConfirm) {
+            if (!skipConfirm) {
+                showConfirmActionModal('rejeitar', id);
+                return;
+            }
             try {
-                const { error } = await window.supabaseClient
-                    .from('formularios_curso')
+                const idStr = String(id).trim();
+                console.log('ID usado no update rejeitado:', idStr);
+                const { data, error } = await window.supabaseClient
+                    .from('inscricoes')
                     .update({ status: 'rejeitado' })
-                    .eq('id', id);
-
+                    .eq('id', idStr)
+                    .select();
+                console.log('Update rejeitado:', { data, error });
                 if (error) throw error;
-
-                showNotification('Formulário rejeitado com sucesso!', 'success');
-                loadForms();
+                if (!data || data.length === 0) {
+                    alert('Nenhuma inscrição foi atualizada! O id pode não corresponder ao da base de dados.');
+                    return;
+                }
+                showSuccessModal('Inscrição rejeitada com sucesso!');
             } catch (error) {
-                console.error('Erro ao rejeitar formulário:', error);
-                showNotification('Erro ao rejeitar formulário', 'error');
+                console.error('Erro ao rejeitar inscrição:', error);
+                showNotification('Erro ao rejeitar inscrição', 'error');
             }
         }
+        // ... existing code ...
 
         function filterForms() {
             const planoFilter = document.getElementById('planoFilter').value;
@@ -2528,6 +2973,183 @@
                 });
             }
         });
+
+        // Adicionar função de pesquisa de contas
+        function filterAccountsTable() {
+            const input = document.getElementById('searchAccountsInput');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('accountsTable');
+            const trs = table.getElementsByTagName('tr');
+            for (let i = 1; i < trs.length; i++) { // começa em 1 para ignorar o header
+                const tds = trs[i].getElementsByTagName('td');
+                if (tds.length > 1) {
+                    const nome = tds[0].textContent.toLowerCase();
+                    const email = tds[1].textContent.toLowerCase();
+                    if (nome.includes(filter) || email.includes(filter)) {
+                        trs[i].style.display = '';
+                    } else {
+                        trs[i].style.display = 'none';
+                    }
+                }
+            }
+        }
+        document.getElementById('searchAccountsInput').addEventListener('input', filterAccountsTable);
+
+        // Garantir pesquisa e filtro em tempo real
+        document.querySelectorAll('.search-input').forEach(input => {
+            input.addEventListener('input', function() {
+                searchForms(this.value);
+            });
+        });
+        document.getElementById('planoFilter').addEventListener('change', filterForms);
+
+        let reloadAfterSuccess = false;
+        function showSuccessModal(msg) {
+            document.getElementById('successModalText').textContent = msg;
+            document.getElementById('successModal').classList.add('active');
+            reloadAfterSuccess = true;
+        }
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('active');
+            if (reloadAfterSuccess) {
+                reloadAfterSuccess = false;
+                loadForms();
+            }
+        }
+
+        // Função para carregar dados do treinador
+        async function loadTreinadorDashboard() {
+            try {
+                console.log('Iniciando carregamento da dashboard do treinador');
+                
+                // Verificar elementos da interface
+                const elementos = {
+                    'treinadorNome': document.getElementById('treinadorNome'),
+                    'treinadorEspecialidade': document.getElementById('treinadorEspecialidade'),
+                    'treinadorAvatar': document.getElementById('treinadorAvatar'),
+                    'mediaAvaliacoes': document.getElementById('mediaAvaliacoes'),
+                    'proximasAulas': document.getElementById('proximasAulas'),
+                    'ultimasAvaliacoes': document.getElementById('ultimasAvaliacoes')
+                };
+
+                // Verificar se todos os elementos existem
+                for (const [id, element] of Object.entries(elementos)) {
+                    if (!element) {
+                        console.error(`Elemento ${id} não encontrado`);
+                    }
+                }
+
+                // Buscar dados do treinador autenticado
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                console.log('Usuário autenticado:', user);
+                
+                if (!user) {
+                    console.error('Nenhum usuário autenticado encontrado');
+                    if (elementos.treinadorNome) elementos.treinadorNome.textContent = 'Utilizador não autenticado.';
+                    if (elementos.treinadorEspecialidade) elementos.treinadorEspecialidade.textContent = '';
+                    if (elementos.treinadorAvatar) elementos.treinadorAvatar.src = '../IMG/avatar_default.png';
+                    if (elementos.proximasAulas) elementos.proximasAulas.innerHTML = '<div class="no-data">Sem dados de aulas.</div>';
+                    if (elementos.ultimasAvaliacoes) elementos.ultimasAvaliacoes.innerHTML = '<div class="no-data">Sem dados de avaliações.</div>';
+                    return;
+                }
+
+                const { data: treinador, error: treinadorError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('nome, especialidade, avatar_url')
+                    .eq('id', user.id)
+                    .single();
+                    
+                console.log('Dados do treinador:', treinador);
+                
+                if (treinadorError || !treinador) {
+                    console.error('Erro ao buscar dados do treinador:', treinadorError);
+                    if (elementos.treinadorNome) elementos.treinadorNome.textContent = 'Ainda não existem dados de treinador para este utilizador.';
+                    if (elementos.treinadorEspecialidade) elementos.treinadorEspecialidade.textContent = '';
+                    if (elementos.treinadorAvatar) elementos.treinadorAvatar.src = '../IMG/avatar_default.png';
+                    if (elementos.proximasAulas) elementos.proximasAulas.innerHTML = '<div class="no-data">Sem dados de aulas.</div>';
+                    if (elementos.ultimasAvaliacoes) elementos.ultimasAvaliacoes.innerHTML = '<div class="no-data">Sem dados de avaliações.</div>';
+                    return;
+                }
+
+                // Atualizar informações do treinador
+                if (elementos.treinadorNome) elementos.treinadorNome.textContent = treinador.nome || 'Nome não definido';
+                if (elementos.treinadorEspecialidade) elementos.treinadorEspecialidade.textContent = treinador.especialidade || 'Especialidade não definida';
+                if (elementos.treinadorAvatar) elementos.treinadorAvatar.src = treinador.avatar_url || '../IMG/avatar_default.png';
+
+                // Buscar avaliações
+                const { data: avals, error: avalsError } = await window.supabaseClient
+                    .from('avaliacoes')
+                    .select('nota')
+                    .eq('treinador_id', user.id);
+                console.log('Avaliações encontradas:', avals);
+                if (avalsError) {
+                    console.error('Erro ao buscar avaliações:', avalsError);
+                }
+                let media = 0;
+                if (avals && avals.length > 0) {
+                    media = (avals.reduce((acc, a) => acc + (a.nota || 0), 0) / avals.length).toFixed(1);
+                }
+                if (elementos.mediaAvaliacoes) elementos.mediaAvaliacoes.textContent = media;
+
+                // Buscar próximas aulas
+                const { data: aulas, error: aulasError } = await window.supabaseClient
+                    .from('agendamentos')
+                    .select('*')
+                    .eq('treinador_id', user.id)
+                    .gte('data', new Date().toISOString())
+                    .order('data', { ascending: true });
+                console.log('Aulas encontradas:', aulas);
+                if (aulasError) {
+                    console.error('Erro ao buscar aulas:', aulasError);
+                }
+                if (elementos.proximasAulas) {
+                    if (aulas && aulas.length > 0) {
+                        elementos.proximasAulas.innerHTML = '';
+                        aulas.forEach(aula => {
+                            elementos.proximasAulas.innerHTML += `<div class="aula-card">
+                                <h4>${aula.titulo || 'Aula'}</h4>
+                                <p>Data: ${new Date(aula.data).toLocaleString()}</p>
+                                <p>Aluno: ${aula.nome_aluno || ''}</p>
+                            </div>`;
+                        });
+                    } else {
+                        elementos.proximasAulas.innerHTML = '<div class="no-data">Sem aulas agendadas para este treinador.</div>';
+                    }
+                }
+
+                // Buscar últimas avaliações
+                const { data: avaliacoes, error: avaliacoesError } = await window.supabaseClient
+                    .from('avaliacoes')
+                    .select('nota, comentario, aluno_nome, created_at')
+                    .eq('treinador_id', user.id)
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+                console.log('Avaliações detalhadas encontradas:', avaliacoes);
+                if (avaliacoesError) {
+                    console.error('Erro ao buscar avaliações detalhadas:', avaliacoesError);
+                }
+                if (elementos.ultimasAvaliacoes) {
+                    if (avaliacoes && avaliacoes.length > 0) {
+                        elementos.ultimasAvaliacoes.innerHTML = '';
+                        avaliacoes.forEach(av => {
+                            elementos.ultimasAvaliacoes.innerHTML += `<div class="avaliacao-card">
+                                <h4>${av.aluno_nome || 'Aluno'}</h4>
+                                <div class="estrelas">${'★'.repeat(av.nota || 0)}</div>
+                                <p>${av.comentario || ''}</p>
+                                <small>${new Date(av.created_at).toLocaleDateString()}</small>
+                            </div>`;
+                        });
+                    } else {
+                        elementos.ultimasAvaliacoes.innerHTML = '<div class="no-data">Sem avaliações recentes para este treinador.</div>';
+                    }
+                }
+
+                console.log('Dashboard do treinador carregada com sucesso');
+            } catch (error) {
+                console.error('Erro ao carregar dashboard do treinador:', error);
+                showNotification('Erro ao carregar dashboard do treinador', 'error');
+            }
+        }
     </script>
 </body>
 </html> 

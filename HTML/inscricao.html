@@ -533,6 +533,73 @@
             z-index: 99999 !important;
             position: relative !important;
         }
+
+        .user-menu {
+            position: relative;
+            display: inline-block;
+            margin-left: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-info span {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .user-info i {
+            color: #fff;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 8px 0;
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .dropdown-menu.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 16px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu a:hover {
+            background: #f5f5f5;
+            color: #2196F3;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 
     <script>
@@ -612,6 +679,9 @@
                 <div style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 5px; color: #333;">
                     <strong>Plano Escolhido:</strong> ${planoText}
                 </div>
+                <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 5px; color: #1976D2;">
+                    <i class="fas fa-info-circle"></i> Após confirmar, você receberá um email com instruções para acessar sua conta.
+                </div>
             `;
 
             // Adicionar eventos aos botões do modal
@@ -653,6 +723,11 @@
             }
         }
 
+        // Inicializar o cliente Supabase
+        const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3dkZmlmaGhjcW10cG5ob3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTUzMDksImV4cCI6MjA2MDQzMTMwOX0.Q50xEMRQLTjuOKtn0f92GX5NKY9GgWWYVfHlmE5yhUs';
+        window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
         // Enviar formulário
         async function submitForm() {
             const nome = document.getElementById('nome').value.trim();
@@ -669,6 +744,8 @@
             }
 
             try {
+                console.log('Iniciando processo de inscrição...');
+                
                 // Verificar se o usuário já existe
                 const { data: existingUser, error: checkError } = await window.supabaseClient
                     .from('utilizadores')
@@ -676,104 +753,103 @@
                     .eq('email', email)
                     .single();
 
-                if (checkError && checkError.code !== 'PGRST116') { // PGRST116 é o erro de "não encontrado"
+                console.log('Verificação de usuário existente:', { existingUser, checkError });
+
+                if (checkError && checkError.code !== 'PGRST116') {
                     throw checkError;
                 }
 
+                let userId;
+
                 if (existingUser) {
-                    // Se o usuário já existe, verificar se é admin ou treinador
-                    const { data: userData, error: userError } = await window.supabaseClient
+                    console.log('Usuário existente encontrado:', existingUser);
+                    userId = existingUser.id;
+                } else {
+                    console.log('Criando novo usuário...');
+                    // Se o usuário não existe, criar um novo
+                    const { data: authData, error: authError } = await window.supabaseClient.auth.signUp({
+                        email: email,
+                        password: Math.random().toString(36).slice(-8),
+                        options: {
+                            data: {
+                                nome: nome
+                            }
+                        }
+                    });
+
+                    console.log('Resposta do signUp:', { authData, authError });
+
+                    if (authError) throw authError;
+                    userId = authData.user.id;
+
+                    // Criar registro na tabela utilizadores
+                    const { error: insertError } = await window.supabaseClient
                         .from('utilizadores')
-                        .select('tipo_conta')
-                        .eq('id', existingUser.id)
-                        .single();
-
-                    if (userError) throw userError;
-
-                    // Manter o tipo_conta original se for admin ou treinador
-                    const tipoConta = (userData.tipo_conta === 'admin' || userData.tipo_conta === 'treinador') 
-                        ? userData.tipo_conta 
-                        : 'premium';
-
-                    // Atualizar os dados do usuário
-                    const { error: updateError } = await window.supabaseClient
-                        .from('utilizadores')
-                        .update({
+                        .insert({
+                            id: userId,
                             nome: nome,
-                            tipo_conta: tipoConta
-                        })
-                        .eq('email', email);
-
-                    if (updateError) throw updateError;
-
-                    // Criar inscrição na tabela inscricoes
-                    const { error: inscricaoError } = await window.supabaseClient
-                        .from('inscricoes')
-                        .upsert({
-                            utilizador_id: existingUser.id,
-                            plano: plano,
-                            tag: tag,
-                            trofeus: trofeus,
-                            nivel: nivel,
-                            status: 'pendente',
-                            data_inscricao: new Date().toISOString()
+                            email: email,
+                            tipo_conta: 'premium'
                         });
 
-                    if (inscricaoError) throw inscricaoError;
+                    console.log('Inserção na tabela utilizadores:', { insertError });
 
-                    alert('Dados enviados com sucesso!');
-                    window.location.href = '../login.html';
-                    return;
+                    if (insertError) throw insertError;
                 }
 
-                // Se o usuário não existe, cria um novo
-                const { data: authData, error: authError } = await window.supabaseClient.auth.signUp({
-                    email: email,
-                    password: Math.random().toString(36).slice(-8),
-                    options: {
-                        data: {
-                            nome: nome
-                        }
-                    }
-                });
-
-                if (authError) throw authError;
-
-                // Criar registro na tabela utilizadores (apenas dados básicos)
-                const { error: insertError } = await window.supabaseClient
-                    .from('utilizadores')
-                    .insert({
-                        id: authData.user.id,
-                        nome: nome,
-                        email: email,
-                        tipo_conta: 'premium'
-                    });
-
-                if (insertError) throw insertError;
-
+                console.log('Criando inscrição...');
                 // Criar inscrição na tabela inscricoes
-                const { error: inscricaoError } = await window.supabaseClient
+                const dadosInscricao = {
+                    utilizador_id: userId,
+                    plano: plano,
+                    tag: tag,
+                    trofeus: parseInt(trofeus),
+                    nivel: parseInt(nivel),
+                    status: 'pendente',
+                    data_inscricao: new Date().toISOString()
+                };
+
+                console.log('Dados da inscrição:', dadosInscricao);
+
+                const { data: inscricaoData, error: inscricaoError } = await window.supabaseClient
                     .from('inscricoes')
-                    .insert({
-                        utilizador_id: authData.user.id,
-                        plano: plano,
-                        tag: tag,
-                        trofeus: trofeus,
-                        nivel: nivel,
-                        status: 'pendente',
-                        data_inscricao: new Date().toISOString()
-                    });
+                    .insert(dadosInscricao)
+                    .select();
 
-                if (inscricaoError) throw inscricaoError;
+                console.log('Resposta da inscrição:', { inscricaoData, inscricaoError });
 
+                if (inscricaoError) {
+                    console.error('Erro ao criar inscrição:', inscricaoError);
+                    throw inscricaoError;
+                }
+
+                if (!inscricaoData || inscricaoData.length === 0) {
+                    throw new Error('Não foi possível confirmar a criação da inscrição');
+                }
+
+                // Fechar o modal de confirmação
+                closeModal();
+
+                // Mostrar mensagem de sucesso
                 alert('Inscrição realizada com sucesso! Um email foi enviado para você com instruções de acesso.');
-                window.location.href = '../login.html';
+                
+                // Limpar o formulário
+                document.getElementById('inscricaoForm').reset();
+                
+                // Remover seleção dos planos
+                document.querySelectorAll('.plano-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                
+                // Selecionar plano avançado por padrão
+                selecionarPlano('avancado');
+
             } catch (error) {
-                console.error('Erro na inscrição:', error);
+                console.error('Erro detalhado na inscrição:', error);
                 if (error.message && error.message.includes('already registered')) {
                     alert('Este email já está registrado. Por favor, faça login ou use outro email.');
                 } else {
-                    alert('Erro ao realizar a inscrição. Por favor, tente novamente.');
+                    alert('Erro ao realizar a inscrição. Por favor, tente novamente. Erro: ' + error.message);
                 }
             }
         }
@@ -834,82 +910,68 @@
         // Verificar se o usuário está logado
         async function checkUser() {
             try {
-                const { data: { session }, error } = await window.supabaseClient.auth.getSession()
-                if (error) throw error
-
-                // Se não estiver logado, redirecionar para a página de login
-                if (!session) {
-                    const urlParams = new URLSearchParams(window.location.search)
-                    const plano = urlParams.get('plano')
-                    const redirectPath = plano ? `../login.html?redirect=inscricao.html&plano=${plano}` : '../login.html?redirect=inscricao.html'
-                    window.location.href = redirectPath
-                    return
-                }
+                const { data: { session }, error } = await window.supabaseClient.auth.getSession();
+                if (error) throw error;
 
                 // Se estiver logado, atualizar o menu do usuário
-                const { data: userData, error: userError } = await window.supabaseClient
-                    .from('utilizadores')
-                    .select('nome, tipo_conta')
-                    .eq('id', session.user.id)
-                    .single()
+                if (session) {
+                    const { data: userData, error: userError } = await window.supabaseClient
+                        .from('utilizadores')
+                        .select('nome, tipo_conta')
+                        .eq('id', session.user.id)
+                        .single();
 
-                if (userError) throw userError
+                    if (userError) throw userError;
 
-                // Atualizar o menu do usuário
-                const loginLink = document.getElementById('loginLink')
-                if (loginLink) {
-                    const userMenu = document.createElement('div')
-                    userMenu.className = 'user-menu'
-                    userMenu.innerHTML = `
-                        <div class="user-info">
-                            <span class="user-name">${userData.nome}</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div class="user-dropdown">
-                            <div class="account-type">${userData.tipo_conta === 'admin' ? 'Administrador' : userData.tipo_conta === 'treinador' ? 'Treinador' : 'Aluno'}</div>
-                            ${userData.tipo_conta === 'admin' || userData.tipo_conta === 'treinador' ? `
-                                <a href="admin.html" class="dropdown-item">
-                                    <i class="fas fa-user-shield"></i> Painel Admin
-                                </a>
-                            ` : ''}
-                            <a href="perfil.html" class="dropdown-item">
-                                <i class="fas fa-user"></i> Meu Perfil
-                            </a>
-                            <a href="configuracoes.html" class="dropdown-item">
-                                <i class="fas fa-cog"></i> Configurações
-                            </a>
-                            <div class="dropdown-item logout" onclick="handleLogout()">
-                                <i class="fas fa-sign-out-alt"></i> Sair
-                            </div>
-                        </div>
-                    `
-                    loginLink.parentNode.replaceChild(userMenu, loginLink)
-
-                    // Adicionar eventos do dropdown
-                    const userInfo = userMenu.querySelector('.user-info')
-                    const dropdown = userMenu.querySelector('.user-dropdown')
-                    const chevron = userInfo.querySelector('.fa-chevron-down')
-                    
-                    let isDropdownOpen = false
-
-                    userInfo.addEventListener('click', (e) => {
-                        e.stopPropagation()
-                        isDropdownOpen = !isDropdownOpen
-                        dropdown.classList.toggle('active')
-                        chevron.style.transform = isDropdownOpen ? 'rotate(180deg)' : 'rotate(0)'
-                    })
-
-                    document.addEventListener('click', (e) => {
-                        if (!userMenu.contains(e.target) && isDropdownOpen) {
-                            isDropdownOpen = false
-                            dropdown.classList.remove('active')
-                            chevron.style.transform = 'rotate(0)'
+                    // Atualizar o menu do usuário
+                    const loginLink = document.getElementById('loginLink');
+                    if (loginLink) {
+                        loginLink.style.display = 'none';
+                        
+                        // Verificar se o menu do usuário já existe
+                        let userMenu = document.querySelector('.user-menu');
+                        if (!userMenu) {
+                            userMenu = document.createElement('div');
+                            userMenu.className = 'user-menu';
+                            loginLink.parentNode.insertBefore(userMenu, loginLink.nextSibling);
                         }
-                    })
+
+                        userMenu.innerHTML = `
+                            <div class="user-info">
+                                <span>${userData.nome}</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="dropdown-menu">
+                                <a href="perfil.html">Perfil</a>
+                                <a href="configuracoes.html">Configurações</a>
+                                <a href="#" onclick="handleLogout()">Sair</a>
+                            </div>
+                        `;
+
+                        // Adicionar funcionalidade ao dropdown
+                        const userInfo = userMenu.querySelector('.user-info');
+                        const dropdown = userMenu.querySelector('.dropdown-menu');
+                        const chevron = userInfo.querySelector('i');
+                        let isDropdownOpen = false;
+
+                        userInfo.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            isDropdownOpen = !isDropdownOpen;
+                            dropdown.classList.toggle('active');
+                            chevron.style.transform = isDropdownOpen ? 'rotate(180deg)' : 'rotate(0)';
+                        });
+
+                        document.addEventListener('click', (e) => {
+                            if (!userMenu.contains(e.target) && isDropdownOpen) {
+                                isDropdownOpen = false;
+                                dropdown.classList.remove('active');
+                                chevron.style.transform = 'rotate(0)';
+                            }
+                        });
+                    }
                 }
             } catch (error) {
-                console.error('Erro ao verificar usuário:', error)
-                window.location.href = '../login.html?redirect=inscricao.html'
+                console.error('Erro ao verificar usuário:', error);
             }
         }
 
