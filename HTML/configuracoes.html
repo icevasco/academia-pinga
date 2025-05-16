@@ -429,27 +429,30 @@
         // Atualizar informações pessoais e foto de perfil
         async function updatePersonalInfo(event) {
             event.preventDefault();
+            
             try {
-                const { data: { session } } = await window.supabaseClient.auth.getSession();
-                if (!session) {
-                    throw new Error('Usuário não autenticado');
-                }
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                if (!user) throw new Error('Usuário não autenticado');
 
-                let foto_perfil_url = null;
-                // Se o utilizador selecionou uma nova imagem
+                const nome = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+
+                let fotoPerfilUrl = document.getElementById('profileImagePreview').src;
+
+                // Se houver uma nova imagem selecionada
                 if (profileImageInput.files && profileImageInput.files[0]) {
                     const file = profileImageInput.files[0];
+                    const timestamp = Date.now();
                     const fileExt = file.name.split('.').pop();
-                    const filePath = `${session.user.id}.${fileExt}`;
+                    const fileName = `${user.id}-${timestamp}.${fileExt}`;
+                    const filePath = `avatars/${fileName}`;
 
-                    // Upload para o Supabase Storage
-                    const { error: uploadError } = await window.supabaseClient
-                        .storage
+                    // Upload da nova imagem
+                    const { data: uploadData, error: uploadError } = await window.supabaseClient.storage
                         .from('avatars')
                         .upload(filePath, file, {
-                            upsert: true,
                             cacheControl: '3600',
-                            contentType: file.type
+                            upsert: true
                         });
 
                     if (uploadError) {
@@ -457,51 +460,33 @@
                         throw uploadError;
                     }
 
-                    // Obter URL público
-                    const { data: urlData } = window.supabaseClient
-                        .storage
+                    // Obter URL pública da nova imagem
+                    const { data } = window.supabaseClient.storage
                         .from('avatars')
                         .getPublicUrl(filePath);
 
-                    foto_perfil_url = urlData.publicUrl;
-                    console.log('Nova URL da foto de perfil:', foto_perfil_url);
+                    fotoPerfilUrl = data.publicUrl;
                 }
 
-                // Atualizar nome e foto no perfil
-                const updateData = { nome: document.getElementById('name').value };
-                if (foto_perfil_url) {
-                    updateData.foto_perfil_url = foto_perfil_url;
-                    console.log('Atualizando foto de perfil com URL:', foto_perfil_url);
-                }
-
+                // Atualizar dados do usuário
                 const { error: updateError } = await window.supabaseClient
                     .from('utilizadores')
-                    .update(updateData)
-                    .eq('id', session.user.id);
+                    .update({
+                        nome,
+                        email,
+                        foto_perfil_url: fotoPerfilUrl,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', user.id);
 
                 if (updateError) {
-                    console.error('Erro na atualização:', updateError);
+                    console.error('Erro ao atualizar informações:', updateError);
                     throw updateError;
                 }
 
                 showModal('Alterações salvas com sucesso!');
+                profileImageInput.value = ''; // Limpar o input de arquivo
                 
-                // Atualizar preview se a foto mudou
-                if (foto_perfil_url) {
-                    profileImagePreview.src = foto_perfil_url;
-                    profileImagePreview.style.display = 'block';
-                    profileAvatar.style.display = 'none';
-                    
-                    // Verificar se a nova imagem carregou corretamente
-                    profileImagePreview.onload = () => {
-                        console.log('Nova imagem carregada com sucesso');
-                    };
-                    profileImagePreview.onerror = (error) => {
-                        console.error('Erro ao carregar nova imagem:', error);
-                        profileImagePreview.style.display = 'none';
-                        profileAvatar.style.display = 'flex';
-                    };
-                }
             } catch (error) {
                 console.error('Erro ao atualizar informações:', error);
                 showModal('Erro ao salvar alterações: ' + error.message);

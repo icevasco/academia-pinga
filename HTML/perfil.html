@@ -446,11 +446,6 @@
                     document.getElementById('setClashTagBtn').style.display = 'inline-block';
                 }
 
-                // Carregar atividades recentes
-                if (!isViewing) {
-                    carregarAtividades(userData.id);
-                }
-
                 // No JS, dentro da função carregarPerfil, depois de carregar userData:
                 if (isViewing) {
                     document.getElementById('editTrofeusBtn').style.display = 'none';
@@ -473,56 +468,6 @@
                 console.error('Erro ao carregar perfil:', error);
                 showNotification('Erro ao carregar perfil', 'error');
             }
-        }
-
-        // Função para carregar atividades
-        async function carregarAtividades(userId) {
-            try {
-                const { data: atividades, error } = await supabase
-                    .from('atividades')
-                    .select('*')
-                    .eq('user_id', userId)
-                    .order('created_at', { ascending: false })
-                    .limit(5);
-
-                if (error) throw error;
-
-                const activityList = document.getElementById('activityList');
-                activityList.innerHTML = '';
-
-                if (atividades && atividades.length > 0) {
-                    atividades.forEach(atividade => {
-                        const activityItem = document.createElement('div');
-                        activityItem.className = 'activity-item';
-                        activityItem.innerHTML = `
-                            <i class="fas ${getActivityIcon(atividade.tipo)}"></i>
-                            <div class="activity-info">
-                                <h4>${atividade.titulo}</h4>
-                                <p>${atividade.descricao}</p>
-                            </div>
-                            <div class="activity-date">
-                                ${new Date(atividade.created_at).toLocaleDateString()}
-                            </div>
-                        `;
-                        activityList.appendChild(activityItem);
-                    });
-                } else {
-                    activityList.innerHTML = '<p>Nenhuma atividade recente.</p>';
-                }
-            } catch (error) {
-                console.error('Erro ao carregar atividades:', error);
-            }
-        }
-
-        // Função para obter ícone da atividade
-        function getActivityIcon(tipo) {
-            const icons = {
-                'aula': 'fa-chalkboard-teacher',
-                'avaliacao': 'fa-star',
-                'conquista': 'fa-trophy',
-                'default': 'fa-circle'
-            };
-            return icons[tipo] || icons.default;
         }
 
         // Função para mostrar notificação

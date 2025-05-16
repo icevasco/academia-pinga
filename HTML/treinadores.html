@@ -38,36 +38,17 @@
 
     <div class="coaches-container">
         <div class="coaches-header animate__animated animate__fadeInDown">
-            <h1>Nossos Treinadores</h1>
-            <p>Aprenda com os melhores jogadores profissionais de Clash Royale</p>
+            <h1>Os Nossos Treinadores</h1>
+            <p style="color: #fff;">Aprende com os melhores jogadores profissionais de Clash Royale</p>
             
-            <div class="coaches-filters">
+            <div class="coaches-filtros">
                 <div class="filter-group">
-                    <label>Especialidade:</label>
-                    <select id="specialtyFilter" onchange="filtrarTreinadores()">
+                    <label for="filtroUnico" style="color: #fff;">Ordenar por:</label>
+                    <select id="filtroUnico" onchange="filtrarTreinadores()">
                         <option value="todos">Todos</option>
-                        <option value="golem">Golem</option>
-                        <option value="ciclo">Ciclo Rápido</option>
-                        <option value="controle">Controle</option>
-                        <option value="bait">Bait</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Nível:</label>
-                    <select id="levelFilter" onchange="filtrarTreinadores()">
-                        <option value="todos">Todos</option>
-                        <option value="pro">Pro Player</option>
-                        <option value="top1000">Top 1000</option>
-                        <option value="top100">Top 100</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Preço:</label>
-                    <select id="priceFilter" onchange="filtrarTreinadores()">
-                        <option value="todos">Todos</option>
-                        <option value="baixo">€20-€40</option>
-                        <option value="medio">€41-€60</option>
-                        <option value="alto">€61+</option>
+                        <option value="avaliacao">Avaliação</option>
+                        <option value="trofeus">Troféus</option>
+                        <option value="maxliga">Liga Máxima</option>
                     </select>
                 </div>
             </div>
@@ -91,7 +72,7 @@
                 <div class="form-group">
                     <label for="horaAula">Hora da Aula</label>
                     <select id="horaAula" required>
-                        <option value="">Selecione a hora</option>
+                        <option value="">Seleciona a hora</option>
                         <option value="09:00">09:00</option>
                         <option value="10:00">10:00</option>
                         <option value="11:00">11:00</option>
@@ -111,7 +92,7 @@
                 </div>
                 <div class="form-group">
                     <label for="objetivosAula">Objetivos da Aula</label>
-                    <textarea id="objetivosAula" rows="3" placeholder="Descreva o que pretende melhorar..."></textarea>
+                    <textarea id="objetivosAula" rows="3" placeholder="Descreve o que pretendes melhorar..."></textarea>
                 </div>
                 <div class="modal-buttons">
                     <button class="btn-secondary" onclick="fecharModalAgendamento()">Cancelar</button>
@@ -150,13 +131,37 @@
                 </div>
                 <div class="form-group">
                     <label for="avaliacaoTexto">Comentário:</label>
-                    <textarea id="avaliacaoTexto" rows="3" placeholder="Conte sua experiência com o treinador..."></textarea>
+                    <textarea id="avaliacaoTexto" rows="3" placeholder="Conta a tua experiência com o treinador..."></textarea>
                 </div>
                 <div class="modal-buttons">
                     <button class="btn-secondary" onclick="fecharModalNovaAvaliacao()">Cancelar</button>
                     <button class="btn-primary" onclick="enviarAvaliacao()">Enviar Avaliação</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div id="modalConfirmarApagar" class="modal" style="display:none;">
+        <div class="modal-content" style="max-width: 300px; text-align: center; padding: 1.2rem;">
+            <h2 style="color: #F44336; font-size: 1.2rem; margin-bottom: 0.8rem;">Confirmar eliminação</h2>
+            <p style="margin-bottom: 1rem; font-size: 0.95rem;">Tens a certeza que queres apagar esta avaliação?</p>
+            <div style="display: flex; justify-content: center; gap: 1rem;">
+                <button id="btnCancelarApagar" style="background: #888; color: #fff; border: none; border-radius: 6px; padding: 8px 20px; cursor: pointer; font-size: 0.9rem;">Cancelar</button>
+                <button id="btnConfirmarApagar" style="background: #F44336; color: #fff; border: none; border-radius: 6px; padding: 8px 20px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">Apagar</button>
+            </div>
+        </div>
+    </div>
+    <div id="modalSucessoApagar" class="modal" style="display:none;">
+        <div class="modal-content" style="max-width: 280px; text-align: center; padding: 1rem;">
+            <i class="fas fa-check-circle" style="color: #4CAF50; font-size: 2rem; margin-bottom: 0.6rem;"></i>
+            <div style="color: #4CAF50; font-size: 1rem;">Avaliação apagada com sucesso!</div>
+        </div>
+    </div>
+
+    <div id="modalSucessoAvaliacao" class="modal" style="display:none;">
+        <div class="modal-content" style="max-width: 280px; text-align: center; padding: 1rem;">
+            <i class="fas fa-check-circle" style="color: #4CAF50; font-size: 2rem; margin-bottom: 0.6rem;"></i>
+            <div style="color: #4CAF50; font-size: 1rem;">Avaliação enviada com sucesso!</div>
         </div>
     </div>
 
@@ -174,8 +179,15 @@
 
         .coaches-header h1 {
             font-size: 2.5em;
-            color: #333;
+            color: #FFD700;
             margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255,215,0,0.5), 0 0 20px rgba(255,215,0,0.3), 0 0 30px rgba(255,215,0,0.2);
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+            font-weight: 800;
         }
 
         .coaches-header p {
@@ -184,26 +196,24 @@
             margin-bottom: 30px;
         }
 
-        .coaches-filters {
+        .coaches-filtros {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 30px;
             margin-bottom: 30px;
+            margin-top: 20px;
             flex-wrap: wrap;
         }
-
-        .filter-group {
+        .coaches-filtros .filter-group {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
-        .filter-group label {
+        .coaches-filtros label {
             color: #666;
             font-weight: 500;
         }
-
-        .filter-group select {
+        .coaches-filtros select {
             padding: 8px 15px;
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -212,8 +222,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
-        .filter-group select:hover {
+        .coaches-filtros select:hover {
             border-color: #2196F3;
         }
 
@@ -454,20 +463,6 @@
         }
 
         @media (max-width: 768px) {
-            .coaches-filters {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .filter-group {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .filter-group select {
-                width: 100%;
-            }
-
             .coaches-grid {
                 grid-template-columns: 1fr;
             }
@@ -817,6 +812,99 @@
             font-weight: bold;
             margin-left: 4px;
         }
+
+        .stat-avaliacao { grid-column: 1 / -1; text-align: center; margin-top: 10px; }
+
+        /* Modals de sucesso uniformes e centralizados */
+        #modalSucessoAvaliacao .modal-content,
+        #modalSucessoApagar .modal-content,
+        #modalConfirmarApagar .modal-content {
+            background: #222;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            animation: modalFadeIn 0.2s ease-out;
+            position: relative;
+            margin: 15% auto;
+            height: auto;
+            min-height: unset;
+            max-height: unset;
+        }
+
+        #modalSucessoAvaliacao,
+        #modalSucessoApagar,
+        #modalConfirmarApagar {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #modalSucessoAvaliacao .modal-content i,
+        #modalSucessoApagar .modal-content i {
+            color: #4CAF50;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+        }
+
+        #modalSucessoAvaliacao .modal-content div,
+        #modalSucessoApagar .modal-content div {
+            color: #4CAF50;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.2);
+        }
+
+        #modalConfirmarApagar .modal-content h2 {
+            text-shadow: 0 0 10px rgba(244, 67, 54, 0.2);
+        }
+
+        #modalConfirmarApagar .modal-content button {
+            transition: all 0.2s ease;
+        }
+
+        #modalConfirmarApagar .modal-content button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .coach-stats .stat-item {
+            min-width: 140px;
+            padding: 10px 8px;
+            box-sizing: border-box;
+            word-break: break-word;
+        }
+        .coach-stats .stat-item .stat-value {
+            font-size: 1.05em;
+            font-weight: bold;
+            color: #FFD700;
+            word-break: break-word;
+            white-space: normal;
+            line-height: 1.1;
+        }
+        .coach-stats .stat-item .stat-label {
+            font-size: 0.95em;
+            color: #666;
+            word-break: break-word;
+            white-space: normal;
+            padding: 0 6px;
+            margin-top: 2px;
+            display: block;
+        }
     </style>
 
     <script>
@@ -845,7 +933,7 @@
                 if (!treinadores || treinadores.length === 0) {
                     console.log('Nenhum treinador encontrado');
                     const coachesGrid = document.getElementById('coachesGrid');
-                    coachesGrid.innerHTML = '<div class="no-coaches">Nenhum treinador disponível no momento.</div>';
+                    coachesGrid.innerHTML = '<div class="no-coaches">Nenhum treinador disponível de momento.</div>';
                     return;
                 }
 
@@ -891,10 +979,19 @@
                     const estrelasCheias = Math.floor(media);
                     const estrelasVazias = 5 - estrelasCheias;
 
+                    // Verificar status online/offline usando ultimo_login
+                    const isOnline = treinador.ultimo_login && (new Date() - new Date(treinador.ultimo_login)) < 300000; // 5 minutos
+                    const ultimaAtividade = treinador.ultimo_login ? new Date(treinador.ultimo_login).toLocaleString('pt-BR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }) : 'Nunca';
+
                     card.innerHTML = `
                         <div class="coach-avatar">
                             <img src="${avatarUrl}" alt="${treinador.nome}" onerror="this.onerror=null; this.src='${defaultAvatar}';">
-                            <div class="online-status"></div>
+                            <div class="online-status ${isOnline ? '' : 'offline'}"></div>
                         </div>
                         <div class="coach-content">
                             <h2 class="coach-name">${treinador.nome}</h2>
@@ -905,18 +1002,14 @@
                             </div>
                             <div class="coach-stats">
                                 <div class="stat-item">
-                                    <div class="stat-value">${treinador.trofeus || 'N/A'}</div>
+                                    <div class="stat-value">${treinador.trofeus || 'N/D'}</div>
                                     <div class="stat-label">Troféus</div>
                                 </div>
                                 <div class="stat-item">
-                                    <div class="stat-value">${treinador.max_liga || 'N/A'}</div>
-                                    <div class="stat-label">Max Liga</div>
+                                    <div class="stat-value">${treinador.max_liga || 'N/D'}</div>
+                                    <div class="stat-label">Liga Máxima</div>
                                 </div>
-                                <div class="stat-item">
-                                    <div class="stat-value">${treinador.total_alunos || '0'}+</div>
-                                    <div class="stat-label">Alunos</div>
-                                </div>
-                                <div class="stat-item">
+                                <div class="stat-item stat-avaliacao">
                                     <div class="rating" data-treinador-id="${treinador.id}" style="cursor: pointer;">
                                         <span class="rating-stars">${'★'.repeat(estrelasCheias)}${'☆'.repeat(estrelasVazias)}</span>
                                         <span class="rating-num-dourado">${treinador.avaliacao_media || '0.0'}</span>
@@ -925,8 +1018,8 @@
                                 </div>
                             </div>
                             <div class="coach-availability">
-                                <span class="availability-dot"></span>
-                                Disponível agora
+                                <span class="availability-dot ${isOnline ? '' : 'offline'}"></span>
+                                ${isOnline ? 'Disponível agora' : `Última vez online: ${ultimaAtividade}`}
                             </div>
                             <div class="coach-actions">
                                 <button class="action-button primary-button" onclick="agendarAula('${treinador.id}')">
@@ -961,27 +1054,42 @@
 
         // Função para filtrar treinadores
         function filtrarTreinadores() {
-            const especialidade = document.getElementById('specialtyFilter').value;
-            const nivel = document.getElementById('levelFilter').value;
-            const preco = document.getElementById('priceFilter').value;
+            const filtro = document.getElementById('filtroUnico').value;
+            const coachesGrid = document.getElementById('coachesGrid');
+            const cards = Array.from(document.querySelectorAll('.coach-card'));
 
-            const cards = document.querySelectorAll('.coach-card');
-            cards.forEach(card => {
-                const especialidadeCard = card.querySelector('.coach-specialty').textContent.toLowerCase();
-                const nivelCard = card.querySelector('.coach-badge').textContent.toLowerCase();
-                
-                let mostrar = true;
-
-                if (especialidade !== 'todos' && !especialidadeCard.includes(especialidade)) {
-                    mostrar = false;
+            // Função para obter valor da avaliação, troféus ou max liga
+            function getValor(card, tipo) {
+                if (tipo === 'avaliacao') {
+                    const val = card.querySelector('.stat-avaliacao .rating-num-dourado');
+                    return val ? parseFloat(val.textContent.replace(',', '.')) || 0 : 0;
                 }
-
-                if (nivel !== 'todos' && !nivelCard.includes(nivel)) {
-                    mostrar = false;
+                if (tipo === 'trofeus') {
+                    const val = card.querySelector('.coach-stats .stat-item:nth-child(1) .stat-value');
+                    return val ? parseInt(val.textContent) || 0 : 0;
                 }
+                if (tipo === 'maxliga') {
+                    const val = card.querySelector('.coach-stats .stat-item:nth-child(2) .stat-value');
+                    const ligas = [
+                        'Desafiante I','Desafiante II','Desafiante III','Mestre I','Mestre II','Mestre III','Campeão','Grande Campeão','Campeão Real','Maior Campeão'
+                    ];
+                    return val ? ligas.indexOf(val.textContent.trim()) : -1;
+                }
+                return 0;
+            }
 
-                card.style.display = mostrar ? '' : 'none';
-            });
+            let sortedCards = cards;
+            if (filtro === 'avaliacao') {
+                sortedCards = cards.sort((a, b) => getValor(b, 'avaliacao') - getValor(a, 'avaliacao'));
+            } else if (filtro === 'trofeus') {
+                sortedCards = cards.sort((a, b) => getValor(b, 'trofeus') - getValor(a, 'trofeus'));
+            } else if (filtro === 'maxliga') {
+                sortedCards = cards.sort((a, b) => getValor(b, 'maxliga') - getValor(a, 'maxliga'));
+            }
+
+            // Limpar e adicionar os cards ordenados
+            coachesGrid.innerHTML = '';
+            sortedCards.forEach(card => coachesGrid.appendChild(card));
         }
 
         // Função para mostrar notificação
@@ -1037,33 +1145,45 @@
         async function confirmarAgendamento() {
             try {
                 const { data: { user }, error: userError } = await supabase.auth.getUser();
-                
                 if (userError || !user) {
                     window.location.href = '../login.html?redirect=treinadores.html';
                     return;
                 }
 
                 const modal = document.getElementById('agendamentoModal');
-                const treinadorId = modal.dataset.treinadorId;
-            const data = document.getElementById('dataAula').value;
-            const hora = document.getElementById('horaAula').value;
-            const duracao = document.getElementById('duracaoAula').value;
-            const objetivos = document.getElementById('objetivosAula').value;
+                const treinadorUserId = modal.dataset.treinadorId; // Este é o ID do utilizador do treinador
 
-            if (!data || !hora || !duracao) {
-                    showNotification('Por favor, preencha todos os campos obrigatórios', 'error');
-                return;
-            }
+                // Buscar o ID do treinador na tabela treinadores
+                const { data: treinador } = await supabase
+                    .from('treinadores')
+                    .select('id')
+                    .eq('user_id', treinadorUserId)
+                    .single();
 
-                const { data: agendamento, error } = await supabase
+                if (!treinador) {
+                    showNotification('Treinador não encontrado!', 'error');
+                    return;
+                }
+
+                const dataAula = document.getElementById('dataAula').value;
+                const horaAula = document.getElementById('horaAula').value;
+                const duracaoAula = document.getElementById('duracaoAula').value;
+                const objetivosAula = document.getElementById('objetivosAula').value;
+
+                if (!dataAula || !horaAula || !duracaoAula) {
+                    showNotification('Por favor, preenche todos os campos obrigatórios', 'error');
+                    return;
+                }
+
+                const { error } = await supabase
                     .from('agendamentos')
                     .insert({
-                        treinador_id: treinadorId,
+                        treinador_id: treinador.id, // ID correto da tabela treinadores
                         aluno_id: user.id,
-                        data: data,
-                        hora: hora,
-                        duracao: parseInt(duracao),
-                        objetivos: objetivos,
+                        data: dataAula,
+                        hora: horaAula,
+                        duracao: parseInt(duracaoAula),
+                        objetivos: objetivosAula,
                         status: 'pendente'
                     });
 
@@ -1127,6 +1247,7 @@
 
         let treinadorIdAtual = null;
         let avaliacaoSelecionada = 0;
+        let tipoContaAtual = null;
 
         // Função para ver avaliações
         async function verAvaliacoes(treinadorId) {
@@ -1137,9 +1258,17 @@
                 const { data: { user }, error: userError } = await supabase.auth.getUser();
                 if (userError) {
                     console.error('Erro ao verificar autenticação:', userError);
-                    showNotification('Por favor, faça login para ver as avaliações', 'error');
+                    showNotification('Por favor, faz login para ver as avaliações', 'error');
                     return;
                 }
+
+                // Buscar o tipo de conta do utilizador autenticado
+                const { data: userData, error: userDataError } = await supabase
+                    .from('utilizadores')
+                    .select('tipo_conta')
+                    .eq('id', user.id)
+                    .single();
+                tipoContaAtual = userData?.tipo_conta || null;
 
                 console.log('Usuário autenticado, buscando avaliações...');
 
@@ -1203,7 +1332,9 @@
                         avaliacaoItem.innerHTML = `
                             <div class="avaliacao-header">
                                 <span class="avaliacao-nome">${usuariosMap[avaliacao.user_id] || 'Usuário Anônimo'}</span>
-                                <span class="avaliacao-data">${dataFormatada}</span>
+                                <span class="avaliacao-data">${dataFormatada}
+                                    ${tipoContaAtual === 'admin' ? `<i class='fas fa-trash-alt btn-apagar-avaliacao' title='Apagar avaliação' style='color:#F44336; margin-left:10px; cursor:pointer;' data-id='${avaliacao.id}'></i>` : ''}
+                                </span>
                             </div>
                             <div class="avaliacao-estrelas">
                                 ${'★'.repeat(avaliacao.estrelas)}${'☆'.repeat(5 - avaliacao.estrelas)}
@@ -1219,6 +1350,15 @@
                 console.log('Exibindo modal de avaliações');
                 modal.style.display = 'block';
                 document.body.style.overflow = 'hidden';
+
+                // Depois de renderizar as avaliações, adicionar evento aos ícones de lixo
+                document.querySelectorAll('.btn-apagar-avaliacao').forEach(btn => {
+                    btn.onclick = function() {
+                        idAvaliacaoParaApagar = this.getAttribute('data-id');
+                        document.getElementById('modalConfirmarApagar').style.display = 'block';
+                        document.body.style.overflow = 'hidden';
+                    };
+                });
             } catch (error) {
                 console.error('Erro ao carregar avaliações:', error);
                 showNotification('Erro ao carregar avaliações', 'error');
@@ -1245,7 +1385,7 @@
                 if (userDataError) throw userDataError;
 
                 if (userData.tipo_conta === 'gratuito') {
-                    showNotification('Você precisa ter um plano premium para avaliar treinadores', 'error');
+                    showNotification('Precisas de ter um plano premium para avaliar treinadores', 'error');
                     return;
                 }
 
@@ -1276,7 +1416,7 @@
         async function enviarAvaliacao() {
             try {
                 if (avaliacaoSelecionada === 0) {
-                    showNotification('Por favor, selecione uma avaliação', 'error');
+                    showNotification('Por favor, seleciona uma avaliação', 'error');
                     return;
                 }
 
@@ -1285,7 +1425,7 @@
 
                 const texto = document.getElementById('avaliacaoTexto').value.trim();
                 if (!texto) {
-                    showNotification('Por favor, escreva um comentário', 'error');
+                    showNotification('Por favor, escreve um comentário', 'error');
                     return;
                 }
 
@@ -1304,6 +1444,8 @@
                 showNotification('Avaliação enviada com sucesso!', 'success');
                 fecharModalNovaAvaliacao();
                 carregarTreinadores(); // Recarregar para atualizar a média
+                document.getElementById('modalSucessoAvaliacao').style.display = 'block';
+                setTimeout(() => { document.getElementById('modalSucessoAvaliacao').style.display = 'none'; document.body.style.overflow = ''; }, 3000);
             } catch (error) {
                 console.error('Erro ao enviar avaliação:', error);
                 showNotification('Erro ao enviar avaliação', 'error');
@@ -1331,7 +1473,7 @@
         }
 
         // Fechar modais ao clicar fora do conteúdo
-        window.addEventListener('click', function(event) {
+        window.addEventListener('mousedown', function(event) {
             // Modal de avaliações
             const avaliacoesModal = document.getElementById('avaliacoesModal');
             if (avaliacoesModal && avaliacoesModal.style.display === 'block') {
@@ -1356,6 +1498,12 @@
                     fecharModalAgendamento();
                 }
             }
+            // Modal de sucesso de avaliação
+            const modalSucessoAvaliacao = document.getElementById('modalSucessoAvaliacao');
+            if (modalSucessoAvaliacao.style.display === 'block' && event.target === modalSucessoAvaliacao) {
+                modalSucessoAvaliacao.style.display = 'none';
+                document.body.style.overflow = '';
+            }
         });
 
         // Fechar modais com ESC
@@ -1363,6 +1511,49 @@
             if (event.key === 'Escape') {
                 fecharModalAvaliacoes();
                 fecharModalNovaAvaliacao();
+            }
+        });
+
+        // Guardar referência ao id da avaliação a apagar
+        let idAvaliacaoParaApagar = null;
+        // Evento cancelar
+        const modalConfirmar = document.getElementById('modalConfirmarApagar');
+        document.getElementById('btnCancelarApagar').onclick = function() {
+            modalConfirmar.style.display = 'none';
+            document.body.style.overflow = '';
+            idAvaliacaoParaApagar = null;
+        };
+        // Evento confirmar
+        const modalSucessoApagar = document.getElementById('modalSucessoApagar');
+        document.getElementById('btnConfirmarApagar').onclick = async function() {
+            if (!idAvaliacaoParaApagar) return;
+            const { error } = await supabase
+                .from('avaliacoes_treinadores')
+                .delete()
+                .eq('id', idAvaliacaoParaApagar);
+            if (!error) {
+                // Remover do DOM
+                const btn = document.querySelector(`.btn-apagar-avaliacao[data-id='${idAvaliacaoParaApagar}']`);
+                if (btn) btn.closest('.avaliacao-item').remove();
+                modalConfirmar.style.display = 'none';
+                modalSucessoApagar.style.display = 'block';
+                setTimeout(() => {
+                    modalSucessoApagar.style.display = 'none';
+                    document.body.style.overflow = '';
+                }, 3000);
+            } else {
+                modalConfirmar.style.display = 'none';
+                showNotification('Erro ao apagar avaliação', 'error');
+                document.body.style.overflow = '';
+            }
+            idAvaliacaoParaApagar = null;
+        };
+
+        // Event listener para fechar ao clicar fora
+        modalSucessoApagar.addEventListener('mousedown', function(event) {
+            if (event.target === modalSucessoApagar) {
+                modalSucessoApagar.style.display = 'none';
+                document.body.style.overflow = '';
             }
         });
     </script>
