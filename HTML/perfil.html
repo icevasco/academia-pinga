@@ -276,19 +276,13 @@
             <div class="profile-stats">
                 <div class="stat-card">
                     <p>Troféus</p>
-                    <h3 id="trofeus">0</h3>
+                    <h3 id="trofeus" style="display: inline-block; vertical-align: middle;">0</h3>
+                    <button id="editTrofeusBtn" style="display:inline-block; margin-left: 8px; padding: 4px 10px; border-radius: 5px; border: none; background: #FFD700; color: #1a1a1a; font-size: 0.95em; font-weight: bold; cursor: pointer; vertical-align: middle;">Editar</button>
                 </div>
                 <div class="stat-card">
                     <p>Max Liga</p>
-                    <h3 id="maxLiga">N/A</h3>
-                </div>
-                <div class="stat-card">
-                    <p>Total de Aulas</p>
-                    <h3 id="totalAulas">0</h3>
-                </div>
-                <div class="stat-card">
-                    <p>Avaliação Média</p>
-                    <h3 id="avaliacaoMedia">0.0</h3>
+                    <h3 id="maxLiga" style="display: inline-block; vertical-align: middle;">N/A</h3>
+                    <button id="editMaxLigaBtn" style="display:inline-block; margin-left: 8px; padding: 4px 10px; border-radius: 5px; border: none; background: #FFD700; color: #1a1a1a; font-size: 0.95em; font-weight: bold; cursor: pointer; vertical-align: middle;">Editar</button>
                 </div>
             </div>
         </div>
@@ -312,6 +306,41 @@
         <button id="closeSuccessModal" style="position: absolute; top: 10px; right: 10px; background: transparent; border: none; color: #FFD700; font-size: 1.5rem; cursor: pointer;">&times;</button>
         <i class="fas fa-check-circle" style="color: #FFD700; font-size: 2.5rem; margin-bottom: 1rem;"></i>
         <div id="successModalMsg" style="color: #FFD700; font-size: 1.2rem; text-align: center;"></div>
+      </div>
+    </div>
+
+    <!-- Modal para editar troféus -->
+    <div id="trofeusModal" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+      <div style="background: #222; padding: 2rem 1.5rem; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); min-width: 320px; max-width: 90vw; display: flex; flex-direction: column; align-items: center;">
+        <h2 style="color: #FFD700; margin-bottom: 1rem;">Editar Troféus</h2>
+        <input id="trofeusInput" type="number" min="0" max="9000" style="width: 90%; padding: 10px; border-radius: 6px; border: 1px solid #FFD700; font-size: 1.1rem; margin-bottom: 1.5rem;" />
+        <div style="display: flex; gap: 1rem;">
+          <button id="saveTrofeusBtn" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #1a1a1a; font-weight: bold; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer;">Guardar</button>
+          <button id="cancelTrofeusBtn" style="background: #888; color: #fff; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer;">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para editar max liga -->
+    <div id="maxLigaModal" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+      <div style="background: #222; padding: 2rem 1.5rem; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); min-width: 320px; max-width: 90vw; display: flex; flex-direction: column; align-items: center;">
+        <h2 style="color: #FFD700; margin-bottom: 1rem;">Editar Max Liga</h2>
+        <select id="maxLigaInput" style="width: 90%; padding: 10px; border-radius: 6px; border: 1px solid #FFD700; font-size: 1.1rem; margin-bottom: 1.5rem;">
+          <option value="Desafiante I">Desafiante I</option>
+          <option value="Desafiante II">Desafiante II</option>
+          <option value="Desafiante III">Desafiante III</option>
+          <option value="Mestre I">Mestre I</option>
+          <option value="Mestre II">Mestre II</option>
+          <option value="Mestre III">Mestre III</option>
+          <option value="Campeão">Campeão</option>
+          <option value="Grande Campeão">Grande Campeão</option>
+          <option value="Campeão Real">Campeão Real</option>
+          <option value="Maior Campeão">Maior Campeão</option>
+        </select>
+        <div style="display: flex; gap: 1rem;">
+          <button id="saveMaxLigaBtn" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #1a1a1a; font-weight: bold; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer;">Guardar</button>
+          <button id="cancelMaxLigaBtn" style="background: #888; color: #fff; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer;">Cancelar</button>
+        </div>
       </div>
     </div>
 
@@ -387,8 +416,6 @@
                 // Atualizar estatísticas
                 document.getElementById('trofeus').textContent = userData.trofeus || '0';
                 document.getElementById('maxLiga').textContent = userData.max_liga || 'N/A';
-                document.getElementById('totalAulas').textContent = userData.total_aulas || '0';
-                document.getElementById('avaliacaoMedia').textContent = userData.avaliacao_media || '0.0';
 
                 // Atualizar cargo
                 const cargoElement = document.getElementById('userRole');
@@ -422,6 +449,24 @@
                 // Carregar atividades recentes
                 if (!isViewing) {
                     carregarAtividades(userData.id);
+                }
+
+                // No JS, dentro da função carregarPerfil, depois de carregar userData:
+                if (isViewing) {
+                    document.getElementById('editTrofeusBtn').style.display = 'none';
+                    document.getElementById('editMaxLigaBtn').style.display = 'none';
+                    document.getElementById('editClashTagBtn').style.display = 'none';
+                    document.getElementById('setClashTagBtn').style.display = 'none';
+                } else {
+                    document.getElementById('editTrofeusBtn').style.display = 'inline-block';
+                    document.getElementById('editMaxLigaBtn').style.display = 'inline-block';
+                    if (userData.tag_clash) {
+                        document.getElementById('editClashTagBtn').style.display = 'inline-block';
+                        document.getElementById('setClashTagBtn').style.display = 'none';
+                    } else {
+                        document.getElementById('editClashTagBtn').style.display = 'none';
+                        document.getElementById('setClashTagBtn').style.display = 'inline-block';
+                    }
                 }
 
             } catch (error) {
@@ -653,6 +698,88 @@
                 }
             };
         }
+
+        // Eventos para editar troféus
+        const trofeusModal = document.getElementById('trofeusModal');
+        document.getElementById('editTrofeusBtn').onclick = () => {
+            const valorAtual = parseInt(document.getElementById('trofeus').textContent, 10) || 0;
+            document.getElementById('trofeusInput').value = valorAtual;
+            trofeusModal.style.display = 'flex';
+            setTimeout(() => document.getElementById('trofeusInput').focus(), 100);
+        };
+        document.getElementById('trofeusInput').oninput = function() {
+            if (this.value.length > 4 || parseInt(this.value, 10) > 9000) {
+                this.value = 9000;
+            }
+            if (parseInt(this.value, 10) < 0) {
+                this.value = 0;
+            }
+        };
+        document.getElementById('cancelTrofeusBtn').onclick = () => {
+            trofeusModal.style.display = 'none';
+        };
+        document.getElementById('saveTrofeusBtn').onclick = async () => {
+            let novoValor = parseInt(document.getElementById('trofeusInput').value, 10);
+            if (isNaN(novoValor) || novoValor < 0) novoValor = 0;
+            if (novoValor > 9000) novoValor = 9000;
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('id');
+            let id = userId;
+            if (!id) {
+                const { data: { user } } = await supabase.auth.getUser();
+                id = user.id;
+            }
+            const { error } = await supabase
+                .from('utilizadores')
+                .update({ trofeus: novoValor })
+                .eq('id', id);
+            if (!error) {
+                document.getElementById('trofeus').textContent = novoValor;
+                showSuccessModal('Troféus atualizados com sucesso!');
+                trofeusModal.style.display = 'none';
+            } else {
+                showNotification('Erro ao atualizar troféus', 'error');
+            }
+        };
+
+        // Eventos para editar max liga
+        const maxLigaModal = document.getElementById('maxLigaModal');
+        document.getElementById('editMaxLigaBtn').onclick = () => {
+            const valorAtual = document.getElementById('maxLiga').textContent;
+            document.getElementById('maxLigaInput').value = valorAtual;
+            maxLigaModal.style.display = 'flex';
+            setTimeout(() => document.getElementById('maxLigaInput').focus(), 100);
+        };
+        document.getElementById('cancelMaxLigaBtn').onclick = () => {
+            maxLigaModal.style.display = 'none';
+        };
+        document.getElementById('saveMaxLigaBtn').onclick = async () => {
+            const novoValor = document.getElementById('maxLigaInput').value;
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('id');
+            let id = userId;
+            if (!id) {
+                const { data: { user } } = await supabase.auth.getUser();
+                id = user.id;
+            }
+            const { error } = await supabase
+                .from('utilizadores')
+                .update({ max_liga: novoValor })
+                .eq('id', id);
+            if (!error) {
+                document.getElementById('maxLiga').textContent = novoValor;
+                showSuccessModal('Max Liga atualizada com sucesso!');
+                maxLigaModal.style.display = 'none';
+            } else {
+                showNotification('Erro ao atualizar Max Liga', 'error');
+            }
+        };
+
+        // Fechar modais ao clicar fora
+        window.addEventListener('click', function(event) {
+            if (event.target === trofeusModal) trofeusModal.style.display = 'none';
+            if (event.target === maxLigaModal) maxLigaModal.style.display = 'none';
+        });
     </script>
 </body>
 </html> 
