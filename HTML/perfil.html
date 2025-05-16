@@ -292,13 +292,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="profile-section">
-            <h2>Atividades Recentes</h2>
-            <div id="activityList" class="activity-list">
-                <!-- As atividades serão carregadas dinamicamente aqui -->
-            </div>
-        </div>
     </div>
 
     <!-- Modal para definir tag -->
@@ -372,9 +365,18 @@
                 // Atualizar avatar
                 const profileImage = document.getElementById('profileImage');
                 const defaultAvatar = document.getElementById('defaultAvatar');
-                
-                if (userData.foto_perfil_url) {
-                    profileImage.src = `${supabaseUrl}/storage/v1/object/public/avatars/${userData.foto_perfil_url}`;
+                // Tenta usar foto_perfil_url, se não existir tenta avatar_url
+                const fotoUrl = userData.foto_perfil_url || userData.avatar_url;
+                if (fotoUrl) {
+                    if (fotoUrl.startsWith('http')) {
+                        profileImage.src = fotoUrl;
+                    } else {
+                        profileImage.src = `${supabaseUrl}/storage/v1/object/public/avatars/${fotoUrl}`;
+                    }
+                    profileImage.onerror = function() {
+                        profileImage.style.display = 'none';
+                        defaultAvatar.style.display = 'block';
+                    };
                     profileImage.style.display = 'block';
                     defaultAvatar.style.display = 'none';
                 } else {
