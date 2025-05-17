@@ -11,6 +11,20 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../JS/user-menu.js" defer></script>
     <link rel="icon" type="image/png" href="../IMG/favicon_sem_fundo.png">
+    <style>
+        .explore-button {
+            background: #FFD700 !important;
+            color: #111 !important;
+            border: 2px solid #FFD700 !important;
+            outline: none !important;
+            transition: all 0.3s ease;
+        }
+        .explore-button:hover {
+            background: #fff !important;
+            color: #FFD700 !important;
+            border: 2px solid #FFD700 !important;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -1902,6 +1916,66 @@
         });
 
         // ... rest of the existing code ...
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Seleciona todos os botões de detalhes
+        document.querySelectorAll('.explore-button[data-deck]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const deckId = btn.getAttribute('data-deck');
+                const deckCard = btn.closest('.deck-card');
+                if (!deckCard) return;
+
+                // Preencher título
+                const title = deckCard.querySelector('.deck-title')?.innerHTML || '';
+                document.querySelector('#deckModal .modal-title').innerHTML = title;
+
+                // Preencher média de elixir
+                const elixir = deckCard.querySelector('.elixir-cost span')?.textContent || '';
+                document.querySelector('#deckModal .elixir-cost span').textContent = elixir ? `Média de Elixir: ${elixir}` : '';
+
+                // Preencher cartas
+                const cardsGrid = document.querySelector('#deckModal .deck-cards-grid');
+                cardsGrid.innerHTML = '';
+                deckCard.querySelectorAll('.deck-cards .card').forEach(function(card) {
+                    const img = card.querySelector('img');
+                    const span = card.querySelector('span');
+                    const div = document.createElement('div');
+                    div.className = 'card';
+                    div.innerHTML = `<img src="${img.src}" alt="${img.alt}"><span>${span.textContent}</span>`;
+                    cardsGrid.appendChild(div);
+                });
+
+                // Preencher explicação
+                const explicacao = deckCard.querySelector('.deck-description')?.textContent || '';
+                document.querySelector('#deckModal .deck-explanation').textContent = explicacao;
+
+                // Preencher evoluções (se houver)
+                const evolutionsList = document.querySelector('#deckModal .evolutions');
+                evolutionsList.innerHTML = '';
+                // Exemplo: buscar cartas com 'Evo' no nome
+                deckCard.querySelectorAll('.deck-cards .card span').forEach(function(span) {
+                    if (span.textContent.includes('Evo')) {
+                        const li = document.createElement('li');
+                        li.textContent = span.textContent;
+                        evolutionsList.appendChild(li);
+                    }
+                });
+
+                // Abrir modal
+                document.getElementById('deckModal').style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        // Fecha o modal ao clicar no X
+        document.querySelectorAll('.modal-close').forEach(function(closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                closeBtn.closest('.modal').style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+        });
+    });
     </script>
 </body>
 </html> 

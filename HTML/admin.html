@@ -1775,7 +1775,7 @@
                 </div>
                 <div class="section-card" onclick="showSection('treinadores')">
                     <i class="fas fa-chalkboard-teacher"></i>
-                    <h2>Dashboard Treinadores</h2>
+                    <h2>Dashboard Treinador</h2>
                     <p>Gerencie agendamentos e perfil de treinador</p>
                 </div>
             </div>
@@ -1893,7 +1893,7 @@
             <button class="back-button" onclick="showMainDashboard()">
                 <i class="fas fa-arrow-left"></i> Voltar
             </button>
-            <h2>Dashboard Treinadores</h2>
+            <h2>Dashboard Treinador</h2>
             
             <div class="treinadores-dashboard" style="display: none;">
                 <div class="treinador-header">
@@ -2926,66 +2926,41 @@
                     return;
                 }
 
-                const { data: treinador, error: treinadorError } = await window.supabaseClient
-                    .from('utilizadores')
-                    .select('nome, tipo_conta, foto_perfil_url')
-                    .eq('id', user.id)
+                // Buscar os dados completos do treinador na tabela treinadores
+                const { data: treinadorObj, error: treinadorObjError } = await window.supabaseClient
+                    .from('treinadores')
+                    .select('id, nome, especialidade, foto_perfil_url')
+                    .eq('user_id', user.id)
                     .single();
-                    
-                console.log('Dados do treinador:', treinador);
-                
-                if (treinadorError) {
-                    console.error('Erro ao buscar dados do treinador:', treinadorError);
-                    if (elementos.treinadorNome) elementos.treinadorNome.textContent = 'Erro ao carregar dados do treinador.';
-                    if (elementos.treinadorEspecialidade) elementos.treinadorEspecialidade.textContent = '';
-                    if (elementos.treinadorAvatar) elementos.treinadorAvatar.src = '../IMG/avatar_default.png';
-                    if (elementos.proximasAulas) elementos.proximasAulas.innerHTML = '<div class="no-data">Sem dados de aulas.</div>';
-                    if (elementos.ultimasAvaliacoes) elementos.ultimasAvaliacoes.innerHTML = '<div class="no-data">Sem dados de avaliações.</div>';
-                    return;
-                }
 
-                if (!treinador) {
-                    console.error('Nenhum dado de treinador encontrado');
-                    if (elementos.treinadorNome) elementos.treinadorNome.textContent = 'Ainda não existem dados de treinador para este utilizador.';
+                if (treinadorObjError || !treinadorObj) {
+                    console.error('Treinador não encontrado na tabela treinadores:', treinadorObjError);
+                    if (elementos.proximasAulas) elementos.proximasAulas.innerHTML = '<div class="no-data">Sem dados de aulas.</div>';
+                    if (elementos.treinadorNome) elementos.treinadorNome.textContent = 'Treinador não encontrado';
                     if (elementos.treinadorEspecialidade) elementos.treinadorEspecialidade.textContent = '';
                     if (elementos.treinadorAvatar) elementos.treinadorAvatar.src = '../IMG/avatar_default.png';
-                    if (elementos.proximasAulas) elementos.proximasAulas.innerHTML = '<div class="no-data">Sem dados de aulas.</div>';
-                    if (elementos.ultimasAvaliacoes) elementos.ultimasAvaliacoes.innerHTML = '<div class="no-data">Sem dados de avaliações.</div>';
                     return;
                 }
+                const treinadorId = treinadorObj.id;
+                console.log('ID do treinador encontrado:', treinadorId);
 
                 // Atualizar informações do treinador
-                if (elementos.treinadorNome) elementos.treinadorNome.textContent = treinador.nome || 'Nome não definido';
-                if (elementos.treinadorEspecialidade) elementos.treinadorEspecialidade.textContent = treinador.tipo_conta === 'treinador' ? 'Treinador Profissional' : 'Administrador';
+                if (elementos.treinadorNome) elementos.treinadorNome.textContent = treinadorObj.nome || 'Nome não definido';
+                if (elementos.treinadorEspecialidade) elementos.treinadorEspecialidade.textContent = treinadorObj.especialidade || 'Treinador Profissional';
                 if (elementos.treinadorAvatar) {
-                    const avatarUrl = treinador.foto_perfil_url || '../IMG/avatar_default.png';
+                    const avatarUrl = treinadorObj.foto_perfil_url || '../IMG/avatar_default.png';
                     elementos.treinadorAvatar.src = avatarUrl.startsWith('http') ? avatarUrl : `${window.supabaseUrl}/storage/v1/object/public/avatars/${avatarUrl}`;
                 }
 
-                // Buscar avaliações
-                const { data: avals, error: avalsError } = await window.supabaseClient
-                    .from('avaliacoes_treinadores')
-                    .select('estrelas')
-                    .eq('treinador_id', user.id);
-                console.log('Avaliações encontradas:', avals);
-                if (avalsError) {
-                    console.error('Erro ao buscar avaliações:', avalsError);
-                }
-                let media = 0;
-                if (avals && avals.length > 0) {
-                    media = (avals.reduce((acc, a) => acc + (a.estrelas || 0), 0) / avals.length).toFixed(1);
-                }
-                if (elementos.mediaAvaliacoes) elementos.mediaAvaliacoes.textContent = media;
-
-                // Buscar próximas aulas
-                console.log('Buscando aulas para o treinador ID:', user.id);
+                // Buscar próximas aulas usando treinadorId
+                console.log('Buscando aulas para o treinador ID:', treinadorId);
                 const { data: aulas, error: aulasError } = await window.supabaseClient
                     .from('agendamentos')
                     .select('*, utilizadores!agendamentos_aluno_id_fkey(nome)')
-                    .eq('treinador_id', user.id)
+                    .eq('treinador_id', treinadorId)
                     .gte('data', new Date().toISOString())
                     .order('data', { ascending: true });
-                
+
                 console.log('Resultado da busca de aulas:', { aulas, error: aulasError });
                 
                 if (aulasError) {

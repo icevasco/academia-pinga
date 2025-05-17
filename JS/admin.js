@@ -9,12 +9,12 @@ async function loadTreinadorDashboard() {
         
         console.log('Usuário autenticado:', user);
         
-        // Verificar se o treinador existe na tabela treinadores
+        // Verificar se o treinador existe na tabela utilizadores
         console.log('Verificando se o treinador existe...');
         const { data: treinador, error: treinadorError } = await supabase
-            .from('treinadores')
+            .from('utilizadores')
             .select('*')
-            .eq('user_id', user.id)
+            .eq('id', user.id)
             .single();
             
         console.log('Dados do treinador:', treinador);
