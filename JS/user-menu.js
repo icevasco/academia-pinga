@@ -83,9 +83,13 @@ async function checkUser() {
                 </div>
                 <div class="user-dropdown">
                     <div class="account-type">${userData.tipo_conta === 'admin' ? 'Administrador' : userData.tipo_conta === 'treinador' ? 'Treinador' : 'Aluno'}</div>
-                    ${userData.tipo_conta === 'admin' || userData.tipo_conta === 'treinador' ? `
+                    ${userData.tipo_conta === 'admin' ? `
                         <a href="${getBasePath()}HTML/admin.html" class="dropdown-item">
                             <i class="fas fa-user-shield"></i> Painel Admin
+                        </a>
+                    ` : userData.tipo_conta === 'treinador' ? `
+                        <a href="${getBasePath()}HTML/admin.html" class="dropdown-item">
+                            <i class="fas fa-chalkboard-teacher"></i> Dashboard Treinador
                         </a>
                     ` : ''}
                     <a href="${getBasePath()}HTML/perfil.html" class="dropdown-item">

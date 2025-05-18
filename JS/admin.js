@@ -1,49 +1,40 @@
 // Função para carregar dados do treinador
-async function loadTreinadorDashboard() {
+async function loadTreinadorDashboard(treinadorId) {
     try {
-        console.log('Iniciando carregamento da dashboard do treinador');
+        console.log('Loading trainer dashboard for ID:', treinadorId);
         
-        // Verificar se o usuário está autenticado
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
-        if (authError) throw authError;
-        
-        console.log('Usuário autenticado:', user);
-        
-        // Verificar se o treinador existe na tabela utilizadores
-        console.log('Verificando se o treinador existe...');
-        const { data: treinador, error: treinadorError } = await supabase
-            .from('utilizadores')
-            .select('*')
-            .eq('id', user.id)
+        // Primeiro, buscar o ID do treinador na tabela treinadores
+        console.log('Buscando ID do treinador na tabela treinadores...');
+        const { data: treinadorData, error: treinadorError } = await supabase
+            .from('treinadores')
+            .select('id')
+            .eq('user_id', treinadorId)
             .single();
-            
-        console.log('Dados do treinador:', treinador);
+
+        console.log('Dados do treinador:', treinadorData);
         
-        if (treinadorError) {
+        if (treinadorError || !treinadorData) {
             console.error('Erro ao buscar dados do treinador:', treinadorError);
-            throw treinadorError;
+            return;
         }
 
-        if (!treinador) {
-            console.error('Treinador não encontrado');
-            throw new Error('Treinador não encontrado');
-        }
+        const treinadorIdCorreto = treinadorData.id;
+        console.log('ID correto do treinador:', treinadorIdCorreto);
 
-        // Primeiro, verificar se existem aulas na tabela sem nenhum filtro
-        console.log('Verificando todas as aulas na tabela (sem filtros)...');
-        const { data: todasAulasSemFiltro, error: todasAulasSemFiltroError } = await supabase
+        // Buscar todas as aulas agendadas usando o ID correto do treinador
+        console.log('Buscando todas as aulas para o treinador ID:', treinadorIdCorreto);
+
+        // Primeiro, verificar se existem aulas na tabela
+        const { data: todasAulas, error: todasAulasError } = await supabase
             .from('agendamentos')
-            .select('*');
-            
-        console.log('Todas as aulas na tabela (sem filtros):', todasAulasSemFiltro);
-        if (todasAulasSemFiltroError) {
-            console.error('Erro ao buscar todas as aulas:', todasAulasSemFiltroError);
-        }
+            .select('*')
+            .limit(1);
 
-        // Depois, verificar aulas do treinador com join para ver os dados completos
-        console.log('Buscando aulas do treinador com join...');
-        console.log('Usando treinador_id:', treinador.id);
-        const { data: aulasComJoin, error: aulasComJoinError } = await supabase
+        console.log('Verificando se existem aulas na tabela:', todasAulas);
+        console.log('Erro na verificação:', todasAulasError);
+
+        // Agora buscar as aulas do treinador
+        const { data: aulas, error: aulasError } = await supabase
             .from('agendamentos')
             .select(`
                 *,
@@ -53,56 +44,21 @@ async function loadTreinadorDashboard() {
                     email
                 )
             `)
-            .eq('treinador_id', treinador.id);
-            
-        console.log('Aulas do treinador com join:', aulasComJoin);
-        if (aulasComJoinError) {
-            console.error('Erro ao buscar aulas com join:', aulasComJoinError);
-        }
-
-        // Buscar aulas futuras
-        console.log('Buscando aulas futuras para o treinador ID:', treinador.id);
-        const hoje = new Date();
-        hoje.setHours(0, 0, 0, 0); // Zerar as horas para comparar apenas a data
-        const dataHoje = hoje.toISOString().split('T')[0];
-        console.log('Data de hoje para comparação:', dataHoje);
-        
-        const { data: aulasFuturas, error: aulasFuturasError } = await supabase
-            .from('agendamentos')
-            .select(`
-                *,
-                aluno:aluno_id (
-                    id,
-                    nome,
-                    email
-                )
-            `)
-            .eq('treinador_id', treinador.id)
-            .gte('data', dataHoje)
+            .eq('treinador_id', treinadorIdCorreto)
             .order('data', { ascending: true })
             .order('hora', { ascending: true });
 
-        console.log('Resultado da busca de aulas futuras:', { 
-            aulasFuturas, 
-            error: aulasFuturasError,
-            query: {
-                treinador_id: treinador.id,
-                data_minima: dataHoje
-            }
-        });
+        console.log('Aulas encontradas:', aulas);
+        console.log('Erro na busca de aulas:', aulasError);
 
-        // Atualizar a interface
+        // Atualizar a interface com as aulas
         const proximasAulas = document.getElementById('proximasAulas');
         console.log('Elemento proximasAulas:', proximasAulas);
         
         if (proximasAulas) {
-            // Usar aulasFuturas em vez de aulasComJoin para mostrar apenas aulas futuras
-            const aulasParaExibir = aulasFuturas || [];
-            console.log('Aulas para exibir:', aulasParaExibir);
-            
-            if (aulasParaExibir.length > 0) {
-                console.log('Gerando HTML para', aulasParaExibir.length, 'aulas');
-                const aulasHTML = aulasParaExibir.map(aula => {
+            if (aulas && aulas.length > 0) {
+                console.log('Gerando HTML para', aulas.length, 'aulas');
+                const aulasHTML = aulas.map(aula => {
                     console.log('Processando aula:', aula);
                     const dataAula = new Date(aula.data);
                     const horaAula = aula.hora;
@@ -110,11 +66,10 @@ async function loadTreinadorDashboard() {
                         <div class="aula-card">
                             <div class="aula-info">
                                 <h4>${aula.aluno?.nome || 'Aluno não especificado'}</h4>
-                                <p>Data: ${dataAula.toLocaleDateString()}</p>
-                                <p>Hora: ${horaAula}</p>
-                                <p>Duração: ${aula.duracao}h</p>
-                                <p>Objetivos: ${aula.objetivos}</p>
-                                <p>Status: ${aula.status}</p>
+                                <p><i class="fas fa-calendar"></i> Data: ${dataAula.toLocaleDateString()}</p>
+                                <p><i class="fas fa-clock"></i> Hora: ${horaAula}</p>
+                                <p><i class="fas fa-bullseye"></i> Objetivos: ${aula.objetivos || 'Não especificado'}</p>
+                                <p><i class="fas fa-info-circle"></i> Status: ${aula.status || 'Pendente'}</p>
                             </div>
                         </div>
                     `;
@@ -124,7 +79,7 @@ async function loadTreinadorDashboard() {
                 console.log('HTML inserido no elemento');
             } else {
                 console.log('Nenhuma aula encontrada, mostrando mensagem padrão');
-                proximasAulas.innerHTML = '<p>Nenhuma aula agendada.</p>';
+                proximasAulas.innerHTML = '<div class="no-data">Nenhuma aula agendada.</div>';
             }
         } else {
             console.error('Elemento proximasAulas não encontrado no DOM');
@@ -133,48 +88,26 @@ async function loadTreinadorDashboard() {
         // Atualizar estatísticas
         const totalAulas = document.getElementById('totalAulas');
         if (totalAulas) {
-            totalAulas.textContent = aulasParaExibir ? aulasParaExibir.length : 0;
+            totalAulas.textContent = aulas ? aulas.length : 0;
         }
 
         // Buscar avaliações do treinador
         const { data: avaliacoes, error: avaliacoesError } = await supabase
             .from('avaliacoes')
             .select('*')
-            .eq('treinador_id', treinador.id);
+            .eq('treinador_id', treinadorIdCorreto);
             
         console.log('Avaliações encontradas:', avaliacoes);
 
         if (avaliacoesError) {
             console.error('Erro ao buscar avaliações:', avaliacoesError);
-            throw avaliacoesError;
-        }
-
-        // Buscar avaliações detalhadas
-        const { data: avaliacoesDetalhadas, error: avaliacoesDetalhadasError } = await supabase
-            .from('avaliacoes')
-            .select(`
-                *,
-                aluno:aluno_id (
-                    id,
-                    nome,
-                    email
-                )
-            `)
-            .eq('treinador_id', treinador.id)
-            .order('created_at', { ascending: false });
-
-        console.log('Avaliações detalhadas encontradas:', avaliacoesDetalhadas);
-
-        if (avaliacoesDetalhadasError) {
-            console.error('Erro ao buscar avaliações detalhadas:', avaliacoesDetalhadasError);
-            throw avaliacoesDetalhadasError;
         }
 
         // Atualizar lista de avaliações
         const listaAvaliacoes = document.getElementById('listaAvaliacoes');
         if (listaAvaliacoes) {
-            if (avaliacoesDetalhadas && avaliacoesDetalhadas.length > 0) {
-                const avaliacoesHTML = avaliacoesDetalhadas.map(avaliacao => `
+            if (avaliacoes && avaliacoes.length > 0) {
+                const avaliacoesHTML = avaliacoes.map(avaliacao => `
                     <div class="avaliacao-card">
                         <div class="avaliacao-info">
                             <h4>${avaliacao.aluno?.nome || 'Aluno não especificado'}</h4>
