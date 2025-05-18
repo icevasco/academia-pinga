@@ -93,7 +93,7 @@ async function loadTreinadorDashboard(treinadorId) {
 
         // Buscar avaliações do treinador
         const { data: avaliacoes, error: avaliacoesError } = await supabase
-            .from('avaliacoes')
+            .from('avaliacoes_treinadores')
             .select('*')
             .eq('treinador_id', treinadorIdCorreto);
             
@@ -110,10 +110,10 @@ async function loadTreinadorDashboard(treinadorId) {
                 const avaliacoesHTML = avaliacoes.map(avaliacao => `
                     <div class="avaliacao-card">
                         <div class="avaliacao-info">
-                            <h4>${avaliacao.aluno?.nome || 'Aluno não especificado'}</h4>
-                            <p>Data: ${new Date(avaliacao.created_at).toLocaleDateString()}</p>
-                            <p>Nota: ${avaliacao.nota}/5</p>
-                            <p>Comentário: ${avaliacao.comentario}</p>
+                            <h4>${avaliacao.nome_usuario || 'Usuário não especificado'}</h4>
+                            <p>Data: ${new Date(avaliacao.data).toLocaleDateString()}</p>
+                            <p>Nota: ${avaliacao.estrelas}/5</p>
+                            <p>Comentário: ${avaliacao.texto}</p>
                         </div>
                     </div>
                 `).join('');

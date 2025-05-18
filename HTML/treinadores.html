@@ -813,14 +813,27 @@
             background: #555;
         }
 
+        /* Estilos para as estrelas de avaliação */
+        .rating-input {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
         .rating-input i {
+            font-size: 24px;
             color: #ccc;
             cursor: pointer;
             transition: color 0.2s;
         }
+
         .rating-input i.active {
-            color: #FFD700 !important;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            color: #ffd700;
+        }
+
+        .rating-input i:hover,
+        .rating-input i:hover ~ i {
+            color: #ffd700;
         }
 
         .rating-num-dourado {
@@ -1480,21 +1493,37 @@
                 }
 
                 treinadorIdAtual = treinadorId;
+                avaliacaoSelecionada = 0;
+                
+                // Reset form
+                document.getElementById('avaliacaoTexto').value = '';
+                document.querySelectorAll('.rating-input i').forEach(star => {
+                    star.classList.remove('active');
+                });
+
+                // Show modal
                 const modal = document.getElementById('novaAvaliacaoModal');
                 modal.style.display = 'block';
 
-                // Configurar eventos das estrelas SEMPRE que abrir o modal
+                // Add click handlers to stars
                 const stars = document.querySelectorAll('.rating-input i');
+                console.log('Found stars:', stars.length);
                 stars.forEach(star => {
-                    star.classList.remove('active');
-                    star.onclick = null;
-                    star.addEventListener('click', function() {
+                    star.onclick = function() {
                         const rating = parseInt(this.dataset.rating);
+                        console.log('Star clicked, rating:', rating);
                         avaliacaoSelecionada = rating;
+                        
+                        // Update stars appearance
                         stars.forEach(s => {
-                            s.classList.toggle('active', parseInt(s.dataset.rating) <= rating);
+                            if (parseInt(s.dataset.rating) <= rating) {
+                                s.classList.add('active');
+                            } else {
+                                s.classList.remove('active');
+                            }
                         });
-                    });
+                        console.log('Updated avaliacaoSelecionada:', avaliacaoSelecionada);
+                    };
                 });
             } catch (error) {
                 console.error('Erro ao abrir modal de avaliação:', error);
@@ -1505,21 +1534,31 @@
         // Função para enviar avaliação
         async function enviarAvaliacao() {
             try {
+                console.log('Starting evaluation submission...');
+                console.log('Current avaliacaoSelecionada:', avaliacaoSelecionada);
+                console.log('Current treinadorIdAtual:', treinadorIdAtual);
+
                 if (avaliacaoSelecionada === 0) {
                     showNotification('Por favor, seleciona uma avaliação', 'error');
                     return;
                 }
 
                 const { data: { user }, error: userError } = await supabase.auth.getUser();
-                if (userError) throw userError;
+                if (userError) {
+                    console.error('Error getting user:', userError);
+                    throw userError;
+                }
+                console.log('User authenticated:', user.id);
 
                 const texto = document.getElementById('avaliacaoTexto').value.trim();
                 if (!texto) {
                     showNotification('Por favor, escreve um comentário', 'error');
                     return;
                 }
+                console.log('Comment text:', texto);
 
                 // Verificar se o usuário já avaliou este treinador
+                console.log('Checking for existing evaluation...');
                 const { data: existingAvaliacao, error: checkError } = await supabase
                     .from('avaliacoes_treinadores')
                     .select('id')
@@ -1527,40 +1566,57 @@
                     .eq('user_id', user.id)
                     .single();
 
-                if (checkError && checkError.code !== 'PGRST116') { // PGRST116 é o código para "não encontrado"
-                    console.error('Erro ao verificar avaliação existente:', checkError);
+                if (checkError && checkError.code !== 'PGRST116') {
+                    console.error('Error checking existing evaluation:', checkError);
                     throw checkError;
                 }
 
+                const evaluationData = {
+                    treinador_id: treinadorIdAtual,
+                    user_id: user.id,
+                    estrelas: avaliacaoSelecionada,
+                    texto: texto,
+                    data: new Date().toISOString()
+                };
+
+                let error;
                 if (existingAvaliacao) {
-                    showNotification('Já avaliaste este treinador', 'error');
-                    return;
+                    console.log('Updating existing evaluation...');
+                    // Update existing evaluation
+                    const { error: updateError } = await supabase
+                        .from('avaliacoes_treinadores')
+                        .update({
+                            estrelas: avaliacaoSelecionada,
+                            texto: texto,
+                            data: new Date().toISOString()
+                        })
+                        .eq('id', existingAvaliacao.id);
+                    error = updateError;
+                } else {
+                    console.log('Inserting new evaluation...');
+                    // Insert new evaluation
+                    const { error: insertError } = await supabase
+                        .from('avaliacoes_treinadores')
+                        .insert(evaluationData);
+                    error = insertError;
                 }
 
-                console.log('Enviando avaliação com treinador_id:', treinadorIdAtual);
-
-                const { error } = await supabase
-                    .from('avaliacoes_treinadores')
-                    .insert({
-                        treinador_id: treinadorIdAtual,  // Usando o user_id do treinador diretamente
-                        user_id: user.id,
-                        estrelas: avaliacaoSelecionada,
-                        texto: texto,
-                        data: new Date().toISOString()
-                    });
-
                 if (error) {
-                    console.error('Erro detalhado ao inserir avaliação:', error);
+                    console.error('Error saving evaluation:', error);
                     throw error;
                 }
 
-                showNotification('Avaliação enviada com sucesso!', 'success');
+                console.log('Evaluation saved successfully');
+                showNotification('Avaliação ' + (existingAvaliacao ? 'atualizada' : 'enviada') + ' com sucesso!', 'success');
                 fecharModalNovaAvaliacao();
-                carregarTreinadores(); // Recarregar para atualizar a média
+                carregarTreinadores();
                 document.getElementById('modalSucessoAvaliacao').style.display = 'block';
-                setTimeout(() => { document.getElementById('modalSucessoAvaliacao').style.display = 'none'; document.body.style.overflow = ''; }, 3000);
+                setTimeout(() => {
+                    document.getElementById('modalSucessoAvaliacao').style.display = 'none';
+                    document.body.style.overflow = '';
+                }, 3000);
             } catch (error) {
-                console.error('Erro ao enviar avaliação:', error);
+                console.error('Error in evaluation submission:', error);
                 showNotification('Erro ao enviar avaliação', 'error');
             }
         }
