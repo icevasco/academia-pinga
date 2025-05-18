@@ -1898,7 +1898,7 @@
             <div class="treinadores-dashboard" style="display: none;">
                 <div class="treinador-header">
                     <div class="treinador-info">
-                        <img src="" alt="Avatar do Treinador" class="treinador-avatar" id="treinadorAvatar">
+                        <img src="https://vhswdfifhhcqmtpnhoso.supabase.co/storage/v1/object/public/avatars/avatar_default.png" alt="Avatar do Treinador" class="treinador-avatar" id="treinadorAvatar">
                         <div class="treinador-detalhes">
                             <h2 id="treinadorNome">Nome do Treinador</h2>
                             <p id="treinadorEspecialidade">Especialidade</p>
@@ -2135,7 +2135,7 @@
                     dashboard.innerHTML = `
                         <div class="treinador-header">
                             <div class="treinador-info">
-                                <img src="../IMG/avatar_default.png" alt="Avatar do Treinador" class="treinador-avatar" id="treinadorAvatar">
+                                <img src="https://vhswdfifhhcqmtpnhoso.supabase.co/storage/v1/object/public/avatars/avatar_default.png" alt="Avatar do Treinador" class="treinador-avatar" id="treinadorAvatar">
                                 <div class="treinador-detalhes">
                                     <h2 id="treinadorNome">Nome do Treinador</h2>
                                     <p id="treinadorEspecialidade">Especialidade</p>
@@ -2920,36 +2920,39 @@
                     console.error('Nenhum usuário autenticado encontrado');
                     if (elementos.treinadorNome) elementos.treinadorNome.textContent = 'Utilizador não autenticado.';
                     if (elementos.treinadorEspecialidade) elementos.treinadorEspecialidade.textContent = '';
-                    if (elementos.treinadorAvatar) elementos.treinadorAvatar.src = '../IMG/avatar_default.png';
+                    if (elementos.treinadorAvatar) elementos.treinadorAvatar.src = 'https://vhswdfifhhcqmtpnhoso.supabase.co/storage/v1/object/public/avatars/avatar_default.png';
                     if (elementos.proximasAulas) elementos.proximasAulas.innerHTML = '<div class="no-data">Sem dados de aulas.</div>';
                     if (elementos.ultimasAvaliacoes) elementos.ultimasAvaliacoes.innerHTML = '<div class="no-data">Sem dados de avaliações.</div>';
                     return;
                 }
 
-                // Buscar os dados completos do treinador na tabela treinadores
+                // Buscar os dados completos do treinador na tabela utilizadores
                 const { data: treinadorObj, error: treinadorObjError } = await window.supabaseClient
-                    .from('treinadores')
-                    .select('id, nome, especialidade, foto_perfil_url')
-                    .eq('user_id', user.id)
+                    .from('utilizadores')
+                    .select('id, nome, foto_perfil_url')
+                    .eq('id', user.id)
                     .single();
 
                 if (treinadorObjError || !treinadorObj) {
-                    console.error('Treinador não encontrado na tabela treinadores:', treinadorObjError);
+                    console.error('Treinador não encontrado na tabela utilizadores:', treinadorObjError);
                     if (elementos.proximasAulas) elementos.proximasAulas.innerHTML = '<div class="no-data">Sem dados de aulas.</div>';
                     if (elementos.treinadorNome) elementos.treinadorNome.textContent = 'Treinador não encontrado';
                     if (elementos.treinadorEspecialidade) elementos.treinadorEspecialidade.textContent = '';
-                    if (elementos.treinadorAvatar) elementos.treinadorAvatar.src = '../IMG/avatar_default.png';
+                    if (elementos.treinadorAvatar) elementos.treinadorAvatar.src = 'https://vhswdfifhhcqmtpnhoso.supabase.co/storage/v1/object/public/avatars/avatar_default.png';
                     return;
                 }
+
                 const treinadorId = treinadorObj.id;
                 console.log('ID do treinador encontrado:', treinadorId);
 
-                // Atualizar informações do treinador
+                // Atualizar informações do treinador na interface
                 if (elementos.treinadorNome) elementos.treinadorNome.textContent = treinadorObj.nome || 'Nome não definido';
-                if (elementos.treinadorEspecialidade) elementos.treinadorEspecialidade.textContent = treinadorObj.especialidade || 'Treinador Profissional';
+                if (elementos.treinadorEspecialidade) elementos.treinadorEspecialidade.textContent = 'Treinador Profissional'; // Default value since column doesn't exist
                 if (elementos.treinadorAvatar) {
-                    const avatarUrl = treinadorObj.foto_perfil_url || '../IMG/avatar_default.png';
-                    elementos.treinadorAvatar.src = avatarUrl.startsWith('http') ? avatarUrl : `${window.supabaseUrl}/storage/v1/object/public/avatars/${avatarUrl}`;
+                    const avatarUrl = treinadorObj.foto_perfil_url || 'avatar_default.png';
+                    elementos.treinadorAvatar.src = avatarUrl.startsWith('http')
+                        ? avatarUrl
+                        : `https://vhswdfifhhcqmtpnhoso.supabase.co/storage/v1/object/public/avatars/${avatarUrl}`;
                 }
 
                 // Buscar próximas aulas usando treinadorId
@@ -2975,9 +2978,9 @@
                             elementos.proximasAulas.innerHTML += `
                                 <div class="aula-card">
                                     <h4>${aula.titulo || 'Aula'}</h4>
-                                    <p>Data: ${dataAula.toLocaleString('pt-BR')}</p>
-                                    <p>Aluno: ${alunoNome}</p>
-                                    ${aula.objetivos ? `<p>Objetivos: ${aula.objetivos}</p>` : ''}
+                                    <p><i class="fas fa-calendar"></i> ${dataAula.toLocaleString('pt-BR')}</p>
+                                    <p><i class="fas fa-user"></i> ${alunoNome}</p>
+                                    ${aula.objetivos ? `<p><i class="fas fa-bullseye"></i> ${aula.objetivos}</p>` : ''}
                                 </div>`;
                         });
                     } else {
@@ -2985,30 +2988,54 @@
                     }
                 }
 
-                // Buscar últimas avaliações
+                // Buscar avaliações normalmente
                 const { data: avaliacoes, error: avaliacoesError } = await window.supabaseClient
                     .from('avaliacoes_treinadores')
-                    .select('estrelas, texto, data')
-                    .eq('treinador_id', user.id)
+                    .select('estrelas, texto, data, user_id')
+                    .eq('treinador_id', treinadorId)
                     .order('data', { ascending: false })
                     .limit(5);
-                console.log('Avaliações detalhadas encontradas:', avaliacoes);
+
                 if (avaliacoesError) {
-                    console.error('Erro ao buscar avaliações detalhadas:', avaliacoesError);
-                }
-                if (elementos.ultimasAvaliacoes) {
+                    console.error('Erro ao buscar avaliações:', avaliacoesError);
+                    if (elementos.mediaAvaliacoes) elementos.mediaAvaliacoes.textContent = '0.0';
+                    if (elementos.ultimasAvaliacoes) elementos.ultimasAvaliacoes.innerHTML = '<div class="no-data">Erro ao carregar avaliações.</div>';
+                } else {
+                    // Buscar nomes dos usuários
+                    const userIds = avaliacoes ? avaliacoes.map(av => av.user_id) : [];
+                    let userMap = {};
+                    if (userIds.length > 0) {
+                        const { data: utilizadores, error: utilizadoresError } = await window.supabaseClient
+                            .from('utilizadores')
+                            .select('id, nome')
+                            .in('id', userIds);
+                        if (!utilizadoresError && utilizadores) {
+                            utilizadores.forEach(u => userMap[u.id] = u.nome);
+                        }
+                    }
+
+                    // Calcular média das avaliações
                     if (avaliacoes && avaliacoes.length > 0) {
-                        elementos.ultimasAvaliacoes.innerHTML = '';
-                        avaliacoes.forEach(av => {
-                            elementos.ultimasAvaliacoes.innerHTML += `<div class="avaliacao-card">
-                                <h4>${av.aluno_nome || 'Aluno'}</h4>
-                                <div class="estrelas">${'★'.repeat(av.estrelas || 0)}</div>
-                                <p>${av.texto || ''}</p>
-                                <small>${new Date(av.data).toLocaleDateString()}</small>
-                            </div>`;
-                        });
+                        const media = avaliacoes.reduce((acc, curr) => acc + (curr.estrelas || 0), 0) / avaliacoes.length;
+                        if (elementos.mediaAvaliacoes) elementos.mediaAvaliacoes.textContent = media.toFixed(1);
+
+                        // Exibir últimas avaliações
+                        if (elementos.ultimasAvaliacoes) {
+                            elementos.ultimasAvaliacoes.innerHTML = '';
+                            avaliacoes.forEach(av => {
+                                const nomeAvaliador = userMap[av.user_id] || 'Aluno';
+                                elementos.ultimasAvaliacoes.innerHTML += `
+                                    <div class="avaliacao-card">
+                                        <h4>${nomeAvaliador}</h4>
+                                        <div class="estrelas">${'★'.repeat(av.estrelas || 0)}${'☆'.repeat(5 - (av.estrelas || 0))}</div>
+                                        <p>${av.texto || 'Sem comentário'}</p>
+                                        <small>${new Date(av.data).toLocaleDateString('pt-BR')}</small>
+                                    </div>`;
+                            });
+                        }
                     } else {
-                        elementos.ultimasAvaliacoes.innerHTML = '<div class="no-data">Sem avaliações recentes para este treinador.</div>';
+                        if (elementos.mediaAvaliacoes) elementos.mediaAvaliacoes.textContent = '0.0';
+                        if (elementos.ultimasAvaliacoes) elementos.ultimasAvaliacoes.innerHTML = '<div class="no-data">Sem avaliações recentes para este treinador.</div>';
                     }
                 }
 
