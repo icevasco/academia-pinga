@@ -201,6 +201,16 @@
         </div>
     </div>
 
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSuccessModal()">&times;</span>
+            <h2>Inscrição realizada com sucesso!</h2>        
+            <div class="modal-buttons">
+                <button onclick="closeSuccessModal()" class="btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
+
     <style>
         .container {
             max-width: 1200px;
@@ -600,6 +610,11 @@
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        #successModal .modal-content {
+            max-height: 250px;
+            overflow-y: auto;
+        }
     </style>
 
     <script>
@@ -679,9 +694,7 @@
                 <div style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 5px; color: #333;">
                     <strong>Plano Escolhido:</strong> ${planoText}
                 </div>
-                <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 5px; color: #1976D2;">
-                    <i class="fas fa-info-circle"></i> Após confirmar, você receberá um email com instruções para acessar sua conta.
-                </div>
+                
             `;
 
             // Adicionar eventos aos botões do modal
@@ -764,43 +777,93 @@
                 if (existingUser) {
                     console.log('Usuário existente encontrado:', existingUser);
                     userId = existingUser.id;
-                } else {
-                    console.log('Criando novo usuário...');
-                    // Se o usuário não existe, criar um novo
-                    const { data: authData, error: authError } = await window.supabaseClient.auth.signUp({
-                        email: email,
-                        password: Math.random().toString(36).slice(-8),
-                        options: {
-                            data: {
-                                nome: nome
-                            }
+                    
+                    // Criar inscrição na tabela inscricoes
+                    const dadosInscricao = {
+                        utilizador_id: userId,
+                        nome: nome,
+                        plano: plano,
+                        tag: tag,
+                        trofeus: parseInt(trofeus),
+                        nivel: parseInt(nivel),
+                        status: 'pendente',
+                        data_inscricao: new Date().toISOString()
+                    };
+
+                    console.log('Dados da inscrição:', dadosInscricao);
+
+                    const { data: inscricaoData, error: inscricaoError } = await window.supabaseClient
+                        .from('inscricoes')
+                        .insert(dadosInscricao)
+                        .select();
+
+                    console.log('Resposta da inscrição:', { inscricaoData, inscricaoError });
+
+                    if (inscricaoError) {
+                        console.error('Erro ao criar inscrição:', inscricaoError);
+                        throw inscricaoError;
+                    }
+
+                    if (!inscricaoData || inscricaoData.length === 0) {
+                        throw new Error('Não foi possível confirmar a criação da inscrição');
+                    }
+
+                    // Fechar o modal de confirmação
+                    closeModal();
+
+                    // Mostrar modal de sucesso
+                    showSuccessModal();
+                    
+                    // Limpar o formulário
+                    document.getElementById('inscricaoForm').reset();
+                    
+                    // Remover seleção dos planos
+                    document.querySelectorAll('.plano-card').forEach(card => {
+                        card.classList.remove('selected');
+                    });
+                    
+                    // Selecionar plano avançado por padrão
+                    selecionarPlano('avancado');
+                    
+                    return;
+                }
+
+                console.log('Criando novo usuário...');
+                // Se o usuário não existe, criar um novo
+                const { data: authData, error: authError } = await window.supabaseClient.auth.signUp({
+                    email: email,
+                    password: Math.random().toString(36).slice(-8),
+                    options: {
+                        data: {
+                            nome: nome
                         }
+                    }
+                });
+
+                console.log('Resposta do signUp:', { authData, authError });
+
+                if (authError) throw authError;
+                userId = authData.user.id;
+
+                // Criar registro na tabela utilizadores
+                const { error: insertError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .insert({
+                        id: userId,
+                        nome: nome,
+                        email: email,
+                        tipo_conta: 'premium'
                     });
 
-                    console.log('Resposta do signUp:', { authData, authError });
+                console.log('Inserção na tabela utilizadores:', { insertError });
 
-                    if (authError) throw authError;
-                    userId = authData.user.id;
-
-                    // Criar registro na tabela utilizadores
-                    const { error: insertError } = await window.supabaseClient
-                        .from('utilizadores')
-                        .insert({
-                            id: userId,
-                            nome: nome,
-                            email: email,
-                            tipo_conta: 'premium'
-                        });
-
-                    console.log('Inserção na tabela utilizadores:', { insertError });
-
-                    if (insertError) throw insertError;
-                }
+                if (insertError) throw insertError;
 
                 console.log('Criando inscrição...');
                 // Criar inscrição na tabela inscricoes
                 const dadosInscricao = {
                     utilizador_id: userId,
+                    nome: nome,
                     plano: plano,
                     tag: tag,
                     trofeus: parseInt(trofeus),
@@ -830,8 +893,8 @@
                 // Fechar o modal de confirmação
                 closeModal();
 
-                // Mostrar mensagem de sucesso
-                alert('Inscrição realizada com sucesso! Um email foi enviado para você com instruções de acesso.');
+                // Mostrar modal de sucesso
+                showSuccessModal();
                 
                 // Limpar o formulário
                 document.getElementById('inscricaoForm').reset();
@@ -892,7 +955,7 @@
                     // Buscar dados do usuário
                     const { data: userData, error: userError } = await window.supabaseClient
                         .from('utilizadores')
-                        .select('nome, email')
+                        .select('nome, email, tag, trofeus, nivel')
                         .eq('id', user.id)
                         .single()
 
@@ -901,6 +964,9 @@
                     // Pré-preencher nome e email com os dados do usuário
                     document.getElementById('nome').value = userData.nome || ''
                     document.getElementById('email').value = userData.email || ''
+                    if (userData.tag) document.getElementById('tag').value = userData.tag
+                    if (userData.trofeus) document.getElementById('trofeus').value = userData.trofeus
+                    if (userData.nivel) document.getElementById('nivel').value = userData.nivel
                 }
             } catch (error) {
                 console.error('Erro ao buscar dados do usuário:', error)
@@ -1021,6 +1087,46 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof checkUser === 'function') checkUser();
+        });
+
+        // Modal de sucesso
+        function showSuccessModal() {
+            const modal = document.getElementById('successModal');
+            modal.style.display = 'block';
+            // Fechar automaticamente após 3 segundos
+            window._successModalTimeout = setTimeout(closeSuccessModal, 3000);
+        }
+        function closeSuccessModal() {
+            const modal = document.getElementById('successModal');
+            modal.style.display = 'none';
+            if (window._successModalTimeout) clearTimeout(window._successModalTimeout);
+        }
+        // Fechar modal de sucesso ao clicar fora
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('successModal');
+            if (modal && modal.style.display === 'block' && event.target === modal) {
+                closeSuccessModal();
+            }
+        });
+
+        // Função para limitar troféus a 9000 se digitar mais de 4 dígitos
+        document.getElementById('trofeus').addEventListener('input', function(e) {
+            let val = e.target.value;
+            if (val.length > 4) {
+                e.target.value = 9000;
+            } else if (parseInt(val) > 9000) {
+                e.target.value = 9000;
+            }
+        });
+
+        // Função para limitar nível do rei a 15 se digitar mais de 2 dígitos
+        document.getElementById('nivel').addEventListener('input', function(e) {
+            let val = e.target.value;
+            if (val.length > 2) {
+                e.target.value = 15;
+            } else if (parseInt(val) > 15) {
+                e.target.value = 15;
+            }
         });
     </script>
 </body>

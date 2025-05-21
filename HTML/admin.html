@@ -350,17 +350,84 @@
 
         .action-buttons {
             display: flex;
-            gap: 8px;
+            gap: 10px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .action-buttons button {
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .action-buttons button i {
+            font-size: 14px;
+        }
+
+        .action-buttons button.loading {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        .action-buttons button.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .approve-button {
-            background: #28a745;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
             color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .approve-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+            background: linear-gradient(135deg, #45a049 0%, #4CAF50 100%);
+        }
+
+        .approve-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .reject-button {
-            background: #dc3545;
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
             color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .reject-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+            background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
+        }
+
+        .reject-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .account-type-select {
@@ -1937,18 +2004,85 @@
         }
 
         .approve-button {
-            background: #4CAF50;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
             color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .approve-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+            background: linear-gradient(135deg, #45a049 0%, #4CAF50 100%);
+        }
+
+        .approve-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .reject-button {
-            background: #f44336;
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
             color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .action-button:hover {
+        .reject-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+            background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
+        }
+
+        .reject-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .action-buttons button {
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .action-buttons button i {
+            font-size: 14px;
+        }
+
+        .action-buttons button.loading {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        .action-buttons button.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .status-badge {
@@ -2049,17 +2183,17 @@
             </div>
 
             <div class="dashboard-sections">
-                <div class="section-card" onclick="showSection('accounts')">
+                <div class="section-card" data-section="accounts">
                     <i class="fas fa-users"></i>
                     <h2>Todas as Contas</h2>
                     <p>Gerencie todas as contas de usuários</p>
                 </div>
-                <div class="section-card" onclick="showSection('forms')">
+                <div class="section-card" data-section="forms">
                     <i class="fas fa-file-alt"></i>
                     <h2>Inscrições Cursos</h2>
                     <p>Visualize e gerencie inscrições em cursos</p>
                 </div>
-                <div class="section-card" onclick="showSection('treinadores')">
+                <div class="section-card" data-section="treinadores">
                     <i class="fas fa-chalkboard-teacher"></i>
                     <h2>Dashboard Treinador</h2>
                     <p>Gerencie agendamentos e perfil de treinador</p>
@@ -2068,7 +2202,7 @@
         </div>
 
         <div id="accountsSection" class="content-section">
-            <button class="back-button" onclick="showMainDashboard()">
+            <button class="back-button">
                 <i class="fas fa-arrow-left"></i> Voltar
             </button>
             <h2>Todas as Contas</h2>
@@ -2091,7 +2225,7 @@
         </div>
 
         <div id="formsSection" class="content-section">
-            <button class="back-button" onclick="showMainDashboard()">
+            <button class="back-button">
                 <i class="fas fa-arrow-left"></i> Voltar
             </button>
             <h2>Inscrições Cursos</h2>
@@ -2176,7 +2310,7 @@
         </div>
 
         <div id="treinadoresSection" class="content-section">
-            <button class="back-button" id="backButtonTreinador" onclick="showMainDashboard()" style="display: none !important;">
+            <button class="back-button" id="backButtonTreinador" style="display: none !important;">
                 <i class="fas fa-arrow-left"></i> Voltar
             </button>
             <h2>Dashboard Treinador</h2>
@@ -2398,7 +2532,150 @@
     </div>
 
     <script>
-        // Funções globais
+        // Definir funções globais necessárias
+        window.closeConfirmActionModal = function() {
+            const modal = document.getElementById('confirmActionModal');
+            modal.style.display = 'none';
+            modal.classList.remove('active');
+        };
+
+        window.closeSuccessModal = function() {
+            const modal = document.getElementById('successModal');
+            modal.style.display = 'none';
+            modal.classList.remove('active');
+        };
+
+        window.closeEditProfileModal = function() {
+            const modal = document.getElementById('editProfileModal');
+            modal.style.display = 'none';
+        };
+
+        window.previewImage = function(event) {
+            const preview = document.getElementById('avatarPreview');
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        window.salvarPerfilTreinador = async function() {
+            try {
+                const nome = document.getElementById('editNome').value;
+                const especialidade = document.getElementById('editEspecialidade').value;
+                const avatarFile = document.getElementById('avatarUpload').files[0];
+
+                const { data: { user }, error: userError } = await window.supabaseClient.auth.getUser();
+                if (userError) throw userError;
+
+                let avatarUrl = null;
+                if (avatarFile) {
+                    const fileExt = avatarFile.name.split('.').pop();
+                    const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+                    const { error: uploadError } = await window.supabaseClient.storage
+                        .from('avatars')
+                        .upload(fileName, avatarFile);
+                    
+                    if (uploadError) throw uploadError;
+                    
+                    const { data: { publicUrl } } = window.supabaseClient.storage
+                        .from('avatars')
+                        .getPublicUrl(fileName);
+                    
+                    avatarUrl = publicUrl;
+                }
+
+                const { error: updateError } = await window.supabaseClient
+                    .from('treinadores')
+                    .update({
+                        nome,
+                        especialidade,
+                        ...(avatarUrl && { avatar_url: avatarUrl })
+                    })
+                    .eq('user_id', user.id);
+
+                if (updateError) throw updateError;
+
+                showNotification('Perfil atualizado com sucesso!', 'success');
+                closeEditProfileModal();
+                loadTreinadorDashboard();
+            } catch (error) {
+                console.error('Erro ao salvar perfil:', error);
+                showNotification('Erro ao salvar perfil', 'error');
+            }
+        };
+
+        // Adicionar event listeners quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event listeners para os botões de seção
+            document.querySelectorAll('.section-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    if (section) {
+                        window.showSection(section);
+                    }
+                });
+            });
+
+            // Event listener para o botão de atualizar
+            const refreshButton = document.querySelector('.refresh-button');
+            if (refreshButton) {
+                refreshButton.addEventListener('click', window.refreshDashboard);
+            }
+
+            // Event listeners para os botões de voltar
+            document.querySelectorAll('.back-button').forEach(button => {
+                button.addEventListener('click', window.showMainDashboard);
+            });
+
+            // Event listener para o campo de confirmação de exclusão
+            const deleteConfirmation = document.getElementById('deleteConfirmation');
+            if (deleteConfirmation) {
+                deleteConfirmation.addEventListener('input', function() {
+                    const deleteButton = document.querySelector('#deleteAccountModal .delete-button');
+                    deleteButton.disabled = this.value !== 'EXCLUIR';
+                });
+            }
+
+            // Inicializar o dashboard
+            window.checkAdminAccess();
+        });
+
+        // Definir showSection no escopo global antes de qualquer uso
+        window.showSection = function(section) {
+            console.log('Mostrando seção:', section);
+            document.getElementById('mainDashboard').style.display = 'none';
+            document.getElementById('accountsSection').classList.remove('active');
+            document.getElementById('formsSection').classList.remove('active');
+            document.getElementById('treinadoresSection').classList.remove('active');
+
+            if (section === 'accounts') {
+                document.getElementById('accountsSection').classList.add('active');
+                if (window.loadAccounts) window.loadAccounts();
+            } else if (section === 'forms') {
+                document.getElementById('formsSection').classList.add('active');
+                if (window.loadForms) window.loadForms();
+            } else if (section === 'treinadores') {
+                document.getElementById('treinadoresSection').classList.add('active');
+                const dashboard = document.querySelector('.treinadores-dashboard');
+                if (dashboard) {
+                    dashboard.style.display = 'block';
+                    if (window.loadTreinadorDashboard) window.loadTreinadorDashboard();
+                }
+            }
+        };
+
+        window.showMainDashboard = function() {
+            document.getElementById('mainDashboard').style.display = 'block';
+            document.getElementById('accountsSection').classList.remove('active');
+            document.getElementById('formsSection').classList.remove('active');
+            document.getElementById('treinadoresSection').classList.remove('active');
+            loadStats(); // Recarregar estatísticas ao voltar
+        };
+
         async function confirmarAula(aulaId) {
             try {
                 const { error } = await window.supabaseClient
@@ -2433,76 +2710,6 @@
             }
         }
 
-        function showSection(section) {
-            console.log('Mostrando seção:', section);
-            document.getElementById('mainDashboard').style.display = 'none';
-            document.getElementById('accountsSection').classList.remove('active');
-            document.getElementById('formsSection').classList.remove('active');
-            document.getElementById('treinadoresSection').classList.remove('active');
-
-            if (section === 'accounts') {
-                document.getElementById('accountsSection').classList.add('active');
-                loadAccounts();
-            } else if (section === 'forms') {
-                document.getElementById('formsSection').classList.add('active');
-                loadForms();
-            } else if (section === 'treinadores') {
-                document.getElementById('treinadoresSection').classList.add('active');
-                const dashboard = document.querySelector('.treinadores-dashboard');
-                if (dashboard) {
-                    dashboard.style.display = 'block';
-                    // Renderizar sempre o HTML base da dashboard
-                    dashboard.innerHTML = `
-                        <div class="treinador-header">
-                            <div class="treinador-info">
-                                <img src="https://vhswdfifhhcqmtpnhoso.supabase.co/storage/v1/object/public/avatars/avatar_default.png" alt="Avatar do Treinador" class="treinador-avatar" id="treinadorAvatar">
-                                <div class="treinador-detalhes">
-                                    <h2 id="treinadorNome">Nome do Treinador</h2>
-                                    <p id="treinadorEspecialidade">Especialidade</p>
-                                    <div class="treinador-stats">
-                                        <div class="stat-item">
-                                            <i class="fas fa-star"></i>
-                                            <span id="mediaAvaliacoes">0.0</span>
-                                            <label>Média Avaliações</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="dashboard-cards">
-                            <div class="dashboard-card">
-                                <div class="card-header">
-                                    <i class="fas fa-calendar"></i>
-                                    <h3>Próximas Aulas</h3>
-                                </div>
-                                <div class="card-content" id="proximasAulas">
-                                    <div class="no-data">Sem aulas agendadas para este treinador.</div>
-                                </div>
-                            </div>
-                            <div class="dashboard-card">
-                                <div class="card-header">
-                                    <i class="fas fa-star"></i>
-                                    <h3>Últimas Avaliações</h3>
-                                </div>
-                                <div class="card-content" id="ultimasAvaliacoes">
-                                    <div class="no-data">Sem avaliações recentes para este treinador.</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    `;
-                }
-                loadTreinadorDashboard();
-            }
-        }
-
-        function showMainDashboard() {
-            document.getElementById('mainDashboard').style.display = 'block';
-            document.getElementById('accountsSection').classList.remove('active');
-            document.getElementById('formsSection').classList.remove('active');
-            document.getElementById('treinadoresSection').classList.remove('active');
-        }
-
         function openEditAccountModal(id, nome, email, tipo_conta) {
             document.getElementById('editAccountId').value = id;
             document.getElementById('editAccountName').value = nome;
@@ -2533,6 +2740,58 @@
                 const email = document.getElementById('editAccountEmail').value;
                 const tipo_conta = document.getElementById('editAccountType').value;
 
+                // Primeiro, verificar se o usuário é um treinador
+                const { data: userData, error: userError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('tipo_conta')
+                    .eq('id', id)
+                    .single();
+
+                if (userError) throw userError;
+
+                // Se o usuário atual é um treinador e está sendo alterado para outro tipo
+                if (userData.tipo_conta === 'treinador' && tipo_conta !== 'treinador') {
+                    // Primeiro, buscar o ID do treinador
+                    const { data: treinadorData, error: treinadorError } = await window.supabaseClient
+                        .from('treinadores')
+                        .select('id')
+                        .eq('user_id', id)
+                        .single();
+
+                    if (treinadorError) throw treinadorError;
+
+                    if (treinadorData) {
+                        // Primeiro, buscar todos os agendamentos
+                        const { data: agendamentos, error: agendamentosError } = await window.supabaseClient
+                            .from('agendamentos')
+                            .select('id')
+                            .eq('treinador_id', treinadorData.id);
+
+                        if (agendamentosError) throw agendamentosError;
+
+                        // Se houver agendamentos, removê-los um por um
+                        if (agendamentos && agendamentos.length > 0) {
+                            for (const agendamento of agendamentos) {
+                                const { error: deleteError } = await window.supabaseClient
+                                    .from('agendamentos')
+                                    .delete()
+                                    .eq('id', agendamento.id);
+
+                                if (deleteError) throw deleteError;
+                            }
+                        }
+
+                        // Depois, remover o registro do treinador
+                        const { error: deleteTreinadorError } = await window.supabaseClient
+                            .from('treinadores')
+                            .delete()
+                            .eq('id', treinadorData.id);
+
+                        if (deleteTreinadorError) throw deleteTreinadorError;
+                    }
+                }
+
+                // Atualizar o usuário
                 const { error } = await window.supabaseClient
                     .from('utilizadores')
                     .update({
@@ -2550,7 +2809,7 @@
                 loadStats();
             } catch (error) {
                 console.error('Erro ao salvar alterações:', error);
-                showNotification('Erro ao salvar alterações', 'error');
+                showNotification('Erro ao salvar alterações: ' + (error.message || 'Erro desconhecido'), 'error');
             }
         }
 
@@ -2599,7 +2858,31 @@
             }, 3000);
         }
 
-        window.addEventListener('DOMContentLoaded', function() {
+        // Adicionar função para verificar sessão
+        async function checkSession() {
+            try {
+                const { data: { session }, error } = await window.supabaseClient.auth.getSession();
+                
+                if (error) {
+                    console.error('Erro ao verificar sessão:', error);
+                    return false;
+                }
+
+                if (!session) {
+                    console.log('Nenhuma sessão ativa encontrada');
+                    return false;
+                }
+
+                console.log('Sessão ativa encontrada:', session);
+                return true;
+            } catch (error) {
+                console.error('Erro ao verificar sessão:', error);
+                return false;
+            }
+        }
+
+        // Modificar o evento DOMContentLoaded
+        window.addEventListener('DOMContentLoaded', async function() {
             // Inicializar Supabase
             if (!window.supabaseClient) {
                 const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co'
@@ -2607,801 +2890,690 @@
                 window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey)
             }
 
-            // Verificação de acesso
-            async function checkAdminAccess() {
-                try {
-                    console.log('Iniciando verificação de acesso...');
-                    
-                    // Verificar se o cliente Supabase está inicializado
-                    if (!window.supabaseClient) {
-                        console.error('Cliente Supabase não inicializado');
-                        window.location.href = '../login.html';
-                        return;
-                    }
-
-                    // Obter usuário atual
-                    const { data: { user }, error: authError } = await window.supabaseClient.auth.getUser();
-                    
-                    if (authError) {
-                        console.error('Erro ao obter usuário:', authError);
-                        showNotification('Erro ao verificar autenticação', 'error');
-                        window.location.href = '../login.html';
-                        return;
-                    }
-
-                    if (!user) {
-                        console.error('Nenhum usuário autenticado encontrado');
-                        showNotification('Por favor, faça login para continuar', 'error');
-                        window.location.href = '../login.html';
-                        return;
-                    }
-
-                    console.log('Usuário encontrado:', user);
-
-                    // Buscar dados do usuário
-                    const { data: userData, error: dbError } = await window.supabaseClient
-                        .from('utilizadores')
-                        .select('tipo_conta, nome')
-                        .eq('id', user.id)
-                        .single();
-
-                    if (dbError) {
-                        console.error('Erro ao buscar dados do usuário:', dbError);
-                        showNotification('Erro ao carregar dados do usuário', 'error');
-                        window.location.href = '../login.html';
-                        return;
-                    }
-
-                    if (!userData) {
-                        console.error('Dados do usuário não encontrados');
-                        showNotification('Dados do usuário não encontrados', 'error');
-                        window.location.href = '../login.html';
-                        return;
-                    }
-
-                    console.log('Dados do usuário:', userData);
-
-                    // Verificar tipo de conta
-                    if (userData.tipo_conta !== 'admin' && userData.tipo_conta !== 'treinador') {
-                        console.error('Tipo de conta não permitido:', userData.tipo_conta);
-                        showNotification('Acesso não autorizado', 'error');
-                        window.location.href = '../index.html';
-                        return;
-                    }
-
-                    console.log('Acesso permitido. Tipo de conta:', userData.tipo_conta);
-
-                    // Configurar interface baseada no tipo de conta
-                    if (userData.tipo_conta === 'admin') {
-                        console.log('Configurando interface de admin');
-                        setupAdminInterface();
-                    } else {
-                        console.log('Configurando interface de treinador');
-                        setupTreinadorInterface();
-                    }
-
-                    // Carregar dados iniciais
-                    await Promise.all([
-                        loadStats(),
-                        loadAccounts()
-                    ]).catch(error => {
-                        console.error('Erro ao carregar dados iniciais:', error);
-                        showNotification('Erro ao carregar alguns dados', 'error');
-                    });
-
-                } catch (error) {
-                    console.error('Erro na verificação de acesso:', error);
-                    showNotification('Erro ao verificar acesso', 'error');
-                    window.location.href = '../login.html';
-                }
+            // Verificar sessão antes de prosseguir
+            const hasSession = await checkSession();
+            if (!hasSession) {
+                console.log('Redirecionando para login - sem sessão ativa');
+                window.location.href = '../login.html';
+                return;
             }
 
-            // Configuração da interface
-            function setupAdminInterface() {
-                document.querySelectorAll('.section-card').forEach(card => {
-                    card.addEventListener('click', () => {
-                        const section = card.getAttribute('onclick').match(/'([^']+)'/)[1];
+            // Continuar com a inicialização se houver sessão
+            await checkAdminAccess();
+            
+            // Adicionar event listeners para os botões
+            document.querySelectorAll('.section-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    if (section) {
                         showSection(section);
-                    });
-                });
-
-                const refreshButton = document.querySelector('.refresh-button');
-                if (refreshButton) {
-                    refreshButton.addEventListener('click', refreshDashboard);
-                }
-
-                setupModalListeners();
-            }
-
-            function setupTreinadorInterface() {
-                console.log('Iniciando setup da interface de treinador');
-                // Esconder dashboard principal
-                const mainDashboard = document.getElementById('mainDashboard');
-                if (mainDashboard) {
-                    mainDashboard.style.display = 'none';
-                    console.log('Dashboard principal escondida');
-                } else {
-                    console.error('Elemento mainDashboard não encontrado');
-                }
-                // Mostrar seção de treinadores
-                const treinadoresSection = document.getElementById('treinadoresSection');
-                if (treinadoresSection) {
-                    treinadoresSection.classList.add('active');
-                    console.log('Seção de treinadores ativada');
-                } else {
-                    console.error('Elemento treinadoresSection não encontrado');
-                }
-                // Mostrar dashboard de treinadores
-                const treinadoresDashboard = document.querySelector('.treinadores-dashboard');
-                if (treinadoresDashboard) {
-                    treinadoresDashboard.style.display = 'block';
-                    console.log('Dashboard de treinadores exibida');
-                } else {
-                    console.error('Elemento treinadores-dashboard não encontrado');
-                }
-                console.log('Carregando dashboard do treinador');
-                
-                // Obter o ID do usuário atual
-                window.supabaseClient.auth.getUser().then(({ data: { user } }) => {
-                    if (user) {
-                        console.log('ID do usuário atual:', user.id);
-                        loadTreinadorDashboard(user.id);
-                    } else {
-                        console.error('Nenhum usuário autenticado encontrado');
                     }
                 });
-            }
-
-            function setupModalListeners() {
-                document.querySelectorAll('.close-button').forEach(button => {
-                    button.addEventListener('click', () => {
-                        const modal = button.closest('.modal');
-                        if (modal) {
-                            modal.style.display = 'none';
-                        }
-                    });
-                });
-
-                window.addEventListener('click', (event) => {
-                    document.querySelectorAll('.modal').forEach(modal => {
-                        if (event.target === modal) {
-                            modal.style.display = 'none';
-                        }
-                    });
-                });
-            }
-
-            // Funções de carregamento de dados
-            async function loadStats() {
-                try {
-                    const { data: users, error } = await window.supabaseClient
-                        .from('utilizadores')
-                        .select('*');
-
-                    if (error) throw error;
-
-                    // Inicializar contadores
-                    const stats = {
-                        total: 0,
-                        admins: 0,
-                        treinadores: 0,
-                        gratuito: 0,
-                        premiumIniciante: 0,
-                        premiumAvancado: 0,
-                        premiumPro: 0,
-                        pendingSubscriptions: 0
-                    };
-
-                    // Contar usuários por tipo
-                    users.forEach(user => {
-                        stats.total++;
-                        switch(user.tipo_conta) {
-                            case 'admin':
-                                stats.admins++;
-                                break;
-                            case 'treinador':
-                                stats.treinadores++;
-                                break;
-                            case 'gratuito':
-                                stats.gratuito++;
-                                break;
-                            case 'premium_iniciante':
-                                stats.premiumIniciante++;
-                                break;
-                            case 'premium_avancado':
-                                stats.premiumAvancado++;
-                                break;
-                            case 'premium_pro':
-                                stats.premiumPro++;
-                                break;
-                        }
-                    });
-
-                    // Atualizar elementos na interface
-                    document.getElementById('totalUsers').textContent = stats.total;
-                    document.getElementById('adminUsers').textContent = stats.admins;
-                    document.getElementById('treinadorUsers').textContent = stats.treinadores;
-                    document.getElementById('gratuitoUsers').textContent = stats.gratuito;
-                    document.getElementById('premiumInicianteUsers').textContent = stats.premiumIniciante;
-                    document.getElementById('premiumAvancadoUsers').textContent = stats.premiumAvancado;
-                    document.getElementById('premiumProUsers').textContent = stats.premiumPro;
-                    document.getElementById('pendingSubscriptions').textContent = stats.pendingSubscriptions;
-
-                } catch (error) {
-                    console.error('Erro ao carregar estatísticas:', error);
-                    showNotification('Erro ao carregar estatísticas', 'error');
-                }
-            }
-
-            async function loadAccounts() {
-                try {
-                    const { data: users, error } = await window.supabaseClient
-                        .from('utilizadores')
-                        .select('*');
-
-                    if (error) throw error;
-
-                    // Ordenar usuários por tipo de conta
-                    const ordemCargos = {
-                        'admin': 1,
-                        'treinador': 2,
-                        'premium_pro': 3,
-                        'premium_avancado': 4,
-                        'premium_iniciante': 5,
-                        'gratuito': 6
-                    };
-
-                    users.sort((a, b) => {
-                        return ordemCargos[a.tipo_conta] - ordemCargos[b.tipo_conta];
-                    });
-
-                    const tbody = document.querySelector('#accountsTable tbody');
-                    tbody.innerHTML = '';
-
-                    users.forEach(user => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${user.nome || ''}</td>
-                            <td>${user.email || ''}</td>
-                            <td><span class="account-type-badge account-type-${user.tipo_conta}">${user.tipo_conta}</span></td>
-                            <td>
-                                <button class="edit-button" onclick="openEditAccountModal('${user.id}', '${user.nome || ''}', '${user.email || ''}', '${user.tipo_conta || ''}')">
-                                    <i class="fas fa-edit"></i> Editar
-                                </button>
-                                <button class="delete-button" onclick="openDeleteModal('${user.id}')">
-                                    <i class="fas fa-trash"></i> Excluir
-                                </button>
-                            </td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-                } catch (error) {
-                    console.error('Erro ao carregar contas:', error);
-                    showNotification('Erro ao carregar contas', 'error');
-                }
-            }
-
-            // Funções de atualização
-            function refreshDashboard() {
-                const refreshButton = document.querySelector('.refresh-button');
-                refreshButton.classList.add('loading');
-                
-                Promise.all([
-                    loadStats(),
-                    loadAccounts()
-                ])
-                .then(() => {
-                    showNotification('Dashboard atualizado com sucesso!', 'success');
-                })
-                .catch((error) => {
-                    console.error('Erro ao atualizar dashboard:', error);
-                    showNotification('Erro ao atualizar dashboard', 'error');
-                })
-                .finally(() => {
-                    refreshButton.classList.remove('loading');
-                });
-            }
-
-            // Adicionar evento de clique ao botão de atualização
-            document.addEventListener('DOMContentLoaded', function() {
-                const refreshButton = document.querySelector('.refresh-button');
-                if (refreshButton) {
-                    refreshButton.addEventListener('click', refreshDashboard);
-                }
             });
 
-            // Event listeners
-            document.getElementById('deleteConfirmation').addEventListener('input', function(e) {
-                const deleteButton = document.querySelector('#deleteAccountModal .delete-button');
-                deleteButton.disabled = e.target.value !== 'EXCLUIR';
-            });
+            // Adicionar event listener para o botão de atualizar
+            const refreshButton = document.querySelector('.refresh-button');
+            if (refreshButton) {
+                refreshButton.addEventListener('click', refreshDashboard);
+            }
 
-            // Inicialização
-            checkAdminAccess();
+            // Adicionar event listener para o botão de voltar
+            const backButtons = document.querySelectorAll('.back-button');
+            backButtons.forEach(button => {
+                button.addEventListener('click', showMainDashboard);
+            });
         });
 
-        // Funções para gerenciar formulários de curso
-        function abrirTab(tabName) {
-            const tabs = document.querySelectorAll('.tab-content');
-            const buttons = document.querySelectorAll('.tab-button');
-            
-            tabs.forEach(tab => tab.classList.remove('active'));
-            buttons.forEach(button => button.classList.remove('active'));
-            
-            document.getElementById(tabName).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
-        function showFormTab(tabName) {
-            const tabs = document.querySelectorAll('.form-tab');
-            const buttons = document.querySelectorAll('.forms-tabs .tab-button');
-            
-            tabs.forEach(tab => tab.classList.remove('active'));
-            buttons.forEach(button => button.classList.remove('active'));
-            
-            document.getElementById(tabName + 'Tab').classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
-        async function loadForms() {
+        // Verificação de acesso
+        async function checkAdminAccess() {
             try {
-                console.log('A carregar inscrições de cursos...');
-                // Buscar todas as inscrições
-                const { data: inscricoes, error: inscricoesError } = await window.supabaseClient
-                    .from('inscricoes')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                if (inscricoesError) throw inscricoesError;
-
-                // Buscar todos os utilizadores
-                const { data: utilizadores, error: utilizadoresError } = await window.supabaseClient
-                    .from('utilizadores')
-                    .select('id, nome, email');
-                if (utilizadoresError) throw utilizadoresError;
-
-                // Criar um mapa de utilizadores por id
-                const utilizadoresMap = {};
-                utilizadores.forEach(u => utilizadoresMap[u.id] = u);
-
-                const pendentesTable = document.querySelector('#pendentesTable tbody');
-                const vistosTable = document.querySelector('#vistosTable tbody');
+                console.log('Iniciando verificação de acesso...');
                 
-                pendentesTable.innerHTML = '';
-                vistosTable.innerHTML = '';
-
-                let pendentesCount = 0;
-                let vistosCount = 0;
-
-                if (!inscricoes || inscricoes.length === 0) {
-                    console.log('Nenhuma inscrição encontrada na base de dados.');
+                // Verificar se o cliente Supabase está inicializado
+                if (!window.supabaseClient) {
+                    console.error('Cliente Supabase não inicializado');
+                    window.location.href = '../login.html';
+                    return;
                 }
 
-                inscricoes.forEach(form => {
-                    const user = utilizadoresMap[form.utilizador_id] || {};
-                    const nome = user.nome || '';
-                    const email = user.email || '';
-                    const idLimpo = (form.id || '').toString().trim();
-                    const status = (form.status || '').trim().toLowerCase();
-                    if (status === 'pendente') {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${nome}</td>
-                            <td>${email}</td>
-                            <td>${form.tag || ''}</td>
-                            <td>${form.plano || ''}</td>
-                            <td>${form.trofeus || 0}</td>
-                            <td>${form.nivel || 0}</td>
-                            <td></td>
-                            <td>${new Date(form.data_inscricao || form.created_at).toLocaleDateString()}</td>
-                            <td>
-                                <button class="approve-button" data-id="${idLimpo}">
-                                    <i class="fas fa-check"></i> Aprovar
-                                </button>
-                                <button class="reject-button" data-id="${idLimpo}">
-                                    <i class="fas fa-times"></i> Rejeitar
-                                </button>
-                            </td>
-                        `;
-                        pendentesTable.appendChild(row);
-                        pendentesCount++;
-                    } else {
-                        const badge = status === 'aprovado'
-                            ? '<span style="background:#4CAF50;color:#fff;padding:4px 10px;border-radius:12px;font-size:12px;">Aprovado</span>'
-                            : '<span style="background:#f44336;color:#fff;padding:4px 10px;border-radius:12px;font-size:12px;">Rejeitado</span>';
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${nome}</td>
-                            <td>${email}</td>
-                            <td>${form.tag || ''}</td>
-                            <td>${form.plano || ''}</td>
-                            <td>${form.trofeus || 0}</td>
-                            <td>${form.nivel || 0}</td>
-                            <td>${badge}</td>
-                            <td>${new Date(form.data_inscricao || form.created_at).toLocaleDateString()}</td>
-                            <td></td>
-                        `;
-                        vistosTable.appendChild(row);
-                        vistosCount++;
-                    }
-                });
+                // Obter usuário atual
+                const { data: { user }, error: authError } = await window.supabaseClient.auth.getUser();
+                
+                if (authError) {
+                    console.error('Erro ao obter usuário:', authError);
+                    showNotification('Erro ao verificar autenticação', 'error');
+                    window.location.href = '../login.html';
+                    return;
+                }
 
-                document.getElementById('pendentesCount').textContent = pendentesCount;
-                document.getElementById('vistosCount').textContent = vistosCount;
+                if (!user) {
+                    console.error('Nenhum usuário autenticado encontrado');
+                    showNotification('Por favor, faça login para continuar', 'error');
+                    window.location.href = '../login.html';
+                    return;
+                }
 
-                // Adicionar eventos aos botões
-                addAprovarRejeitarListeners();
+                console.log('Usuário encontrado:', user);
+
+                // Buscar dados do usuário
+                const { data: userData, error: dbError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('tipo_conta, nome')
+                    .eq('id', user.id)
+                    .single();
+
+                if (dbError) {
+                    console.error('Erro ao buscar dados do usuário:', dbError);
+                    showNotification('Erro ao carregar dados do usuário', 'error');
+                    window.location.href = '../login.html';
+                    return;
+                }
+
+                if (!userData) {
+                    console.error('Dados do usuário não encontrados');
+                    showNotification('Dados do usuário não encontrados', 'error');
+                    window.location.href = '../login.html';
+                    return;
+                }
+
+                console.log('Dados do usuário:', userData);
+
+                // Verificar tipo de conta
+                if (userData.tipo_conta !== 'admin' && userData.tipo_conta !== 'treinador') {
+                    console.error('Tipo de conta não permitido:', userData.tipo_conta);
+                    showNotification('Acesso não autorizado', 'error');
+                    window.location.href = '../index.html';
+                    return;
+                }
+
+                // Carregar dados iniciais
+                await loadStats();
+                if (userData.tipo_conta === 'treinador') {
+                    await loadTreinadorDashboard();
+                }
             } catch (error) {
-                console.error('Erro ao carregar inscrições:', error);
-                showNotification('Erro ao carregar inscrições', 'error');
+                console.error('Erro na verificação de acesso:', error);
+                showNotification('Erro ao verificar acesso', 'error');
+                window.location.href = '../login.html';
             }
         }
 
-        // Modal de confirmação
-        let actionToConfirm = null;
-        let actionIdToConfirm = null;
+        // Funções globais
+        window.showSection = function(section) {
+            console.log('Mostrando seção:', section);
+            document.getElementById('mainDashboard').style.display = 'none';
+            document.getElementById('accountsSection').classList.remove('active');
+            document.getElementById('formsSection').classList.remove('active');
+            document.getElementById('treinadoresSection').classList.remove('active');
 
-        function showConfirmActionModal(action, id) {
-            actionToConfirm = action;
-            actionIdToConfirm = id;
-            const modal = document.getElementById('confirmActionModal');
-            const title = document.getElementById('confirmActionTitle');
-            const text = document.getElementById('confirmActionText');
-            if (action === 'aprovar') {
-                title.textContent = 'Confirmar Aprovação';
-                text.textContent = 'Tem a certeza que deseja aprovar esta inscrição?';
-            } else {
-                title.textContent = 'Confirmar Rejeição';
-                text.textContent = 'Tem a certeza que deseja rejeitar esta inscrição?';
-            }
-            modal.classList.add('active');
-        }
-
-        function closeConfirmActionModal() {
-            document.getElementById('confirmActionModal').classList.remove('active');
-            actionToConfirm = null;
-            actionIdToConfirm = null;
-        }
-
-        document.getElementById('confirmActionBtn').onclick = async function() {
-            if (actionToConfirm && actionIdToConfirm) {
-                if (actionToConfirm === 'aprovar') {
-                    await aprovarFormulario(actionIdToConfirm, true);
-                } else {
-                    await rejeitarFormulario(actionIdToConfirm, true);
+            if (section === 'accounts') {
+                document.getElementById('accountsSection').classList.add('active');
+                if (window.loadAccounts) window.loadAccounts();
+            } else if (section === 'forms') {
+                document.getElementById('formsSection').classList.add('active');
+                if (window.loadForms) window.loadForms();
+            } else if (section === 'treinadores') {
+                document.getElementById('treinadoresSection').classList.add('active');
+                const dashboard = document.querySelector('.treinadores-dashboard');
+                if (dashboard) {
+                    dashboard.style.display = 'block';
+                    if (window.loadTreinadorDashboard) window.loadTreinadorDashboard();
                 }
-                closeConfirmActionModal();
             }
         };
 
-        // Alterar listeners dos botões para abrir o modal
-        function addAprovarRejeitarListeners() {
-            document.querySelectorAll('.approve-button').forEach(btn => {
-                btn.onclick = function() { showConfirmActionModal('aprovar', this.getAttribute('data-id')); };
-            });
-            document.querySelectorAll('.reject-button').forEach(btn => {
-                btn.onclick = function() { showConfirmActionModal('rejeitar', this.getAttribute('data-id')); };
-            });
-        }
+        window.showMainDashboard = function() {
+            document.getElementById('mainDashboard').style.display = 'block';
+            document.getElementById('accountsSection').classList.remove('active');
+            document.getElementById('formsSection').classList.remove('active');
+            document.getElementById('treinadoresSection').classList.remove('active');
+            loadStats(); // Recarregar estatísticas ao voltar
+        };
 
-        // Chamar addAprovarRejeitarListeners() no final do loadForms
-        // ... existing code ...
-        // Alterar funções aprovarFormulario e rejeitarFormulario para aceitar um segundo argumento (skipConfirm)
-        async function aprovarFormulario(id, skipConfirm) {
-            if (!skipConfirm) {
-                showConfirmActionModal('aprovar', id);
-                return;
-            }
+        window.loadAccounts = async function() {
             try {
-                const idStr = String(id).trim();
-                console.log('ID usado no update aprovado:', idStr);
-                const { data, error } = await window.supabaseClient
-                    .from('inscricoes')
-                    .update({ status: 'aprovado' })
-                    .eq('id', idStr)
-                    .select();
-                console.log('Update aprovado:', { data, error });
-                if (error) throw error;
-                if (!data || data.length === 0) {
-                    alert('Nenhuma inscrição foi atualizada! O id pode não corresponder ao da base de dados.');
-                    return;
-                }
-                showSuccessModal('Inscrição aprovada com sucesso!');
-            } catch (error) {
-                console.error('Erro ao aprovar inscrição:', error);
-                showNotification('Erro ao aprovar inscrição', 'error');
-            }
-        }
+                const { data: accounts, error } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('*')
+                    .order('tipo_conta');
 
-        async function rejeitarFormulario(id, skipConfirm) {
-            if (!skipConfirm) {
-                showConfirmActionModal('rejeitar', id);
-                return;
+                if (error) throw error;
+
+                const tbody = document.querySelector('#accountsTable tbody');
+                tbody.innerHTML = '';
+
+                accounts.forEach(account => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${account.nome}</td>
+                        <td>${account.email}</td>
+                        <td>
+                            <span class="account-type-badge account-type-${account.tipo_conta}">
+                                ${account.tipo_conta.replace('_', ' ')}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="edit-button" onclick="openEditAccountModal('${account.id}', '${account.nome}', '${account.email}', '${account.tipo_conta}')">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="delete-button" onclick="openDeleteModal('${account.id}')">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar contas:', error);
+                showNotification('Erro ao carregar contas', 'error');
             }
+        };
+
+        window.loadForms = async function() {
             try {
-                const idStr = String(id).trim();
-                console.log('ID usado no update rejeitado:', idStr);
-                const { data, error } = await window.supabaseClient
-                    .from('inscricoes')
-                    .update({ status: 'rejeitado' })
-                    .eq('id', idStr)
-                    .select();
-                console.log('Update rejeitado:', { data, error });
-                if (error) throw error;
-                if (!data || data.length === 0) {
-                    alert('Nenhuma inscrição foi atualizada! O id pode não corresponder ao da base de dados.');
-                    return;
+                console.log('Iniciando busca de formulários...');
+                
+                // Primeiro, verificar se o usuário é admin
+                const { data: { user }, error: userError } = await window.supabaseClient.auth.getUser();
+                if (userError) throw userError;
+                
+                console.log('Usuário atual:', user);
+                
+                // Verificar dados do usuário
+                const { data: userData, error: userDataError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('tipo_conta')
+                    .eq('id', user.id)
+                    .single();
+                    
+                if (userDataError) throw userDataError;
+                
+                console.log('Dados do usuário:', userData);
+                
+                // Verificar se o usuário é admin
+                if (userData.tipo_conta !== 'admin') {
+                    console.error('Usuário não é admin');
+                    throw new Error('Acesso não autorizado');
                 }
-                showSuccessModal('Inscrição rejeitada com sucesso!');
-            } catch (error) {
-                console.error('Erro ao rejeitar inscrição:', error);
-                showNotification('Erro ao rejeitar inscrição', 'error');
-            }
-        }
-        // ... existing code ...
+                
+                // Verificar se a tabela existe e tem dados
+                console.log('Verificando tabela inscricoes...');
+                const { count, error: countError } = await window.supabaseClient
+                    .from('inscricoes')
+                    .select('*', { count: 'exact', head: true });
+                    
+                if (countError) {
+                    console.error('Erro ao contar inscrições:', countError);
+                    throw countError;
+                }
+                
+                console.log('Total de inscrições na tabela:', count);
+                
+                // Buscar inscrições com mais detalhes
+                console.log('Buscando inscrições...');
+                const { data: forms, error } = await window.supabaseClient
+                    .from('inscricoes')
+                    .select('*')
+                    .order('data_inscricao', { ascending: false });
 
-        function filterForms() {
-            const planoFilter = document.getElementById('planoFilter').value;
+                if (error) {
+                    console.error('Erro ao buscar inscrições:', error);
+                    throw error;
+                }
+
+                console.log('Query executada com sucesso');
+                console.log('Inscrições encontradas:', forms);
+                console.log('Detalhes da query:', {
+                    count: forms?.length,
+                    firstForm: forms?.[0],
+                    lastForm: forms?.[forms?.length - 1]
+                });
+
+                // Ajustando a lógica de filtragem
+                const pendentes = forms.filter(form => form.status === 'pendente' || !form.status);
+                const vistos = forms.filter(form => form.status === 'aprovado' || form.status === 'rejeitado');
+
+                console.log('Inscrições pendentes:', pendentes);
+                console.log('Inscrições vistas:', vistos);
+
+                document.getElementById('pendentesCount').textContent = pendentes.length;
+                document.getElementById('vistosCount').textContent = vistos.length;
+
+                const pendentesTbody = document.querySelector('#pendentesTable tbody');
+                pendentesTbody.innerHTML = '';
+
+                pendentes.forEach(form => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${form.nome || '-'}</td>
+                        <td>${form.email || '-'}</td>
+                        <td>${form.tag || '-'}</td>
+                        <td>${form.plano || '-'}</td>
+                        <td>${form.trofeus || '0'}</td>
+                        <td>${form.nivel || '0'}</td>
+                        <td>${form.data_inscricao ? new Date(form.data_inscricao).toLocaleDateString() : '-'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="approve-button" onclick="aprovarFormulario('${form.id}', this)">
+                                    <i class="fas fa-check"></i> Aprovar
+                                </button>
+                                <button class="reject-button" onclick="rejeitarFormulario('${form.id}', this)">
+                                    <i class="fas fa-times"></i> Rejeitar
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    pendentesTbody.appendChild(row);
+                });
+
+                if (pendentes.length === 0) {
+                    pendentesTbody.innerHTML = `
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 20px;">
+                                Nenhuma inscrição pendente encontrada
+                            </td>
+                        </tr>
+                    `;
+                }
+
+                const vistosTbody = document.querySelector('#vistosTable tbody');
+                vistosTbody.innerHTML = '';
+
+                if (vistos.length === 0) {
+                    vistosTbody.innerHTML = `
+                        <tr>
+                            <td colspan="9" style="text-align: center; padding: 20px;">
+                                Nenhuma inscrição vista encontrada
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    vistos.forEach(form => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${form.nome || '-'}</td>
+                            <td>${form.email || '-'}</td>
+                            <td>${form.tag || '-'}</td>
+                            <td>${form.plano || '-'}</td>
+                            <td>${form.trofeus || '0'}</td>
+                            <td>${form.nivel || '0'}</td>
+                            <td>
+                                <span class="status-badge status-${form.status === 'aprovado' ? 'aprovado' : 'rejeitado'}">
+                                    ${form.status === 'aprovado' ? 'Aprovado' : 'Rejeitado'}
+                                </span>
+                            </td>
+                            <td>${form.data_inscricao ? new Date(form.data_inscricao).toLocaleDateString() : '-'}</td>
+                            <td>
+                                <button class="edit-button" onclick="verDetalhesFormulario('${form.id}')">
+                                    <i class="fas fa-eye"></i> Ver Detalhes
+                                </button>
+                            </td>
+                        `;
+                        vistosTbody.appendChild(row);
+                    });
+                }
+
+                document.getElementById('vistosEmptyMsg').style.display = vistos.length === 0 ? 'block' : 'none';
+
+            } catch (error) {
+                console.error('Erro ao carregar inscrições:', error);
+                showNotification('Erro ao carregar inscrições', 'error');
+                
+                const pendentesTbody = document.querySelector('#pendentesTable tbody');
+                const vistosTbody = document.querySelector('#vistosTable tbody');
+                
+                pendentesTbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 20px; color: #ff4444;">
+                            Erro ao carregar inscrições pendentes
+                        </td>
+                    </tr>
+                `;
+                
+                vistosTbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 20px; color: #ff4444;">
+                            Erro ao carregar inscrições vistas
+                        </td>
+                    </tr>
+                `;
+            }
+        };
+
+        window.loadTreinadorDashboard = async function() {
+            try {
+                const { data: { user }, error: userError } = await window.supabaseClient.auth.getUser();
+                if (userError) throw userError;
+
+                // Buscar dados do treinador
+                const { data: treinador, error: treinadorError } = await window.supabaseClient
+                    .from('treinadores')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .single();
+
+                if (treinadorError) throw treinadorError;
+
+                // Atualizar informações do treinador
+                document.getElementById('treinadorNome').textContent = treinador.nome;
+                document.getElementById('treinadorEspecialidade').textContent = treinador.especialidade;
+                document.getElementById('treinadorAvatar').src = treinador.avatar_url || 'https://vhswdfifhhcqmtpnhoso.supabase.co/storage/v1/object/public/avatars/avatar_default.png';
+
+                // Buscar próximas aulas
+                const { data: aulas, error: aulasError } = await window.supabaseClient
+                    .from('agendamentos')
+                    .select('*')
+                    .eq('treinador_id', treinador.id)
+                    .gte('data', new Date().toISOString())
+                    .order('data', { ascending: true })
+                    .limit(5);
+
+                if (aulasError) throw aulasError;
+
+                // Atualizar seção de próximas aulas
+                const proximasAulasDiv = document.getElementById('proximasAulas');
+                if (aulas.length === 0) {
+                    proximasAulasDiv.innerHTML = '<div class="no-data">Sem aulas agendadas para este treinador.</div>';
+                } else {
+                    proximasAulasDiv.innerHTML = aulas.map(aula => `
+                        <div class="aula-card">
+                            <div class="aula-header">
+                                <h4>Aula com ${aula.nome_aluno || 'Aluno'}</h4>
+                                <span class="status-badge status-${aula.status}">${aula.status}</span>
+                            </div>
+                            <div class="aula-info">
+                                <p><i class="fas fa-calendar"></i> ${new Date(aula.data).toLocaleDateString()}</p>
+                                <p><i class="fas fa-clock"></i> ${new Date(aula.data).toLocaleTimeString()}</p>
+                            </div>
+                            <div class="aula-actions">
+                                ${aula.status === 'pendente' ? `
+                                    <button class="action-button approve-button" onclick="confirmarAula('${aula.id}')">
+                                        <i class="fas fa-check"></i> Confirmar
+                                    </button>
+                                    <button class="action-button reject-button" onclick="cancelarAula('${aula.id}')">
+                                        <i class="fas fa-times"></i> Cancelar
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                // Buscar últimas avaliações (ajustado para usar a tabela correta)
+                const { data: avaliacoes, error: avaliacoesError } = await window.supabaseClient
+                    .from('avaliacoes')
+                    .select('*')
+                    .eq('treinador_id', treinador.id)
+                    .order('data', { ascending: false })
+                    .limit(5);
+
+                if (avaliacoesError) throw avaliacoesError;
+
+                // Calcular média das avaliações
+                const mediaAvaliacoes = avaliacoes.length > 0
+                    ? (avaliacoes.reduce((acc, curr) => acc + curr.nota, 0) / avaliacoes.length).toFixed(1)
+                    : '0.0';
+                document.getElementById('mediaAvaliacoes').textContent = mediaAvaliacoes;
+
+                // Atualizar seção de últimas avaliações
+                const ultimasAvaliacoesDiv = document.getElementById('ultimasAvaliacoes');
+                if (avaliacoes.length === 0) {
+                    ultimasAvaliacoesDiv.innerHTML = '<div class="no-data">Sem avaliações recentes.</div>';
+                } else {
+                    ultimasAvaliacoesDiv.innerHTML = avaliacoes.map(avaliacao => `
+                        <div class="avaliacao-card">
+                            <h4>Avaliação de ${avaliacao.nome_aluno || 'Aluno'}</h4>
+                            <div class="estrelas">
+                                ${'★'.repeat(avaliacao.nota)}${'☆'.repeat(5 - avaliacao.nota)}
+                            </div>
+                            <p>${avaliacao.comentario}</p>
+                            <small>${new Date(avaliacao.data).toLocaleDateString()}</small>
+                        </div>
+                    `).join('');
+                }
+
+            } catch (error) {
+                console.error('Erro ao carregar dashboard do treinador:', error);
+                showNotification('Erro ao carregar dashboard do treinador', 'error');
+            }
+        };
+
+        window.loadStats = async function() {
+            try {
+                console.log('Carregando estatísticas...');
+                const { data: users, error } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('tipo_conta');
+
+                if (error) throw error;
+
+                // Contar usuários por tipo de conta
+                const stats = {
+                    total: users.length,
+                    admin: users.filter(u => u.tipo_conta === 'admin').length,
+                    treinador: users.filter(u => u.tipo_conta === 'treinador').length,
+                    premium_iniciante: users.filter(u => u.tipo_conta === 'premium_iniciante').length,
+                    premium_avancado: users.filter(u => u.tipo_conta === 'premium_avancado').length,
+                    premium_pro: users.filter(u => u.tipo_conta === 'premium_pro').length,
+                    gratuito: users.filter(u => u.tipo_conta === 'gratuito').length
+                };
+
+                console.log('Estatísticas carregadas:', stats);
+
+                // Atualizar contadores
+                document.getElementById('totalUsers').textContent = stats.total;
+                document.getElementById('adminUsers').textContent = stats.admin;
+                document.getElementById('treinadorUsers').textContent = stats.treinador;
+                document.getElementById('premiumInicianteUsers').textContent = stats.premium_iniciante;
+                document.getElementById('premiumAvancadoUsers').textContent = stats.premium_avancado;
+                document.getElementById('premiumProUsers').textContent = stats.premium_pro;
+                document.getElementById('gratuitoUsers').textContent = stats.gratuito;
+
+                // Buscar inscrições pendentes
+                const { count: pendentesCount, error: pendentesError } = await window.supabaseClient
+                    .from('inscricoes')
+                    .select('*', { count: 'exact', head: true })
+                    .or('status.eq.pendente,status.is.null');
+
+                if (pendentesError) {
+                    console.error('Erro ao contar inscrições pendentes:', pendentesError);
+                    document.getElementById('pendingSubscriptions').textContent = '0';
+                } else {
+                    document.getElementById('pendingSubscriptions').textContent = pendentesCount;
+                }
+
+            } catch (error) {
+                console.error('Erro ao carregar estatísticas:', error);
+                showNotification('Erro ao carregar estatísticas', 'error');
+            }
+        };
+
+        window.refreshDashboard = async function() {
+            try {
+                const button = document.querySelector('.refresh-button');
+                button.classList.add('loading');
+
+                await loadStats();
+
+                // Recarregar a seção atual
+                const accountsSection = document.getElementById('accountsSection');
+                const formsSection = document.getElementById('formsSection');
+                const treinadoresSection = document.getElementById('treinadoresSection');
+
+                if (accountsSection.classList.contains('active')) {
+                    await loadAccounts();
+                } else if (formsSection.classList.contains('active')) {
+                    await loadForms();
+                } else if (treinadoresSection.classList.contains('active')) {
+                    await loadTreinadorDashboard();
+                }
+
+                showNotification('Dashboard atualizado com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao atualizar dashboard:', error);
+                showNotification('Erro ao atualizar dashboard', 'error');
+            } finally {
+                const button = document.querySelector('.refresh-button');
+                button.classList.remove('loading');
+            }
+        };
+
+        window.showFormTab = function(tab) {
+            // Atualizar botões
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`.tab-button[onclick="showFormTab('${tab}')"]`).classList.add('active');
+
+            // Atualizar conteúdo
+            document.querySelectorAll('.form-tab').forEach(tabContent => {
+                tabContent.classList.remove('active');
+            });
+            document.getElementById(`${tab}Tab`).classList.add('active');
+        };
+
+        window.filterForms = function() {
+            const plano = document.getElementById('planoFilter').value;
             const rows = document.querySelectorAll('#pendentesTable tbody tr, #vistosTable tbody tr');
-            
+
             rows.forEach(row => {
-                const plano = row.cells[3].textContent.toLowerCase();
-                if (planoFilter === 'todos' || plano === planoFilter.toLowerCase()) {
+                const planoCell = row.querySelector('td:nth-child(4)');
+                if (plano === 'todos' || planoCell.textContent.toLowerCase() === plano) {
                     row.style.display = '';
                 } else {
                     row.style.display = 'none';
                 }
             });
-        }
+        };
 
-        function searchForms(query) {
-            query = query.toLowerCase();
+        window.aprovarFormulario = async function(formId, button) {
+            try {
+                // Desabilitar botões durante o processamento
+                const actionButtons = button.closest('.action-buttons');
+                const buttons = actionButtons.querySelectorAll('button');
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('loading');
+                });
+
+                const { error } = await window.supabaseClient
+                    .from('inscricoes')
+                    .update({ 
+                        status: 'aprovado',
+                        data_aprovacao: new Date().toISOString()
+                    })
+                    .eq('id', formId);
+
+                if (error) throw error;
+
+                showNotification('Inscrição aprovada com sucesso!', 'success');
+                loadForms();
+                loadStats();
+            } catch (error) {
+                console.error('Erro ao aprovar inscrição:', error);
+                showNotification('Erro ao aprovar inscrição', 'error');
+            } finally {
+                // Reabilitar botões após o processamento
+                const actionButtons = button.closest('.action-buttons');
+                const buttons = actionButtons.querySelectorAll('button');
+                buttons.forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('loading');
+                });
+            }
+        };
+
+        window.rejeitarFormulario = async function(formId, button) {
+            try {
+                // Desabilitar botões durante o processamento
+                const actionButtons = button.closest('.action-buttons');
+                const buttons = actionButtons.querySelectorAll('button');
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('loading');
+                });
+
+                const { error } = await window.supabaseClient
+                    .from('inscricoes')
+                    .update({ 
+                        status: 'rejeitado',
+                        data_aprovacao: new Date().toISOString()
+                    })
+                    .eq('id', formId);
+
+                if (error) throw error;
+
+                showNotification('Inscrição rejeitada com sucesso!', 'success');
+                loadForms();
+                loadStats();
+            } catch (error) {
+                console.error('Erro ao rejeitar inscrição:', error);
+                showNotification('Erro ao rejeitar inscrição', 'error');
+            } finally {
+                // Reabilitar botões após o processamento
+                const actionButtons = button.closest('.action-buttons');
+                const buttons = actionButtons.querySelectorAll('button');
+                buttons.forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('loading');
+                });
+            }
+        };
+
+        window.verDetalhesFormulario = async function(formId) {
+            try {
+                const { data: form, error } = await window.supabaseClient
+                    .from('inscricoes')
+                    .select('*')
+                    .eq('id', formId)
+                    .single();
+
+                if (error) throw error;
+
+                // Mostrar modal com detalhes
+                const modal = document.getElementById('confirmActionModal');
+                const modalTitle = document.getElementById('confirmActionTitle');
+                const modalText = document.getElementById('confirmActionText');
+                const modalBtn = document.getElementById('confirmActionBtn');
+
+                modalTitle.textContent = 'Detalhes da Inscrição';
+                modalText.innerHTML = `
+                    <p><strong>Nome:</strong> ${form.nome || '-'}</p>
+                    <p><strong>Email:</strong> ${form.email || '-'}</p>
+                    <p><strong>Tag:</strong> ${form.tag || '-'}</p>
+                    <p><strong>Plano:</strong> ${form.plano || '-'}</p>
+                    <p><strong>Troféus:</strong> ${form.trofeus || '0'}</p>
+                    <p><strong>Nível:</strong> ${form.nivel || '0'}</p>
+                    <p><strong>Status:</strong> ${form.aprovado ? 'Aprovado' : 'Rejeitado'}</p>
+                    <p><strong>Data de Inscrição:</strong> ${form.data_inscricao ? new Date(form.data_inscricao).toLocaleDateString() : '-'}</p>
+                    ${form.data_aprovacao ? `<p><strong>Data de Aprovação:</strong> ${new Date(form.data_aprovacao).toLocaleDateString()}</p>` : ''}
+                `;
+
+                modalBtn.textContent = 'Fechar';
+                modalBtn.onclick = closeConfirmActionModal;
+
+                modal.style.display = 'flex';
+                modal.classList.add('active');
+            } catch (error) {
+                console.error('Erro ao carregar detalhes da inscrição:', error);
+                showNotification('Erro ao carregar detalhes da inscrição', 'error');
+            }
+        };
+
+        window.searchForms = function(query) {
             const rows = document.querySelectorAll('#pendentesTable tbody tr, #vistosTable tbody tr');
-            
+            query = query.toLowerCase();
+
             rows.forEach(row => {
                 const text = row.textContent.toLowerCase();
                 row.style.display = text.includes(query) ? '' : 'none';
             });
-        }
+        };
 
-        // Adicionar ao DOMContentLoaded
+        // Inicializar o dashboard quando a página carregar
         document.addEventListener('DOMContentLoaded', function() {
-            // ... código existente ...
-            
-            // Carregar formulários quando a seção de formulários for aberta
-            const formsSection = document.querySelector('.section-card[onclick="showSection(\'forms\')"]');
-            if (formsSection) {
-                formsSection.addEventListener('click', () => {
-                    setTimeout(loadForms, 100); // Pequeno delay para garantir que a seção está visível
-                });
-            }
+            checkAdminAccess();
         });
-
-        // Adicionar função de pesquisa de contas
-        function filterAccountsTable() {
-            const input = document.getElementById('searchAccountsInput');
-            const filter = input.value.toLowerCase();
-            const table = document.getElementById('accountsTable');
-            const trs = table.getElementsByTagName('tr');
-            for (let i = 1; i < trs.length; i++) { // começa em 1 para ignorar o header
-                const tds = trs[i].getElementsByTagName('td');
-                if (tds.length > 1) {
-                    const nome = tds[0].textContent.toLowerCase();
-                    const email = tds[1].textContent.toLowerCase();
-                    if (nome.includes(filter) || email.includes(filter)) {
-                        trs[i].style.display = '';
-                    } else {
-                        trs[i].style.display = 'none';
-                    }
-                }
-            }
-        }
-        document.getElementById('searchAccountsInput').addEventListener('input', filterAccountsTable);
-
-        // Garantir pesquisa e filtro em tempo real
-        document.querySelectorAll('.search-input').forEach(input => {
-            input.addEventListener('input', function() {
-                searchForms(this.value);
-            });
-        });
-        document.getElementById('planoFilter').addEventListener('change', filterForms);
-
-        let reloadAfterSuccess = false;
-        function showSuccessModal(msg) {
-            document.getElementById('successModalText').textContent = msg;
-            document.getElementById('successModal').classList.add('active');
-            reloadAfterSuccess = true;
-        }
-        function closeSuccessModal() {
-            document.getElementById('successModal').classList.remove('active');
-            if (reloadAfterSuccess) {
-                reloadAfterSuccess = false;
-                loadForms();
-            }
-        }
-
-        // Função para carregar dados do treinador
-        async function loadTreinadorDashboard() {
-            try {
-                console.log('Iniciando carregamento da dashboard do treinador');
-                const { data: { user }, error: userError } = await window.supabaseClient.auth.getUser();
-                if (userError) throw userError;
-
-                console.log('Usuário autenticado:', user);
-
-                // Buscar o ID do treinador na tabela treinadores
-                const { data: treinadorData, error: treinadorError } = await window.supabaseClient
-                    .from('treinadores')
-                    .select('id, especialidade, avatar_url')
-                    .eq('user_id', user.id)
-                    .single();
-
-                if (treinadorError) {
-                    console.error('Erro ao buscar dados do treinador:', treinadorError);
-                    throw treinadorError;
-                }
-
-                if (!treinadorData || !treinadorData.id) {
-                    console.error('Dados do treinador não encontrados');
-                    throw new Error('Dados do treinador não encontrados');
-                }
-
-                const treinadorId = treinadorData.id;
-                console.log('ID do treinador encontrado:', treinadorId);
-
-                // Atualizar informações do perfil
-                const treinadorNome = document.getElementById('treinadorNome');
-                const treinadorEspecialidade = document.getElementById('treinadorEspecialidade');
-                const treinadorAvatar = document.getElementById('treinadorAvatar');
-
-                if (treinadorNome) treinadorNome.textContent = user.user_metadata?.nome || user.email;
-                if (treinadorEspecialidade) treinadorEspecialidade.textContent = treinadorData.especialidade || 'Sem especialidade definida';
-                if (treinadorAvatar) {
-                    treinadorAvatar.src = treinadorData.avatar_url || 'https://vhswdfifhhcqmtpnhoso.supabase.co/storage/v1/object/public/avatars/avatar_default.png';
-                }
-
-                // Buscar aulas agendadas
-                console.log('Buscando aulas para o treinador ID:', treinadorId);
-                const { data: aulas, error: aulasError } = await window.supabaseClient
-                    .from('agendamentos')
-                    .select('*, utilizadores:aluno_id (nome)')
-                    .eq('treinador_id', treinadorId)
-                    .order('data', { ascending: true });
-
-                console.log('Resultado da busca de aulas:', { aulas, error: aulasError });
-
-                if (aulasError) {
-                    console.error('Erro ao buscar aulas:', aulasError);
-                    throw aulasError;
-                }
-
-                // Buscar avaliações
-                console.log('Buscando avaliações para o treinador ID:', treinadorId);
-                const { data: avaliacoes, error: avaliacoesError } = await window.supabaseClient
-                    .from('avaliacoes_treinadores')
-                    .select('*')
-                    .eq('treinador_id', treinadorId)
-                    .order('data', { ascending: false })
-                    .limit(5);
-
-                console.log('Resultado da busca de avaliações:', { avaliacoes, error: avaliacoesError });
-
-                if (avaliacoesError) {
-                    console.error('Erro ao buscar avaliações:', avaliacoesError);
-                    throw avaliacoesError;
-                }
-
-                // Buscar nomes dos usuários que fizeram as avaliações
-                let avaliacoesComNomes = [];
-                if (avaliacoes && avaliacoes.length > 0) {
-                    const userIds = avaliacoes.map(a => a.user_id);
-                    const { data: users, error: usersError } = await window.supabaseClient
-                        .from('utilizadores')
-                        .select('id, nome')
-                        .in('id', userIds);
-
-                    if (usersError) {
-                        console.error('Erro ao buscar nomes dos usuários:', usersError);
-                        throw usersError;
-                    }
-
-                    // Criar um mapa de usuários para fácil acesso
-                    const userMap = {};
-                    users.forEach(user => {
-                        userMap[user.id] = user.nome;
-                    });
-
-                    // Adicionar nomes às avaliações
-                    avaliacoesComNomes = avaliacoes.map(avaliacao => ({
-                        ...avaliacao,
-                        nome_usuario: userMap[avaliacao.user_id] || 'Usuário desconhecido'
-                    }));
-                }
-
-                // Atualizar a interface com os dados
-                updateTreinadorDashboard(aulas, avaliacoesComNomes);
-
-                console.log('Dashboard do treinador carregada com sucesso');
-            } catch (error) {
-                console.error('Erro ao carregar dashboard do treinador:', error);
-                showNotification('Erro ao carregar dashboard', 'error');
-            }
-        }
-
-        function updateTreinadorDashboard(aulas, avaliacoes) {
-            try {
-                console.log('Atualizando dashboard com:', { aulas, avaliacoes });
-                
-                // Atualizar seção de próximas aulas
-                const proximasAulasContainer = document.getElementById('proximasAulas');
-                if (proximasAulasContainer) {
-                    if (aulas && aulas.length > 0) {
-                        proximasAulasContainer.innerHTML = aulas.map(aula => `
-                            <div class="aula-card">
-                                <div class="aula-header">
-                                    <h4>${aula.titulo || 'Aula'}</h4>
-                                    <span class="status-badge ${aula.status === 'confirmado' ? 'status-confirmado' : 'status-pendente'}">
-                                        ${aula.status === 'confirmado' ? 'Confirmado' : 'Pendente'}
-                                    </span>
-                                </div>
-                                <div class="aula-info">
-                                    <p><i class="fas fa-user"></i> ${aula.utilizadores?.nome || 'Aluno'}</p>
-                                    <p><i class="fas fa-calendar"></i> ${new Date(aula.data).toLocaleDateString()}</p>
-                                    <p><i class="fas fa-clock"></i> ${aula.hora_inicio} - ${aula.hora_fim}</p>
-                                    ${aula.observacoes ? `<p><i class="fas fa-info-circle"></i> ${aula.observacoes}</p>` : ''}
-                                </div>
-                                ${aula.status !== 'confirmado' ? `
-                                    <div class="aula-actions">
-                                        <button class="action-button approve-button" onclick="confirmarAula('${aula.id}')">
-                                            <i class="fas fa-check"></i> Confirmar
-                                        </button>
-                                        <button class="action-button reject-button" onclick="cancelarAula('${aula.id}')">
-                                            <i class="fas fa-times"></i> Cancelar
-                                        </button>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `).join('');
-                    } else {
-                        proximasAulasContainer.innerHTML = '<div class="no-data">Sem aulas agendadas para este treinador.</div>';
-                    }
-                }
-
-                // Atualizar seção de avaliações
-                const ultimasAvaliacoesContainer = document.getElementById('ultimasAvaliacoes');
-                if (ultimasAvaliacoesContainer) {
-                    if (avaliacoes && avaliacoes.length > 0) {
-                        ultimasAvaliacoesContainer.innerHTML = avaliacoes.map(avaliacao => `
-                            <div class="avaliacao-card">
-                                <h4>${avaliacao.nome_usuario}</h4>
-                                <div class="estrelas">
-                                    ${'★'.repeat(avaliacao.estrelas)}${'☆'.repeat(5 - avaliacao.estrelas)}
-                                </div>
-                                <p>${avaliacao.texto || 'Sem comentário'}</p>
-                                <small>${new Date(avaliacao.data).toLocaleDateString()}</small>
-                            </div>
-                        `).join('');
-
-                        // Calcular e atualizar média das avaliações
-                        const media = avaliacoes.reduce((acc, curr) => acc + curr.estrelas, 0) / avaliacoes.length;
-                        const mediaElement = document.getElementById('mediaAvaliacoes');
-                        if (mediaElement) {
-                            mediaElement.textContent = media.toFixed(1);
-                        }
-                    } else {
-                        ultimasAvaliacoesContainer.innerHTML = '<div class="no-data">Sem avaliações recentes para este treinador.</div>';
-                        const mediaElement = document.getElementById('mediaAvaliacoes');
-                        if (mediaElement) {
-                            mediaElement.textContent = '0.0';
-                        }
-                    }
-                }
-
-                console.log('Dashboard atualizada com sucesso');
-            } catch (error) {
-                console.error('Erro ao atualizar dashboard:', error);
-                showNotification('Erro ao atualizar dashboard', 'error');
-            }
-        }
     </script>
 </body>
-</html> 
+</html>
