@@ -831,6 +831,7 @@
 
                 const proximasAulasDiv = document.getElementById('proximasAulas');
                 if (proximasAulasDiv) {
+<<<<<<< HEAD
                     const agendamentosPendentes = agendamentos?.filter(a => a.status === 'pendente') || [];
 
                     let html = '';
@@ -843,16 +844,48 @@
                         `;
                     } else {
                         html += agendamentosPendentes.map(aula => `
+=======
+                    const agendamentosFuturos = agendamentos?.filter(a => 
+                        new Date(a.data) > new Date() && a.status !== 'cancelado'
+                    ) || [];
+
+                    console.log('Agendamentos futuros:', agendamentosFuturos);
+
+                    if (agendamentosFuturos.length === 0) {
+                        proximasAulasDiv.innerHTML = `
+                            <div class="no-data">
+                                <i class="fas fa-calendar" style="font-size: 48px; color: var(--accent-color); margin-bottom: 20px;"></i>
+                                <p>Nenhuma aula agendada.</p>
+                            </div>
+                        `;
+                    } else {
+                        proximasAulasDiv.innerHTML = agendamentosFuturos.map(aula => `
+>>>>>>> 09a438f860e5b43c0d2663c171d556e336a09724
                             <div class="aula-card">
                                 <div class="aula-header">
                                     <h4>Aula com ${aula.aluno?.nome || 'Aluno'}</h4>
                                     <div class="aula-actions">
+<<<<<<< HEAD
                                         <button class="button approve-button" onclick="confirmarAula('${aula.id}')">
                                             <i class="fas fa-check"></i> Confirmar
                                         </button>
                                         <button class="button reject-button" onclick="cancelarAula('${aula.id}')">
                                             <i class="fas fa-times"></i> Cancelar
                                         </button>
+=======
+                                        ${aula.status === 'pendente' ? `
+                                            <button class="button approve-button" onclick="confirmarAula('${aula.id}')">
+                                                <i class="fas fa-check"></i> Confirmar
+                                            </button>
+                                            <button class="button reject-button" onclick="cancelarAula('${aula.id}')">
+                                                <i class="fas fa-times"></i> Cancelar
+                                            </button>
+                                        ` : `
+                                            <span class="status-badge status-${aula.status}">
+                                                ${aula.status === 'confirmado' ? 'Confirmado' : 'Cancelado'}
+                                            </span>
+                                        `}
+>>>>>>> 09a438f860e5b43c0d2663c171d556e336a09724
                                     </div>
                                 </div>
                                 <div class="aula-info">
@@ -862,16 +895,25 @@
                                     <p><i class="fas fa-info-circle"></i> ${aula.objetivos || 'Sem objetivos'}</p>
                                 </div>
                             </div>
+<<<<<<< HEAD
                         `).join('');
                     }
                     html += `
+=======
+                        `).join('') + `
+>>>>>>> 09a438f860e5b43c0d2663c171d556e336a09724
                         <div style="text-align: center; margin-top: 20px;">
                             <button class="button" style="background: var(--accent-color); color: #000;" onclick="abrirModal()">
                                 <i class="fas fa-calendar-alt"></i> Ver Todos os Agendamentos
                             </button>
+<<<<<<< HEAD
                         </div>
                     `;
                     proximasAulasDiv.innerHTML = html;
+=======
+                        </div>`;
+                    }
+>>>>>>> 09a438f860e5b43c0d2663c171d556e336a09724
                 }
             } catch (error) {
                 console.error('Erro ao carregar agendamentos:', error);
