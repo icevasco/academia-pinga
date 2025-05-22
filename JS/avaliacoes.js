@@ -37,10 +37,63 @@ async function verificarTabelaAvaliacoes() {
     }
 }
 
+// Função para atualizar estatísticas
+async function atualizarEstatisticas() {
+    try {
+        // Buscar todas as avaliações
+        const { data: avaliacoes, error } = await supabaseClient
+            .from('avaliacoes')
+            .select('*');
+
+        if (error) {
+            console.error('Erro ao buscar avaliações:', error);
+            return;
+        }
+
+        // Calcular média de estrelas
+        const mediaEstrelas = avaliacoes.reduce((acc, curr) => acc + curr.estrelas, 0) / avaliacoes.length;
+        
+        // Calcular percentual de recomendação (estrelas >= 4)
+        const recomendacoes = avaliacoes.filter(a => a.estrelas >= 4).length;
+        const percentualRecomendacao = (recomendacoes / avaliacoes.length) * 100;
+        
+        // Calcular total de troféus
+        const totalTrofeus = avaliacoes.reduce((acc, curr) => acc + (curr.trofeus || 0), 0);
+
+        // Atualizar o HTML
+        const statsBar = document.querySelector('.stats-bar');
+        if (statsBar) {
+            statsBar.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-treinadores" style="color: #FFD700;">${mediaEstrelas.toFixed(1)}</div>
+                    <div class="stat-treinadores2" style="color: #fff;">Avaliação Média</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-treinadores" style="color: #FFD700;">${percentualRecomendacao.toFixed(0)}%</div>
+                    <div class="stat-treinadores2" style="color: #fff;">Recomendam</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-treinadores" style="color: #FFD700;">${avaliacoes.length}</div>
+                    <div class="stat-treinadores2" style="color: #fff;">Avaliações</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-treinadores" style="color: #FFD700;">${totalTrofeus}</div>
+                    <div class="stat-treinadores2" style="color: #fff;">Troféus Ganhos</div>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('Erro ao atualizar estatísticas:', error);
+    }
+}
+
 // Função para carregar avaliações
 async function carregarAvaliacoes() {
     // Verificar se a tabela existe
     await verificarTabelaAvaliacoes();
+
+    // Atualizar estatísticas
+    await atualizarEstatisticas();
 
     // Buscar tipo de conta do usuário logado
     let tipoConta = null;
@@ -123,6 +176,14 @@ async function confirmarExclusaoAvaliacao() {
 function criarCardAvaliacao(avaliacao, tipoConta) {
     const card = document.createElement('div')
     card.className = 'review-card animate__animated animate__fadeInUp'
+    card.style.cssText = `
+        background: #1a1a1a;
+        border: 1px solid #333;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    `;
     
     const data = new Date(avaliacao.data)
     const diferencaMs = new Date() - data
@@ -175,21 +236,21 @@ function criarCardAvaliacao(avaliacao, tipoConta) {
     }
     
     card.innerHTML = `
-        <div class="review-header" style="display: flex; align-items: center; justify-content: space-between;">
+        <div class="review-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
             <div class="reviewer-info" style="display: flex; align-items: center; gap: 8px;">
-                <h3 style="margin: 0;">${avaliacao.nome}</h3>
+                <h3 style="margin: 0; color: #FFD700;">${avaliacao.nome}</h3>
                 ${deleteBtnHTML}
-                <span class="date">${tempoAtras}</span>
+                <span class="date" style="color: #888;">${tempoAtras}</span>
             </div>
         </div>
-        <div class="stars">${'★'.repeat(avaliacao.estrelas)}${'☆'.repeat(5-avaliacao.estrelas)}</div>
-        <p class="review-text">"${avaliacao.texto}"</p>
-        <div class="review-meta">
-            <span class="trophies">
+        <div class="stars" style="color: #FFD700; font-size: 1.2rem; margin-bottom: 1rem;">${'★'.repeat(avaliacao.estrelas)}${'☆'.repeat(5-avaliacao.estrelas)}</div>
+        <p class="review-text" style="color: #fff; margin-bottom: 1rem;">"${avaliacao.texto}"</p>
+        <div class="review-meta" style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="trophies" style="color: #FFD700;">
                 <span class="trophy-icon">🏆</span>
                 ${(avaliacao.trofeus !== undefined && avaliacao.trofeus !== null) ? avaliacao.trofeus : 0} Troféus
             </span>
-            <span class="verified-badge">${formatarTipoConta(avaliacao.tipo_conta)}</span>
+            <span class="verified-badge" style="background: #333; color: #FFD700; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">${formatarTipoConta(avaliacao.tipo_conta)}</span>
         </div>
     `
     // Adicionar evento ao botão de eliminar
@@ -524,7 +585,7 @@ function abrirModalSucesso() {
     const modal = document.getElementById('successModal');
     if (modal) {
         modal.style.cssText = `
-            display: flex;
+            display: block;
             position: fixed;
             top: 0;
             left: 0;
@@ -534,8 +595,6 @@ function abrirModalSucesso() {
             z-index: 1000;
             opacity: 0;
             transition: opacity 0.3s ease;
-            align-items: center;
-            justify-content: center;
         `;
         
         const modalContent = modal.querySelector('.modal-content');
@@ -543,22 +602,16 @@ function abrirModalSucesso() {
             modalContent.style.cssText = `
                 position: relative;
                 background: #1a1a1a;
-                padding: 0.8rem 1.5rem;
-                width: auto;
-                max-width: 300px;
-                min-width: 220px;
-                min-height: 80px;
-                max-height: 200px;
+                margin: 5% auto;
+                padding: 2rem;
+                width: 90%;
+                max-width: 800px;
                 border-radius: 10px;
                 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
                 transform: translateY(-20px);
                 opacity: 0;
                 transition: all 0.3s ease;
                 color: #fff;
-                text-align: center;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
             `;
         }
 
@@ -566,11 +619,10 @@ function abrirModalSucesso() {
         if (header) {
             header.style.cssText = `
                 color: #4CAF50;
-                font-size: 1.1rem;
-                margin: 0 0 0.5rem 0;
+                font-size: 1.5rem;
+                margin: 0 0 1rem 0;
                 display: flex;
                 align-items: center;
-                justify-content: center;
                 gap: 0.5rem;
             `;
         }
@@ -578,11 +630,19 @@ function abrirModalSucesso() {
         const body = modal.querySelector('.modal-body p');
         if (body) {
             body.style.cssText = `
-                font-size: 1rem;
+                font-size: 1.2rem;
                 margin: 0;
                 color: #fff;
+                text-align: center;
             `;
         }
+
+        // Adicionar evento de clique fora do modal
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                fecharModalSucesso();
+            }
+        });
 
         // Animar a abertura do modal
         setTimeout(() => {
@@ -653,6 +713,22 @@ async function enviarAvaliacao(event) {
             return;
         }
 
+        console.log('Usuário autenticado:', user.id);
+
+        // Verificar se o usuário já fez uma avaliação
+        const { data: avaliacaoExistente, error: checkError } = await supabaseClient
+            .from('avaliacoes')
+            .select('*')
+            .eq('user_id', user.id)
+            .single();
+
+        console.log('Verificação de avaliação existente:', { avaliacaoExistente, checkError });
+
+        if (checkError && checkError.code !== 'PGRST116') { // PGRST116 é o código para "nenhum resultado encontrado"
+            console.error('Erro ao verificar avaliação existente:', checkError);
+            throw checkError;
+        }
+
         // Buscar o nome do usuário na tabela utilizadores
         const { data: userData, error: userError } = await supabaseClient
             .from('utilizadores')
@@ -670,57 +746,100 @@ async function enviarAvaliacao(event) {
             throw new Error('Nome do usuário não encontrado');
         }
 
-        // Preparar os dados da avaliação
-        const avaliacaoData = {
-            user_id: user.id,
-            nome: userData.nome,
-            texto: texto,
-            estrelas: estrelas || 0,
-            trofeus: trofeus || 0,
-            data: new Date().toISOString()
-        };
+        let operationResult;
+        if (avaliacaoExistente) {
+            console.log('Usuário já possui uma avaliação. Apagando a antiga e criando uma nova...');
+            
+            try {
+                // Primeiro, apagar a avaliação antiga
+                const { error: deleteError } = await supabaseClient
+                    .from('avaliacoes')
+                    .delete()
+                    .eq('id', avaliacaoExistente.id);
 
-        console.log('Tentando inserir avaliação com dados:', avaliacaoData);
+                if (deleteError) {
+                    console.error('Erro ao apagar avaliação antiga:', deleteError);
+                    throw deleteError;
+                }
 
-        // Tentar inserir a avaliação
-        const { data: insertedData, error: insertError } = await supabaseClient
-            .from('avaliacoes')
-            .insert([avaliacaoData])
-            .select();
+                console.log('Avaliação antiga apagada com sucesso');
 
-        if (insertError) {
-            console.error('Erro ao inserir avaliação:', insertError);
-            console.error('Detalhes do erro:', {
-                code: insertError.code,
-                message: insertError.message,
-                details: insertError.details,
-                hint: insertError.hint
-            });
+                // Agora, criar a nova avaliação
+                const insertData = {
+                    user_id: user.id,
+                    nome: userData.nome,
+                    texto: texto,
+                    estrelas: estrelas,
+                    trofeus: trofeus,
+                    data: new Date().toISOString()
+                };
 
-            // Verificar se é um erro de permissão
-            if (insertError.code === '42501') {
-                alert('Você não tem permissão para adicionar avaliações.');
-                return;
+                const { data: insertedData, error: insertError } = await supabaseClient
+                    .from('avaliacoes')
+                    .insert([insertData])
+                    .select();
+
+                if (insertError) {
+                    console.error('Erro ao inserir nova avaliação:', insertError);
+                    throw insertError;
+                }
+
+                console.log('Nova avaliação criada com sucesso:', insertedData);
+
+                // Modificar a mensagem do modal de sucesso
+                const modalBody = document.querySelector('#successModal .modal-body p');
+                if (modalBody) {
+                    modalBody.textContent = 'Avaliação atualizada com sucesso!';
+                }
+
+                // Recarregar as avaliações para mostrar as alterações
+                await carregarAvaliacoes();
+                fecharModalAdicionar();
+                abrirModalSucesso();
+            } catch (error) {
+                console.error('Erro durante o processo:', error);
+                alert('Erro ao atualizar avaliação. Por favor, tente novamente.');
+                throw error;
+            }
+        } else {
+            console.log('Criando nova avaliação');
+            // Inserir nova avaliação
+            const insertData = {
+                user_id: user.id,
+                nome: userData.nome,
+                texto: texto,
+                estrelas: estrelas,
+                trofeus: trofeus,
+                data: new Date().toISOString()
+            };
+            console.log('Dados para inserção:', insertData);
+
+            const { data: insertedData, error: insertError } = await supabaseClient
+                .from('avaliacoes')
+                .insert([insertData])
+                .select();
+            
+            if (insertError) {
+                console.error('Erro ao inserir avaliação:', insertError);
+                throw insertError;
             }
 
-            // Verificar se é um erro de dados inválidos
-            if (insertError.code === '22P02') {
-                alert('Dados inválidos. Por favor, verifique os valores inseridos.');
-                return;
-            }
+            console.log('Avaliação inserida com sucesso:', insertedData);
 
-            throw insertError;
+            // Manter a mensagem original do modal de sucesso
+            const modalBody = document.querySelector('#successModal .modal-body p');
+            if (modalBody) {
+                modalBody.textContent = 'Avaliação enviada com sucesso!';
+            }
         }
 
-        console.log('Avaliação inserida com sucesso:', insertedData);
-
         fecharModalAdicionar();
-        carregarAvaliacoes();
+        await carregarAvaliacoes(); // Garantir que a lista seja atualizada
         abrirModalSucesso();
     } catch (error) {
-        console.error('Erro ao enviar avaliação:', error);
+        console.error('Erro ao processar avaliação:', error);
         console.error('Stack trace:', error.stack);
-        alert('Erro ao enviar avaliação. Por favor, tente novamente.');
+        alert('Erro ao processar avaliação. Por favor, tente novamente.');
     }
 }
 

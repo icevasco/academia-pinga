@@ -3696,3 +3696,37 @@ body {
     background: #FFD700 !important;
     color: #1a1a1a !important;
 }
+
+.team-more-container {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+}
+
+.team-more-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.team-more-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    background-color: var(--primary-color-dark);
+}
+
+.team-more-btn i {
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+}
+
+.team-more-btn:hover i {
+    transform: translateX(5px);
+}

@@ -362,14 +362,30 @@
                 
                 if (isViewing && userId) {
                     // Carregar perfil de outro usuário
-                    const { data, error } = await supabase
-                        .from('utilizadores')
+                    const { data: treinador, error: treinadorError } = await supabase
+                        .from('treinadores')
                         .select('*')
                         .eq('id', userId)
                         .single();
 
-                    if (error) throw error;
-                    userData = data;
+                    if (treinadorError) {
+                        console.error('Erro ao buscar treinador:', treinadorError);
+                        throw treinadorError;
+                    }
+
+                    // Buscar dados do usuário associado ao treinador
+                    const { data: user, error: userError } = await supabase
+                        .from('utilizadores')
+                        .select('*')
+                        .eq('id', treinador.user_id)
+                        .single();
+
+                    if (userError) {
+                        console.error('Erro ao buscar usuário:', userError);
+                        throw userError;
+                    }
+
+                    userData = { ...user, ...treinador };
                 } else {
                     // Carregar perfil do usuário logado
                     const { data: { user }, error: userError } = await supabase.auth.getUser();

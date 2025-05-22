@@ -11,8 +11,103 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../JS/user-menu.js" defer></script>
     <link rel="icon" type="image/png" href="../IMG/favicon_sem_fundo.png">
+    <style>
+        .ver-perfil-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            margin-top: 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .ver-perfil-btn:hover {
+            background-color: #45a049;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+            text-decoration: none;
+        }
+
+        .action-button i {
+            margin-right: 8px;
+        }
+
+        .secondary-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .secondary-button:hover {
+            background-color: #45a049;
+        }
+
+        .stats-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #FFD700;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+
+        .stat-label {
+            color: #fff;
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+    </style>
 </head>
 <body>
+    <script>
+        // Initialize Supabase client only if it doesn't exist
+        if (!window.supabaseClient) {
+            const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co'
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3dkZmlmaGhjcW10cG5ob3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTUzMDksImV4cCI6MjA2MDQzMTMwOX0.Q50xEMRQLTjuOKtn0f92GX5NKY9GgWWYVfHlmE5yhUs'
+            window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey)
+        }
+        const supabase = window.supabaseClient
+    </script>
     <nav class="navbar">
         <div class="nav-content">
             <a href="../index.html" class="nav-logo">
@@ -39,18 +134,18 @@
     <div class="about-container">
         <div class="about-header animate__animated animate__fadeInDown">
             <h1>Sobre a Academia Pinga</h1>
-            <p>A transformar jogadores em campeões desde 2023</p>
+            <p>Transformando jogadores em campeões desde 2023</p>
         </div>
 
         <div class="about-grid">
             <div class="about-card animate__animated animate__fadeInUp">
                 <h2>A Nossa Missão</h2>
-                <p>Capacitar jogadores de todos os níveis a atingirem o seu máximo potencial no Clash Royale e noutros jogos competitivos, através de formação personalizada, conteúdos de alta qualidade e uma comunidade envolvida. O nosso objetivo é formar não só jogadores excecionais, mas também líderes e mentores para a próxima geração.</p>
+                <p>Capacitar jogadores de todos os níveis a atingirem o seu máximo potencial no Clash Royale e noutros jogos Supercell, através de formação personalizada, conteúdos de alta qualidade e uma comunidade envolvida. O nosso objetivo é formar não só jogadores excecionais, mas também líderes e mentores para a próxima geração.</p>
             </div>
 
             <div class="about-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
                 <h2>A Nossa Visão</h2>
-                <p>Ser a principal plataforma de ensino e desenvolvimento de jogadores de Clash Royale em Portugal, reconhecida internacionalmente pela excelência, resultados comprovados e pela construção de uma comunidade forte e colaborativa. Procuramos revolucionar a forma como o jogo é ensinado e praticado.</p>
+                <p>Ser a principal plataforma de ensino e desenvolvimento de jogadores de jogos Supercell em Portugal, reconhecida internacionalmente pela excelência, resultados comprovados e pela construção de uma comunidade forte e colaborativa. Procuramos revolucionar a forma como os jogos são ensinados e praticados.</p>
             </div>
 
             <div class="about-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
@@ -62,6 +157,7 @@
                     <li>Inovação constante nas metodologias de ensino</li>
                     <li>Ética, transparência e respeito mútuo</li>
                     <li>Diversidade e inclusão na comunidade gaming</li>
+                    <li>Foco em múltiplos jogos Supercell</li>
                 </ul>
             </div>
         </div>
@@ -69,20 +165,12 @@
         <div class="stats-section">
             <div class="stats-container">
                 <div class="stat-item animate__animated animate__fadeInUp">
-                    <div class="stat-value">2000+</div>
-                    <div class="stat-label">Alunos Formados</div>
-                </div>
-                <div class="stat-item animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
-                    <div class="stat-value">20+</div>
+                    <div class="stat-value" id="numTreinadores">...</div>
                     <div class="stat-label">Treinadores Profissionais</div>
                 </div>
-                <div class="stat-item animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
-                    <div class="stat-value">99%</div>
+                <div class="stat-item animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                    <div class="stat-value">98%</div>
                     <div class="stat-label">Satisfação</div>
-                </div>
-                <div class="stat-item animate__animated animate__fadeInUp" style="animation-delay: 0.6s">
-                    <div class="stat-value">100+</div>
-                    <div class="stat-label">Torneios Vencidos</div>
                 </div>
             </div>
         </div>
@@ -93,11 +181,34 @@
                 <div class="team-card animate__animated animate__fadeInUp">
                     <div class="team-content">
                         <div class="team-image">
-                            <img src="../IMG/joao-silva.jpg" alt="João Silva">
+                            <img src="../IMG/pedro-costa-coach.png" alt="Pedro Costa">
+                        </div>
+                        <h3 class="team-name">Pedro Costa</h3>
+                        <p class="team-role">Treinador Sénior</p>
+                        <p class="team-description">Um dos primeiros treinadores da Academia, com vasta experiência em competições internacionais.</p>
+                        <div class="team-achievements">
+                            <span>Top 50 Global</span>
+                            <span>2x Campeão Europeu</span>
+                        </div>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        </div>
+                        <button class="action-button secondary-button" onclick="verPerfil('${treinador.id}')">
+                            <i class="fas fa-user"></i> Ver Perfil
+                        </button>
+                    </div>
+                </div>
+
+                <div class="team-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                    <div class="team-content">
+                        <div class="team-image">
+                            <img src="../IMG/joao-silva-coach.png" alt="João Silva">
                         </div>
                         <h3 class="team-name">João Silva</h3>
-                        <p class="team-role">Head Coach</p>
-                        <p class="team-description">Especialista em estratégias avançadas e análise de jogos. Com mais de 5 anos de experiência em competições internacionais.</p>
+                        <p class="team-role">Treinador Sénior</p>
+                        <p class="team-description">Especialista em estratégias avançadas e análise de jogos. Um dos pilares da Academia desde o início.</p>
                         <div class="team-achievements">
                             <span>Top 100 Global</span>
                             <span>3x Campeão Nacional</span>
@@ -107,13 +218,16 @@
                             <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
                             <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
                         </div>
+                        <button class="action-button secondary-button" onclick="verPerfil('${treinador.id}')">
+                            <i class="fas fa-user"></i> Ver Perfil
+                        </button>
                     </div>
                 </div>
 
-                <div class="team-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                <div class="team-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
                     <div class="team-content">
                         <div class="team-image">
-                            <img src="../IMG/manoel-pinga.jpg" alt="Manoel Pinga">
+                            <img src="../IMG/manoel-pinga-coach.png" alt="Manoel Pinga">
                         </div>
                         <h3 class="team-name">Manoel Pinga</h3>
                         <p class="team-role">Fundador & CEO</p>
@@ -127,28 +241,17 @@
                             <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
                             <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
                         </div>
+                        <button class="action-button secondary-button" onclick="verPerfil('${treinador.id}')">
+                            <i class="fas fa-user"></i> Ver Perfil
+                        </button>
                     </div>
                 </div>
-
-                <div class="team-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
-                    <div class="team-content">
-                        <div class="team-image">
-                            <img src="../IMG/pedro-costa.jpg" alt="Pedro Costa">
-                        </div>
-                        <h3 class="team-name">Pedro Costa</h3>
-                        <p class="team-role">Diretor de Conteúdo</p>
-                        <p class="team-description">Responsável pelo desenvolvimento de formações e materiais pedagógicos. Especialista em metodologias de ensino.</p>
-                        <div class="team-achievements">
-                            <span>Top 50 Global</span>
-                            <span>2x Campeão Europeu</span>
-                        </div>
-                        <div class="social-links">
-                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
-                </div>
+            </div>
+            <div class="team-more-container">
+                <a href="treinadores.html" class="team-more-btn animate__animated animate__fadeInUp">
+                    Ver Todos os Treinadores
+                    <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
         </div>
     </div>
@@ -187,8 +290,141 @@
             observer.observe(card);
         });
 
+        // Carregar treinadores mais antigos
+        async function carregarTreinadoresAntigos() {
+            try {
+                // Primeiro, buscar os treinadores
+                const { data: treinadores, error: treinadoresError } = await supabase
+                    .from('treinadores')
+                    .select('*');
+
+                if (treinadoresError) throw treinadoresError;
+
+                if (!treinadores || treinadores.length === 0) {
+                    console.log('Nenhum treinador encontrado');
+                    return;
+                }
+
+                // Depois, buscar os usuários correspondentes ordenados por data_registo
+                const userIds = treinadores.map(t => t.user_id);
+                const { data: usuarios, error: usuariosError } = await supabase
+                    .from('utilizadores')
+                    .select('*')
+                    .in('id', userIds)
+                    .order('data_registo', { ascending: true })
+                    .limit(3);
+
+                if (usuariosError) throw usuariosError;
+
+                // Criar um mapa de treinadores para fácil acesso
+                const treinadoresMap = treinadores.reduce((acc, treinador) => {
+                    acc[treinador.user_id] = treinador;
+                    return acc;
+                }, {});
+
+                const teamGrid = document.querySelector('.team-grid');
+                teamGrid.innerHTML = '';
+
+                usuarios.forEach((usuario, index) => {
+                    const treinador = treinadoresMap[usuario.id];
+                    if (!treinador) return; // Pular se não encontrar o treinador
+
+                    const card = document.createElement('div');
+                    card.className = `team-card animate__animated animate__fadeInUp`;
+                    card.style.animationDelay = `${index * 0.2}s`;
+
+                    const defaultAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${usuario.nome}`;
+                    const avatarUrl = usuario.foto_perfil_url 
+                        ? usuario.foto_perfil_url.startsWith('http') 
+                            ? usuario.foto_perfil_url 
+                            : `${supabaseUrl}/storage/v1/object/public/avatars/${usuario.foto_perfil_url}`
+                        : defaultAvatar;
+
+                    card.innerHTML = `
+                        <div class="team-content">
+                            <div class="team-image">
+                                <img src="${avatarUrl}" alt="${usuario.nome}" onerror="this.onerror=null; this.src='${defaultAvatar}';">
+                            </div>
+                            <h3 class="team-name">${usuario.nome}</h3>
+                            <p class="team-role">${usuario.tipo_conta === 'admin' ? 'Administrador' : 'Treinador Sénior'}</p>
+                            <p class="team-description">${treinador.especialidade || 'Treinador Profissional'} - Membro desde ${new Date(usuario.data_registo).toLocaleDateString('pt-BR')}</p>
+                            <div class="team-achievements">
+                                <span>${usuario.max_liga || 'N/D'}</span>
+                                <span>${usuario.trofeus ? usuario.trofeus.toLocaleString('pt-BR') + ' Troféus' : 'N/D'}</span>
+                            </div>
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                            </div>
+                            <button class="action-button secondary-button" onclick="verPerfil('${treinador.id}')">
+                                <i class="fas fa-user"></i> Ver Perfil
+                            </button>
+                        </div>
+                    `;
+                    teamGrid.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error('Erro ao carregar treinadores:', error);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof checkUser === 'function') checkUser();
+            carregarTreinadoresAntigos();
+        });
+
+        // Função para ver perfil
+        async function verPerfil(treinadorId) {
+            try {
+                // Primeiro verificar se o treinador existe
+                const { data: treinador, error: treinadorError } = await supabase
+                    .from('treinadores')
+                    .select('*')
+                    .eq('id', treinadorId)
+                    .single();
+
+                if (treinadorError) {
+                    console.error('Erro ao buscar treinador:', treinadorError);
+                    showNotification('Erro ao carregar perfil do treinador', 'error');
+                    return;
+                }
+
+                if (!treinador) {
+                    showNotification('Treinador não encontrado', 'error');
+                    return;
+                }
+
+                // Se o treinador existe, redirecionar para a página de perfil
+                window.location.href = `perfil.html?id=${treinadorId}&view=true`;
+            } catch (error) {
+                console.error('Erro ao verificar treinador:', error);
+                showNotification('Erro ao carregar perfil', 'error');
+            }
+        }
+
+        // Função para carregar o número de treinadores
+        async function carregarNumeroTreinadores() {
+            try {
+                const { data: treinadores, error } = await supabase
+                    .from('treinadores')
+                    .select('*');
+
+                if (error) throw error;
+
+                const numTreinadores = treinadores ? treinadores.length : 0;
+                document.getElementById('numTreinadores').textContent = numTreinadores;
+            } catch (error) {
+                console.error('Erro ao carregar número de treinadores:', error);
+                document.getElementById('numTreinadores').textContent = '0';
+            }
+        }
+
+        // Carregar número de treinadores quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof checkUser === 'function') checkUser();
+            carregarNumeroTreinadores();
         });
     </script>
 </body>

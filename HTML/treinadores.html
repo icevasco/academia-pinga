@@ -780,18 +780,34 @@
             font-size: 0.9em;
         }
 
-        .avaliacao-estrelas {
-            color: #FFD700 !important;
-            margin: 10px 0;
-            font-size: 1.2em;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        .btn-apagar-avaliacao {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+            margin-right: 10px;
         }
 
-        .avaliacao-texto {
-            color: #444;
-            font-size: 1em;
-            line-height: 1.5;
-            margin-top: 10px;
+        .btn-apagar-avaliacao:hover {
+            background: rgba(220, 53, 69, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .btn-apagar-avaliacao i {
+            font-size: 0.9em;
+        }
+
+        .avaliacao-header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         /* Estilo para a barra de rolagem */
@@ -956,23 +972,39 @@
             color: #4CAF50;
             text-shadow: 0 0 10px rgba(76, 175, 80, 0.2);
         }
+
+        .avaliacao-estrelas {
+            color: #FFD700 !important;
+            margin: 10px 0;
+            font-size: 1.2em;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .avaliacao-texto {
+            color: #333;
+            font-size: 1em;
+            line-height: 1.5;
+            margin-top: 10px;
+            background: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
     </style>
 
     <script>
         // Função para carregar os treinadores
         async function carregarTreinadores() {
             try {
+                // Buscar treinadores com todos os campos
                 const { data: treinadores, error } = await supabase
-                    .from('utilizadores')
-                    .select('*')
-                    .in('tipo_conta', ['treinador', 'admin']);
+                    .from('treinadores')
+                    .select('*');
 
                 if (error) {
                     console.error('Erro ao buscar treinadores:', error);
                     throw error;
                 }
-
-                console.log('Treinadores encontrados:', treinadores);
 
                 if (!treinadores || treinadores.length === 0) {
                     console.log('Nenhum treinador encontrado');
@@ -981,26 +1013,66 @@
                     return;
                 }
 
-                // Buscar avaliações para cada treinador
-                const treinadoresComAvaliacoes = await Promise.all(treinadores.map(async (treinador) => {
-                    const { data: avaliacoes, error: avaliacoesError } = await supabase
-                        .from('avaliacoes_treinadores')
-                        .select('estrelas')
-                        .eq('treinador_id', treinador.id);
+                // Buscar informações dos usuários correspondentes
+                const userIds = treinadores.map(t => t.user_id);
+                const { data: usuarios, error: usuariosError } = await supabase
+                    .from('utilizadores')
+                    .select('id, nome, foto_perfil_url, tipo_conta, ultimo_login, trofeus, max_liga')
+                    .in('id', userIds);
 
-                    if (avaliacoesError) {
-                        console.error(`Erro ao buscar avaliações do treinador ${treinador.id}:`, avaliacoesError);
-                        return { ...treinador, avaliacao_media: 0 };
-                    }
+                if (usuariosError) {
+                    console.error('Erro ao buscar usuários:', usuariosError);
+                    throw usuariosError;
+                }
 
-                    console.log(`Avaliações para o treinador ${treinador.nome}:`, avaliacoes);
+                // Criar um mapa de usuários para fácil acesso
+                const usuariosMap = usuarios.reduce((acc, user) => {
+                    acc[user.id] = user;
+                    return acc;
+                }, {});
 
-                    const media = avaliacoes && avaliacoes.length > 0
-                        ? avaliacoes.reduce((acc, curr) => acc + curr.estrelas, 0) / avaliacoes.length
+                // Filtrar treinadores que não têm usuário correspondente
+                const treinadoresValidos = treinadores.filter(treinador => usuariosMap[treinador.user_id]);
+
+                if (treinadoresValidos.length === 0) {
+                    console.log('Nenhum treinador válido encontrado');
+                    const coachesGrid = document.getElementById('coachesGrid');
+                    coachesGrid.innerHTML = '<div class="no-coaches">Nenhum treinador disponível de momento.</div>';
+                    return;
+                }
+
+                // Combinar dados dos treinadores com dados dos usuários
+                const treinadoresCompletos = treinadoresValidos.map(treinador => ({
+                    ...treinador,
+                    utilizador: usuariosMap[treinador.user_id]
+                }));
+
+                // Buscar todas as avaliações de uma vez
+                const { data: todasAvaliacoes, error: avaliacoesError } = await supabase
+                    .from('avaliacoes_treinadores')
+                    .select('*');
+
+                if (avaliacoesError) {
+                    console.error('Erro ao buscar avaliações:', avaliacoesError);
+                    throw avaliacoesError;
+                }
+
+                // Calcular média de avaliações para cada treinador
+                const treinadoresComAvaliacoes = treinadoresCompletos.map(treinador => {
+                    const avaliacoesDoTreinador = todasAvaliacoes.filter(a => a.treinador_id === treinador.id);
+                    const media = avaliacoesDoTreinador.length > 0
+                        ? avaliacoesDoTreinador.reduce((acc, curr) => acc + curr.estrelas, 0) / avaliacoesDoTreinador.length
                         : 0;
 
                     return { ...treinador, avaliacao_media: media.toFixed(1) };
-                }));
+                });
+
+                // Ordenar treinadores por troféus (maior para menor)
+                treinadoresComAvaliacoes.sort((a, b) => {
+                    const trofeusA = a.utilizador?.trofeus || 0;
+                    const trofeusB = b.utilizador?.trofeus || 0;
+                    return trofeusB - trofeusA;
+                });
 
                 const coachesGrid = document.getElementById('coachesGrid');
                 coachesGrid.innerHTML = '';
@@ -1010,27 +1082,28 @@
                     card.className = `coach-card animate__animated animate__fadeInUp`;
                     card.style.animationDelay = `${index * 0.2}s`;
 
-                    // Buscar a URL do avatar do bucket do Supabase
                     const defaultAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${treinador.nome}`;
-                    const avatarUrl = treinador.foto_perfil_url 
-                        ? treinador.foto_perfil_url.startsWith('http') 
-                            ? treinador.foto_perfil_url 
-                            : `${supabaseUrl}/storage/v1/object/public/avatars/${treinador.foto_perfil_url}`
+                    const avatarUrl = treinador.utilizador?.foto_perfil_url 
+                        ? treinador.utilizador.foto_perfil_url.startsWith('http') 
+                            ? treinador.utilizador.foto_perfil_url 
+                            : `${supabaseUrl}/storage/v1/object/public/avatars/${treinador.utilizador.foto_perfil_url}`
                         : defaultAvatar;
 
-                    // Calcular estrelas cheias e vazias
                     const media = parseFloat(treinador.avaliacao_media) || 0;
                     const estrelasCheias = Math.floor(media);
                     const estrelasVazias = 5 - estrelasCheias;
 
-                    // Verificar status online/offline usando ultimo_login
-                    const isOnline = treinador.ultimo_login && (new Date() - new Date(treinador.ultimo_login)) < 300000; // 5 minutos
-                    const ultimaAtividade = treinador.ultimo_login ? new Date(treinador.ultimo_login).toLocaleString('pt-BR', {
+                    const isOnline = treinador.utilizador?.ultimo_login && (new Date() - new Date(treinador.utilizador.ultimo_login)) < 300000;
+                    const ultimaAtividade = treinador.utilizador?.ultimo_login ? new Date(treinador.utilizador.ultimo_login).toLocaleString('pt-BR', {
                         day: '2-digit',
                         month: '2-digit',
                         hour: '2-digit',
                         minute: '2-digit'
                     }) : 'Nunca';
+
+                    // Formatar troféus e liga máxima
+                    const trofeus = treinador.utilizador?.trofeus ? treinador.utilizador.trofeus.toLocaleString('pt-BR') : 'N/D';
+                    const maxLiga = treinador.utilizador?.max_liga || 'N/D';
 
                     card.innerHTML = `
                         <div class="coach-avatar">
@@ -1041,16 +1114,15 @@
                             <h2 class="coach-name">${treinador.nome}</h2>
                             <p class="coach-specialty">${treinador.especialidade || 'Treinador Profissional'}</p>
                             <div class="coach-badges">
-                                <span class="coach-badge pro">${treinador.tipo_conta === 'admin' ? 'Administrador' : 'Treinador'}</span>
-                                ${treinador.nivel ? `<span class="coach-badge top1000">${treinador.nivel}</span>` : ''}
+                                <span class="coach-badge pro">${treinador.utilizador?.tipo_conta === 'admin' ? 'Administrador' : 'Treinador'}</span>
                             </div>
                             <div class="coach-stats">
                                 <div class="stat-item">
-                                    <div class="stat-value">${treinador.trofeus || 'N/D'}</div>
+                                    <div class="stat-value">${trofeus}</div>
                                     <div class="stat-label">Troféus</div>
                                 </div>
                                 <div class="stat-item">
-                                    <div class="stat-value">${treinador.max_liga || 'N/D'}</div>
+                                    <div class="stat-value">${maxLiga}</div>
                                     <div class="stat-label">Liga Máxima</div>
                                 </div>
                                 <div class="stat-item stat-avaliacao">
@@ -1081,11 +1153,9 @@
                     coachesGrid.appendChild(card);
                 });
 
-                // Adicionar eventos de clique para as avaliações
                 document.querySelectorAll('.rating').forEach(rating => {
                     rating.addEventListener('click', function() {
                         const treinadorId = this.dataset.treinadorId;
-                        console.log('Clique nas estrelas do treinador:', treinadorId);
                         verAvaliacoes(treinadorId);
                     });
                 });
@@ -1161,22 +1231,133 @@
                 const { data: { user }, error: userError } = await supabase.auth.getUser();
                 
                 if (userError || !user) {
-                window.location.href = '../login.html?redirect=treinadores.html';
-                return;
-            }
+                    window.location.href = '../login.html?redirect=treinadores.html';
+                    return;
+                }
 
-            const modal = document.getElementById('agendamentoModal');
-            modal.style.display = 'block';
-                modal.dataset.treinadorId = treinadorId;
+                // Verificar se o usuário tem plano premium
+                const { data: userData, error: userDataError } = await supabase
+                    .from('utilizadores')
+                    .select('tipo_conta')
+                    .eq('id', user.id)
+                    .single();
+
+                if (userDataError) throw userDataError;
+
+                if (userData.tipo_conta === 'gratuito') {
+                    showNotification('Precisas de ter um plano premium para agendar aulas', 'error');
+                    return;
+                }
+
+                // Verificar se o treinador existe
+                const { data: treinador, error: treinadorError } = await supabase
+                    .from('treinadores')
+                    .select('*')
+                    .eq('id', treinadorId)
+                    .single();
+
+                if (treinadorError) throw treinadorError;
+
+                if (!treinador) {
+                    showNotification('Treinador não encontrado', 'error');
+                    return;
+                }
+
+                treinadorIdAtual = treinador.id;
+                
+                // Reset form
+                document.getElementById('dataAula').value = '';
+                document.getElementById('horaAula').value = '';
+                document.getElementById('duracaoAula').value = '1';
+                document.getElementById('objetivosAula').value = '';
+
+                // Set min date to today
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('dataAula').min = today;
+
+                // Show modal
+                const modal = document.getElementById('agendamentoModal');
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+
             } catch (error) {
-                console.error('Erro ao verificar autenticação:', error);
-                showNotification('Erro ao verificar autenticação', 'error');
+                console.error('Erro ao abrir modal de agendamento:', error);
+                showNotification('Erro ao abrir modal de agendamento', 'error');
+            }
+        }
+
+        async function confirmarAgendamento() {
+            try {
+                const data = document.getElementById('dataAula').value;
+                const hora = document.getElementById('horaAula').value;
+                const duracao = document.getElementById('duracaoAula').value;
+                const objetivos = document.getElementById('objetivosAula').value;
+
+                if (!data || !hora || !duracao) {
+                    showNotification('Por favor, preenche todos os campos obrigatórios', 'error');
+                    return;
+                }
+
+                const { data: { user }, error: userError } = await supabase.auth.getUser();
+                if (userError) throw userError;
+
+                const agendamento = {
+                    treinador_id: treinadorIdAtual,
+                    aluno_id: user.id,
+                    data: data,
+                    hora: hora,
+                    duracao: duracao,
+                    objetivos: objetivos,
+                    status: 'pendente'
+                };
+
+                const { error: insertError } = await supabase
+                    .from('agendamentos')
+                    .insert(agendamento);
+
+                if (insertError) throw insertError;
+
+                showNotification('Aula agendada com sucesso!', 'success');
+                fecharModalAgendamento();
+                document.getElementById('modalSucessoAgendamento').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('modalSucessoAgendamento').style.display = 'none';
+                    document.body.style.overflow = '';
+                }, 3000);
+
+            } catch (error) {
+                console.error('Erro ao agendar aula:', error);
+                showNotification('Erro ao agendar aula', 'error');
             }
         }
 
         // Função para ver perfil
-        function verPerfil(treinadorId) {
-            window.location.href = `perfil.html?id=${treinadorId}&view=true`;
+        async function verPerfil(treinadorId) {
+            try {
+                // Primeiro verificar se o treinador existe
+                const { data: treinador, error: treinadorError } = await supabase
+                    .from('treinadores')
+                    .select('*')
+                    .eq('id', treinadorId)
+                    .single();
+
+                if (treinadorError) {
+                    console.error('Erro ao buscar treinador:', treinadorError);
+                    showNotification('Erro ao carregar perfil do treinador', 'error');
+                    return;
+                }
+
+                if (!treinador) {
+                    showNotification('Treinador não encontrado', 'error');
+                    return;
+                }
+
+                // Se o treinador existe, redirecionar para a página de perfil
+                window.location.href = `perfil.html?id=${treinadorId}&view=true`;
+            } catch (error) {
+                console.error('Erro ao verificar treinador:', error);
+                showNotification('Erro ao carregar perfil', 'error');
+            }
         }
 
         // Função para fechar modal de agendamento
@@ -1184,121 +1365,6 @@
             const modal = document.getElementById('agendamentoModal');
             modal.style.display = 'none';
         }
-
-        // Função para confirmar agendamento
-        async function confirmarAgendamento() {
-            try {
-                const { data: { user }, error: userError } = await supabase.auth.getUser();
-                if (userError || !user) {
-                    window.location.href = '../login.html?redirect=treinadores.html';
-                    return;
-                }
-
-                const modal = document.getElementById('agendamentoModal');
-                const treinadorId = modal.dataset.treinadorId;
-
-                // First, try to get the existing treinador record
-                const { data: existingTreinador, error: existingTreinadorError } = await supabase
-                    .from('treinadores')
-                    .select('id')
-                    .eq('user_id', treinadorId)
-                    .single();
-
-                let treinadorRecordId;
-
-                if (existingTreinadorError) {
-                    // If no record exists, get user info and create one
-                    const { data: treinador, error: treinadorError } = await supabase
-                        .from('utilizadores')
-                        .select('id, tipo_conta, nome')
-                        .eq('id', treinadorId)
-                        .single();
-
-                    if (treinadorError) {
-                        console.error('Erro ao buscar treinador:', treinadorError);
-                        showNotification('Erro ao verificar treinador', 'error');
-                        return;
-                    }
-
-                    if (!treinador || !['treinador', 'admin'].includes(treinador.tipo_conta)) {
-                        showNotification('Usuário não é um treinador válido', 'error');
-                        return;
-                    }
-
-                    // Create new treinador record
-                    const { data: newTreinador, error: newTreinadorError } = await supabase
-                        .from('treinadores')
-                        .insert({
-                            user_id: treinador.id,
-                            nome: treinador.nome,
-                            avatar_url: null
-                        })
-                        .select()
-                        .single();
-
-                    if (newTreinadorError) {
-                        console.error('Erro ao criar registro de treinador:', newTreinadorError);
-                        showNotification('Erro ao processar agendamento', 'error');
-                        return;
-                    }
-
-                    treinadorRecordId = newTreinador.id;
-                } else {
-                    treinadorRecordId = existingTreinador.id;
-                }
-
-                const dataAula = document.getElementById('dataAula').value;
-                const horaAula = document.getElementById('horaAula').value;
-                const duracaoAula = document.getElementById('duracaoAula').value;
-                const objetivosAula = document.getElementById('objetivosAula').value;
-
-                if (!dataAula || !horaAula || !duracaoAula) {
-                    showNotification('Por favor, preenche todos os campos obrigatórios', 'error');
-                    return;
-                }
-
-                const { error } = await supabase
-                    .from('agendamentos')
-                    .insert({
-                        treinador_id: treinadorRecordId,
-                        aluno_id: user.id,
-                        data: dataAula,
-                        hora: horaAula,
-                        duracao: parseInt(duracaoAula),
-                        objetivos: objetivosAula,
-                        status: 'pendente'
-                    });
-
-                if (error) {
-                    console.error('Erro detalhado:', error);
-                    throw error;
-                }
-
-                fecharModalAgendamento();
-                
-                // Show success modal
-                const successModal = document.getElementById('modalSucessoAgendamento');
-                successModal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-
-                // Auto close after 3 seconds
-                setTimeout(() => {
-                    successModal.style.display = 'none';
-                    document.body.style.overflow = '';
-                }, 3000);
-            } catch (error) {
-                console.error('Erro ao agendar aula:', error);
-                showNotification('Erro ao agendar aula', 'error');
-            }
-        }
-
-        // Add event listener to close success modal when clicking outside
-        document.getElementById('modalSucessoAgendamento').addEventListener('click', function(event) {
-            if (event.target === this) {
-                this.style.display = 'none';
-                document.body.style.overflow = '';
-            }
-        });
 
         // Inicializar a página
         function initializePage() {
@@ -1355,32 +1421,29 @@
         // Função para ver avaliações
         async function verAvaliacoes(treinadorId) {
             try {
-                console.log('Iniciando verAvaliacoes para o treinador:', treinadorId);
-                
-                // Primeiro, verificar se o usuário está autenticado
                 const { data: { user }, error: userError } = await supabase.auth.getUser();
-                if (userError) {
-                    console.error('Erro ao verificar autenticação:', userError);
-                    showNotification('Por favor, faz login para ver as avaliações', 'error');
-                    return;
+                if (userError) throw userError;
+
+                // Buscar tipo de conta do usuário se estiver logado
+                let userTipoConta = null;
+                if (user) {
+                    const { data: userData, error: userDataError } = await supabase
+                        .from('utilizadores')
+                        .select('tipo_conta')
+                        .eq('id', user.id)
+                        .single();
+                    
+                    if (!userDataError) {
+                        userTipoConta = userData.tipo_conta;
+                    }
                 }
 
-                // Buscar o tipo de conta do utilizador autenticado
-                const { data: userData, error: userDataError } = await supabase
-                    .from('utilizadores')
-                    .select('tipo_conta')
-                    .eq('id', user.id)
-                    .single();
-                tipoContaAtual = userData?.tipo_conta || null;
+                console.log('Buscando avaliações para o treinador:', treinadorId);
 
-                console.log('Usuário autenticado, buscando avaliações...');
-
-                // Buscar as avaliações
                 const { data: avaliacoes, error } = await supabase
                     .from('avaliacoes_treinadores')
                     .select('*')
-                    .eq('treinador_id', treinadorId)
-                    .order('data', { ascending: false });
+                    .eq('treinador_id', treinadorId);
 
                 if (error) {
                     console.error('Erro na consulta:', error);
@@ -1389,8 +1452,22 @@
 
                 console.log('Avaliações encontradas:', avaliacoes);
 
+                if (!avaliacoes || avaliacoes.length === 0) {
+                    console.log('Nenhuma avaliação encontrada para o treinador:', treinadorId);
+                    const modal = document.getElementById('avaliacoesModal');
+                    const avaliacoesList = document.getElementById('avaliacoesList');
+                    avaliacoesList.innerHTML = '<p class="no-data">Nenhuma avaliação encontrada.</p>';
+                    modal.style.display = 'block';
+                    return;
+                }
+
+                // Ordenar avaliações por data (mais recentes primeiro)
+                avaliacoes.sort((a, b) => new Date(b.data) - new Date(a.data));
+
                 // Buscar os nomes dos usuários
                 const userIds = avaliacoes.map(a => a.user_id);
+                console.log('IDs dos usuários:', userIds);
+
                 const { data: usuarios, error: usuariosError } = await supabase
                     .from('utilizadores')
                     .select('id, nome')
@@ -1400,6 +1477,8 @@
                     console.error('Erro ao buscar usuários:', usuariosError);
                     throw usuariosError;
                 }
+
+                console.log('Usuários encontrados:', usuarios);
 
                 // Criar um mapa de usuários para fácil acesso
                 const usuariosMap = usuarios.reduce((acc, user) => {
@@ -1417,51 +1496,49 @@
 
                 avaliacoesList.innerHTML = '';
 
-                if (avaliacoes && avaliacoes.length > 0) {
-                    avaliacoes.forEach(avaliacao => {
-                        const avaliacaoItem = document.createElement('div');
-                        avaliacaoItem.className = 'avaliacao-item';
-                        
-                        // Formatar a data
-                        const data = new Date(avaliacao.data);
-                        const dataFormatada = data.toLocaleDateString('pt-BR', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-
-                        avaliacaoItem.innerHTML = `
-                            <div class="avaliacao-header">
-                                <span class="avaliacao-nome">${usuariosMap[avaliacao.user_id] || 'Usuário Anônimo'}</span>
-                                <span class="avaliacao-data">${dataFormatada}
-                                    ${tipoContaAtual === 'admin' ? `<i class='fas fa-trash-alt btn-apagar-avaliacao' title='Apagar avaliação' style='color:#F44336; margin-left:10px; cursor:pointer;' data-id='${avaliacao.id}'></i>` : ''}
-                                </span>
-                            </div>
-                            <div class="avaliacao-estrelas">
-                                ${'★'.repeat(avaliacao.estrelas)}${'☆'.repeat(5 - avaliacao.estrelas)}
-                            </div>
-                            <div class="avaliacao-texto">${avaliacao.texto}</div>
-                        `;
-                        avaliacoesList.appendChild(avaliacaoItem);
+                avaliacoes.forEach(avaliacao => {
+                    const avaliacaoItem = document.createElement('div');
+                    avaliacaoItem.className = 'avaliacao-item';
+                    
+                    // Formatar a data
+                    const data = new Date(avaliacao.data);
+                    const dataFormatada = data.toLocaleDateString('pt-BR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
                     });
-                } else {
-                    avaliacoesList.innerHTML = '<p>Nenhuma avaliação disponível.</p>';
-                }
 
-                console.log('Exibindo modal de avaliações');
+                    const nomeUsuario = usuariosMap[avaliacao.user_id] || 'Usuário não encontrado';
+                    console.log(`Avaliação ${avaliacao.id}: Usuário ${avaliacao.user_id} - Nome: ${nomeUsuario}`);
+
+                    // Verificar se o usuário atual pode apagar a avaliação
+                    const podeApagar = user && (userTipoConta === 'admin' || avaliacao.user_id === user.id);
+
+                    avaliacaoItem.innerHTML = `
+                        <div class="avaliacao-header">
+                            <span class="avaliacao-nome">${nomeUsuario}</span>
+                            <div class="avaliacao-header-right">
+                                ${podeApagar ? `
+                                    <button class="btn-apagar-avaliacao" data-id="${avaliacao.id}" onclick="confirmarApagarAvaliacao('${avaliacao.id}')">
+                                        <i class="fas fa-trash"></i> Apagar
+                                    </button>
+                                ` : ''}
+                                <span class="avaliacao-data">${dataFormatada}</span>
+                            </div>
+                        </div>
+                        <div class="avaliacao-estrelas">
+                            ${'★'.repeat(avaliacao.estrelas)}${'☆'.repeat(5 - avaliacao.estrelas)}
+                        </div>
+                        <p class="avaliacao-texto">${avaliacao.texto || 'Sem comentário'}</p>
+                    `;
+                    avaliacoesList.appendChild(avaliacaoItem);
+                });
+
                 modal.style.display = 'block';
                 document.body.style.overflow = 'hidden';
 
-                // Depois de renderizar as avaliações, adicionar evento aos ícones de lixo
-                document.querySelectorAll('.btn-apagar-avaliacao').forEach(btn => {
-                    btn.onclick = function() {
-                        idAvaliacaoParaApagar = this.getAttribute('data-id');
-                        document.getElementById('modalConfirmarApagar').style.display = 'block';
-                        document.body.style.overflow = 'hidden';
-                    };
-                });
             } catch (error) {
                 console.error('Erro ao carregar avaliações:', error);
                 showNotification('Erro ao carregar avaliações', 'error');
@@ -1492,7 +1569,21 @@
                     return;
                 }
 
-                treinadorIdAtual = treinadorId;
+                // Verificar se o treinador existe
+                const { data: treinador, error: treinadorError } = await supabase
+                    .from('treinadores')
+                    .select('id')
+                    .eq('id', treinadorId)
+                    .single();
+
+                if (treinadorError) throw treinadorError;
+
+                if (!treinador) {
+                    showNotification('Treinador não encontrado', 'error');
+                    return;
+                }
+
+                treinadorIdAtual = treinador.id;
                 avaliacaoSelecionada = 0;
                 
                 // Reset form
@@ -1507,11 +1598,9 @@
 
                 // Add click handlers to stars
                 const stars = document.querySelectorAll('.rating-input i');
-                console.log('Found stars:', stars.length);
                 stars.forEach(star => {
                     star.onclick = function() {
                         const rating = parseInt(this.dataset.rating);
-                        console.log('Star clicked, rating:', rating);
                         avaliacaoSelecionada = rating;
                         
                         // Update stars appearance
@@ -1522,7 +1611,6 @@
                                 s.classList.remove('active');
                             }
                         });
-                        console.log('Updated avaliacaoSelecionada:', avaliacaoSelecionada);
                     };
                 });
             } catch (error) {
@@ -1534,90 +1622,50 @@
         // Função para enviar avaliação
         async function enviarAvaliacao() {
             try {
-                console.log('Starting evaluation submission...');
-                console.log('Current avaliacaoSelecionada:', avaliacaoSelecionada);
-                console.log('Current treinadorIdAtual:', treinadorIdAtual);
-
-                if (avaliacaoSelecionada === 0) {
-                    showNotification('Por favor, seleciona uma avaliação', 'error');
+                const { data: { user }, error: userError } = await supabase.auth.getUser();
+                
+                if (userError || !user) {
+                    window.location.href = '../login.html?redirect=treinadores.html';
                     return;
                 }
 
-                const { data: { user }, error: userError } = await supabase.auth.getUser();
-                if (userError) {
-                    console.error('Error getting user:', userError);
-                    throw userError;
+                if (!treinadorIdAtual || !avaliacaoSelecionada) {
+                    showNotification('Por favor, selecione uma avaliação', 'error');
+                    return;
                 }
-                console.log('User authenticated:', user.id);
 
                 const texto = document.getElementById('avaliacaoTexto').value.trim();
-                if (!texto) {
-                    showNotification('Por favor, escreve um comentário', 'error');
-                    return;
-                }
-                console.log('Comment text:', texto);
 
-                // Verificar se o usuário já avaliou este treinador
-                console.log('Checking for existing evaluation...');
-                const { data: existingAvaliacao, error: checkError } = await supabase
+                // Inserir nova avaliação
+                const { error: insertError } = await supabase
                     .from('avaliacoes_treinadores')
-                    .select('id')
-                    .eq('treinador_id', treinadorIdAtual)
-                    .eq('user_id', user.id)
-                    .single();
+                    .insert({
+                        treinador_id: treinadorIdAtual,
+                        user_id: user.id,
+                        estrelas: avaliacaoSelecionada,
+                        texto: texto,
+                        data: new Date().toISOString()
+                    });
 
-                if (checkError && checkError.code !== 'PGRST116') {
-                    console.error('Error checking existing evaluation:', checkError);
-                    throw checkError;
+                if (insertError) {
+                    console.error('Erro ao inserir avaliação:', insertError);
+                    throw insertError;
                 }
 
-                const evaluationData = {
-                    treinador_id: treinadorIdAtual,
-                    user_id: user.id,
-                    estrelas: avaliacaoSelecionada,
-                    texto: texto,
-                    data: new Date().toISOString()
-                };
-
-                let error;
-                if (existingAvaliacao) {
-                    console.log('Updating existing evaluation...');
-                    // Update existing evaluation
-                    const { error: updateError } = await supabase
-                        .from('avaliacoes_treinadores')
-                        .update({
-                            estrelas: avaliacaoSelecionada,
-                            texto: texto,
-                            data: new Date().toISOString()
-                        })
-                        .eq('id', existingAvaliacao.id);
-                    error = updateError;
-                } else {
-                    console.log('Inserting new evaluation...');
-                    // Insert new evaluation
-                    const { error: insertError } = await supabase
-                        .from('avaliacoes_treinadores')
-                        .insert(evaluationData);
-                    error = insertError;
-                }
-
-                if (error) {
-                    console.error('Error saving evaluation:', error);
-                    throw error;
-                }
-
-                console.log('Evaluation saved successfully');
-                showNotification('Avaliação ' + (existingAvaliacao ? 'atualizada' : 'enviada') + ' com sucesso!', 'success');
+                showNotification('Avaliação enviada com sucesso!', 'success');
                 fecharModalNovaAvaliacao();
-                carregarTreinadores();
+                
+                // Recarregar a lista de treinadores para atualizar as avaliações
+                await carregarTreinadores();
+                
                 document.getElementById('modalSucessoAvaliacao').style.display = 'block';
                 setTimeout(() => {
                     document.getElementById('modalSucessoAvaliacao').style.display = 'none';
                     document.body.style.overflow = '';
                 }, 3000);
             } catch (error) {
-                console.error('Error in evaluation submission:', error);
-                showNotification('Erro ao enviar avaliação', 'error');
+                console.error('Erro ao enviar avaliação:', error);
+                showNotification('Erro ao enviar avaliação: ' + error.message, 'error');
             }
         }
 
@@ -1683,8 +1731,14 @@
             }
         });
 
-        // Guardar referência ao id da avaliação a apagar
-        let idAvaliacaoParaApagar = null;
+        // Função para confirmar apagar avaliação
+        function confirmarApagarAvaliacao(avaliacaoId) {
+            idAvaliacaoParaApagar = avaliacaoId;
+            const modalConfirmar = document.getElementById('modalConfirmarApagar');
+            modalConfirmar.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
         // Evento cancelar
         const modalConfirmar = document.getElementById('modalConfirmarApagar');
         document.getElementById('btnCancelarApagar').onclick = function() {
@@ -1692,29 +1746,44 @@
             document.body.style.overflow = '';
             idAvaliacaoParaApagar = null;
         };
+
         // Evento confirmar
         const modalSucessoApagar = document.getElementById('modalSucessoApagar');
         document.getElementById('btnConfirmarApagar').onclick = async function() {
             if (!idAvaliacaoParaApagar) return;
-            const { error } = await supabase
-                .from('avaliacoes_treinadores')
-                .delete()
-                .eq('id', idAvaliacaoParaApagar);
-            if (!error) {
+            
+            try {
+                const { error } = await supabase
+                    .from('avaliacoes_treinadores')
+                    .delete()
+                    .eq('id', idAvaliacaoParaApagar);
+
+                if (error) throw error;
+
                 // Remover do DOM
                 const btn = document.querySelector(`.btn-apagar-avaliacao[data-id='${idAvaliacaoParaApagar}']`);
-                if (btn) btn.closest('.avaliacao-item').remove();
+                if (btn) {
+                    const avaliacaoItem = btn.closest('.avaliacao-item');
+                    if (avaliacaoItem) {
+                        avaliacaoItem.remove();
+                    }
+                }
+
                 modalConfirmar.style.display = 'none';
                 modalSucessoApagar.style.display = 'block';
+                
+                // Recarregar a lista de treinadores para atualizar as avaliações
+                await carregarTreinadores();
+
                 setTimeout(() => {
                     modalSucessoApagar.style.display = 'none';
                     document.body.style.overflow = '';
                 }, 3000);
-            } else {
-                modalConfirmar.style.display = 'none';
+            } catch (error) {
+                console.error('Erro ao apagar avaliação:', error);
                 showNotification('Erro ao apagar avaliação', 'error');
-                document.body.style.overflow = '';
             }
+            
             idAvaliacaoParaApagar = null;
         };
 
@@ -1723,6 +1792,18 @@
             if (event.target === modalSucessoApagar) {
                 modalSucessoApagar.style.display = 'none';
                 document.body.style.overflow = '';
+            }
+        });
+
+        // Fechar modal de confirmação com ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const modalConfirmar = document.getElementById('modalConfirmarApagar');
+                if (modalConfirmar.style.display === 'block') {
+                    modalConfirmar.style.display = 'none';
+                    document.body.style.overflow = '';
+                    idAvaliacaoParaApagar = null;
+                }
             }
         });
     </script>

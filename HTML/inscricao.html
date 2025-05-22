@@ -33,6 +33,7 @@
                 <a href="outros-jogos.html">Outros Jogos</a>
                 <a href="../login.html" id="loginLink">Iniciar Sessão/Registo</a>
             </div>
+            <div id="userMenuContainer"></div>
         </div>
     </nav>
 
@@ -195,7 +196,7 @@
 
                 <div class="tutorial-note">
                     <i class="fas fa-info-circle"></i>
-                    <p>A sua tag é única e serve como identificador do seu perfil no jogo. É essencial para o processo de inscrição.</p>
+                    <p>A tua tag é única e serve como identificador do seu perfil no jogo. É essencial para o processo de inscrição.</p>
                 </div>
             </div>
         </div>
@@ -539,15 +540,11 @@
             background: #1976D2;
         }
 
-        .user-menu, .user-dropdown {
-            z-index: 99999 !important;
-            position: relative !important;
-        }
-
         .user-menu {
             position: relative;
             display: inline-block;
             margin-left: 20px;
+            z-index: 1001;
         }
 
         .user-info {
@@ -585,7 +582,7 @@
             padding: 8px 0;
             min-width: 200px;
             display: none;
-            z-index: 1000;
+            z-index: 1002;
         }
 
         .dropdown-menu.active {
@@ -631,7 +628,7 @@
                     // Buscar nome e email na tabela utilizadores
                     const { data: userData } = await window.supabaseClient
                         .from('utilizadores')
-                        .select('nome, email')
+                        .select('nome, email, tag_clash, trofeus')
                         .eq('id', user.id)
                         .single();
                     if (userData) {
@@ -639,6 +636,8 @@
                         const emailInput = document.querySelector('input[name="email"]');
                         if (nomeInput) nomeInput.value = userData.nome || '';
                         if (emailInput) emailInput.value = userData.email || '';
+                        if (userData.tag_clash) document.getElementById('tag').value = userData.tag_clash;
+                        if (userData.trofeus) document.getElementById('trofeus').value = userData.trofeus;
                     }
                 }
             } catch (error) {
@@ -955,7 +954,7 @@
                     // Buscar dados do usuário
                     const { data: userData, error: userError } = await window.supabaseClient
                         .from('utilizadores')
-                        .select('nome, email, tag, trofeus, nivel')
+                        .select('nome, email, tag_clash, trofeus')
                         .eq('id', user.id)
                         .single()
 
@@ -964,9 +963,8 @@
                     // Pré-preencher nome e email com os dados do usuário
                     document.getElementById('nome').value = userData.nome || ''
                     document.getElementById('email').value = userData.email || ''
-                    if (userData.tag) document.getElementById('tag').value = userData.tag
+                    if (userData.tag_clash) document.getElementById('tag').value = userData.tag_clash
                     if (userData.trofeus) document.getElementById('trofeus').value = userData.trofeus
-                    if (userData.nivel) document.getElementById('nivel').value = userData.nivel
                 }
             } catch (error) {
                 console.error('Erro ao buscar dados do usuário:', error)
@@ -999,7 +997,7 @@
                         if (!userMenu) {
                             userMenu = document.createElement('div');
                             userMenu.className = 'user-menu';
-                            loginLink.parentNode.insertBefore(userMenu, loginLink.nextSibling);
+                            document.getElementById('userMenuContainer').appendChild(userMenu);
                         }
 
                         userMenu.innerHTML = `
@@ -1059,14 +1057,15 @@
         mobileMenuBtn.addEventListener('click', () => {
             mobileMenuBtn.classList.toggle('active');
             navLinks.classList.toggle('active');
-            document.body.classList.toggle('menu-open');
         });
 
         document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenuBtn.classList.remove('active');
-                navLinks.classList.remove('active');
-                document.body.classList.remove('menu-open');
+            link.addEventListener('click', (e) => {
+                // Só fecha o menu mobile se NÃO for um clique no user-menu ou dropdown
+                if (!e.target.closest('.user-menu') && !e.target.closest('.user-dropdown')) {
+                    mobileMenuBtn.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
             });
         });
 
