@@ -890,7 +890,7 @@
                 if (error) throw error;
 
                 showNotification('Aula confirmada com sucesso!', 'success');
-                loadTreinadorDashboard();
+                window.location.reload();
             } catch (error) {
                 console.error('Erro ao confirmar aula:', error);
                 showNotification('Erro ao confirmar aula', 'error');
@@ -907,7 +907,7 @@
                 if (error) throw error;
 
                 showNotification('Aula cancelada com sucesso!', 'success');
-                loadTreinadorDashboard();
+                window.location.reload();
             } catch (error) {
                 console.error('Erro ao cancelar aula:', error);
                 showNotification('Erro ao cancelar aula', 'error');

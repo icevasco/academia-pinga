@@ -151,5 +151,8 @@ async function handleLogout() {
     }
 }
 
+// Tornar a função handleLogout disponível globalmente
+window.handleLogout = handleLogout;
+
 // Chamar a função de verificação quando a página carregar
 window.addEventListener('load', checkUser) 

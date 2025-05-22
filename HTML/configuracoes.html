@@ -503,8 +503,19 @@
                 const newPassword = document.getElementById('newPassword').value
                 const confirmPassword = document.getElementById('confirmPassword').value
 
+                // Validate password length
+                if (newPassword.length < 6) {
+                    throw new Error('A nova senha deve ter pelo menos 6 caracteres')
+                }
+
+                // Validate password match
                 if (newPassword !== confirmPassword) {
                     throw new Error('As senhas não coincidem')
+                }
+
+                // Validate current password is not empty
+                if (!currentPassword) {
+                    throw new Error('Por favor, insira sua senha atual')
                 }
 
                 const { error } = await window.supabaseClient.auth.updateUser({
@@ -513,11 +524,11 @@
 
                 if (error) throw error
 
-                showNotification('Senha atualizada com sucesso!', 'success')
+                showModal('Senha atualizada com sucesso!')
                 document.getElementById('passwordForm').reset()
             } catch (error) {
                 console.error('Erro ao atualizar senha:', error)
-                showNotification('Erro ao atualizar senha', 'error')
+                showModal('Erro ao atualizar senha: ' + error.message)
             }
         }
 
@@ -541,7 +552,7 @@
                 window.location.href = '../index.html'
             } catch (error) {
                 console.error('Erro ao excluir conta:', error)
-                showNotification('Erro ao excluir conta', 'error')
+                showModal('Erro ao excluir conta: ' + error.message)
             }
         }
 

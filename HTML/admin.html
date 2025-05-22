@@ -1053,6 +1053,32 @@
             padding: 20px;
             opacity: 0.8;
         }
+
+        .reset-password-button {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .reset-password-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+            background: linear-gradient(135deg, #45a049 0%, #4CAF50 100%);
+        }
+
+        .reset-password-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -2029,6 +2055,9 @@
                                     <button class="delete-button" onclick="openDeleteModal('${account.id}')" style="border-radius: 8px; padding: 8px 15px;">
                                         <i class="fas fa-trash"></i> Excluir
                                     </button>
+                                    <button class="reset-password-button" onclick="resetUserPassword('${account.id}')" style="border-radius: 8px; padding: 8px 15px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white;">
+                                        <i class="fas fa-key"></i> Reset Password
+                                    </button>
                                 </div>
                             </td>
                         `;
@@ -2098,6 +2127,9 @@
                                 </button>
                                 <button class="delete-button" onclick="openDeleteModal('${account.id}')" style="border-radius: 8px; padding: 8px 15px;">
                                     <i class="fas fa-trash"></i> Excluir
+                                </button>
+                                <button class="reset-password-button" onclick="resetUserPassword('${account.id}')" style="border-radius: 8px; padding: 8px 15px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white;">
+                                    <i class="fas fa-key"></i> Reset Senha
                                 </button>
                             </div>
                         </td>
@@ -2895,6 +2927,38 @@
                 return;
             }
             // ... existing code ...
+        }
+
+        async function resetUserPassword(userId) {
+            try {
+                if (!confirm('Tem certeza que deseja redefinir a senha deste usuário para "123456"?')) {
+                    return;
+                }
+
+                // Obter a sessão atual
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+
+                // Chamar a função Edge do Supabase
+                const response = await fetch('https://vhswdfifhhcqmtpnhoso.supabase.co/functions/v1/reset-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${session?.access_token}`
+                    },
+                    body: JSON.stringify({ userId })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Erro ao redefinir senha');
+                }
+
+                showNotification('Senha redefinida com sucesso para "123456"', 'success');
+            } catch (error) {
+                console.error('Erro ao redefinir senha:', error);
+                showNotification('Erro ao redefinir senha: ' + error.message, 'error');
+            }
         }
     </script>
 </body>
