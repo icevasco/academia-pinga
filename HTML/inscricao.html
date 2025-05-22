@@ -33,6 +33,7 @@
                 <a href="outros-jogos.html">Outros Jogos</a>
                 <a href="../login.html" id="loginLink">Iniciar Sessão/Registo</a>
             </div>
+            <div id="userMenuContainer"></div>
         </div>
     </nav>
 
@@ -73,13 +74,13 @@
             </div>
 
             <div class="form-group">
-                <label>Escolha seu Plano</label>
+                <label>Escolhe o teu Plano</label>
                 <div class="planos-grid">
                     <div class="plano-card" data-plano="iniciante" onclick="selecionarPlano('iniciante')">
                         <input type="radio" name="plano" id="plano-iniciante" value="iniciante" required>
                         <label for="plano-iniciante">
                             <h3>Plano Iniciante</h3>
-                            <div class="plano-preco">€29.99<span>/mês</span></div>
+                            <div class="plano-preco">29,99€<span>/mês</span></div>
                             <ul>
                                 <li><i class="fas fa-check"></i> Acesso a cursos básicos</li>
                                 <li><i class="fas fa-check"></i> Decks populares</li>
@@ -93,7 +94,7 @@
                         <label for="plano-avancado">
                             <div class="featured-badge">Mais Popular</div>
                             <h3>Plano Avançado</h3>
-                            <div class="plano-preco">€49.99<span>/mês</span></div>
+                            <div class="plano-preco">49,99€<span>/mês</span></div>
                             <ul>
                                 <li><i class="fas fa-check"></i> Todos os cursos</li>
                                 <li><i class="fas fa-check"></i> Decks exclusivos</li>
@@ -107,7 +108,7 @@
                         <input type="radio" name="plano" id="plano-pro" value="pro" required>
                         <label for="plano-pro">
                             <h3>Plano Pro</h3>
-                            <div class="plano-preco">€79.99<span>/mês</span></div>
+                            <div class="plano-preco">79,99€<span>/mês</span></div>
                             <ul>
                                 <li><i class="fas fa-check"></i> Conteúdo premium</li>
                                 <li><i class="fas fa-check"></i> Decks personalizados</li>
@@ -145,29 +146,29 @@
     <div id="tagTutorialModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeTagTutorial()">&times;</span>
-            <h2>Como Encontrar a Sua Tag do Clash Royale</h2>
+            <h2>Como Encontrar a Tua Tag do Clash Royale</h2>
             <div class="tutorial-content">
                 <div class="tutorial-step">
                     <div class="step-number">1</div>
                     <div class="step-content">
                         <h3>Abrir o Clash Royale</h3>
-                        <p>Inicie o jogo no seu dispositivo móvel</p>
+                        <p>Inicia o jogo no teu dispositivo móvel</p>
                     </div>
                 </div>
 
                 <div class="tutorial-step">
                     <div class="step-number">2</div>
                     <div class="step-content">
-                        <h3>Aceder ao Seu Perfil</h3>
-                        <p>Toque no ícone do seu perfil no canto superior esquerdo do ecrã</p>
+                        <h3>Aceder ao Teu Perfil</h3>
+                        <p>Toca no ícone do teu perfil no canto superior esquerdo do ecrã</p>
                     </div>
                 </div>
 
                 <div class="tutorial-step">
                     <div class="step-number">3</div>
                     <div class="step-content">
-                        <h3>Encontrar a Sua Tag</h3>
-                        <p>A sua tag aparece logo abaixo do seu nome de utilizador, começando com o símbolo #</p>
+                        <h3>Encontrar a Tua Tag</h3>
+                        <p>A tua tag aparece logo abaixo do teu nome de utilizador, começando com o símbolo #</p>
                         <div class="tag-example">
                             <span class="tag-label">Nome:</span>
                             <span class="tag-value">Manoel Pinga</span>
@@ -183,7 +184,7 @@
                     <div class="step-number">4</div>
                     <div class="step-content">
                         <h3>Copiar a Tag</h3>
-                        <p>Clique na tag e aparecerá um botão para copiar. Clique no botão para copiar a tag completa.</p>
+                        <p>Clica na tag e aparecerá um botão para copiar. Clica no botão para copiar a tag completa.</p>
                         <div class="tag-example" style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
                             <span class="tag-value">#ABC123XYZ</span>
                             <button class="copy-button" style="background: #2196F3; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
@@ -195,8 +196,18 @@
 
                 <div class="tutorial-note">
                     <i class="fas fa-info-circle"></i>
-                    <p>A sua tag é única e serve como identificador do seu perfil no jogo. É essencial para o processo de inscrição.</p>
+                    <p>A tua tag é única e serve como identificador do teu perfil no jogo. É essencial para o processo de inscrição.</p>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSuccessModal()">&times;</span>
+            <h2>Inscrição realizada com sucesso!</h2>        
+            <div class="modal-buttons">
+                <button onclick="closeSuccessModal()" class="btn-primary">OK</button>
             </div>
         </div>
     </div>
@@ -529,15 +540,11 @@
             background: #1976D2;
         }
 
-        .user-menu, .user-dropdown {
-            z-index: 99999 !important;
-            position: relative !important;
-        }
-
         .user-menu {
             position: relative;
             display: inline-block;
             margin-left: 20px;
+            z-index: 1001;
         }
 
         .user-info {
@@ -575,7 +582,7 @@
             padding: 8px 0;
             min-width: 200px;
             display: none;
-            z-index: 1000;
+            z-index: 1002;
         }
 
         .dropdown-menu.active {
@@ -600,6 +607,11 @@
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        #successModal .modal-content {
+            max-height: 250px;
+            overflow-y: auto;
+        }
     </style>
 
     <script>
@@ -616,7 +628,7 @@
                     // Buscar nome e email na tabela utilizadores
                     const { data: userData } = await window.supabaseClient
                         .from('utilizadores')
-                        .select('nome, email')
+                        .select('nome, email, tag_clash, trofeus')
                         .eq('id', user.id)
                         .single();
                     if (userData) {
@@ -624,6 +636,8 @@
                         const emailInput = document.querySelector('input[name="email"]');
                         if (nomeInput) nomeInput.value = userData.nome || '';
                         if (emailInput) emailInput.value = userData.email || '';
+                        if (userData.tag_clash) document.getElementById('tag').value = userData.tag_clash;
+                        if (userData.trofeus) document.getElementById('trofeus').value = userData.trofeus;
                     }
                 }
             } catch (error) {
@@ -636,7 +650,7 @@
             e.preventDefault();
             const planoSelecionado = document.querySelector('input[name="plano"]:checked');
             if (!planoSelecionado) {
-                alert('Por favor, selecione um plano para continuar.');
+                alert('Por favor, seleciona um plano para continuar.');
                 return;
             }
             showModal();
@@ -679,9 +693,7 @@
                 <div style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 5px; color: #333;">
                     <strong>Plano Escolhido:</strong> ${planoText}
                 </div>
-                <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 5px; color: #1976D2;">
-                    <i class="fas fa-info-circle"></i> Após confirmar, você receberá um email com instruções para acessar sua conta.
-                </div>
+                
             `;
 
             // Adicionar eventos aos botões do modal
@@ -739,7 +751,7 @@
 
             // Validação dos campos
             if (!nome || !email || !tag || !trofeus || !nivel) {
-                alert('Por favor, preencha todos os campos obrigatórios.');
+                alert('Por favor, preenche todos os campos obrigatórios.');
                 return;
             }
 
@@ -764,43 +776,93 @@
                 if (existingUser) {
                     console.log('Usuário existente encontrado:', existingUser);
                     userId = existingUser.id;
-                } else {
-                    console.log('Criando novo usuário...');
-                    // Se o usuário não existe, criar um novo
-                    const { data: authData, error: authError } = await window.supabaseClient.auth.signUp({
-                        email: email,
-                        password: Math.random().toString(36).slice(-8),
-                        options: {
-                            data: {
-                                nome: nome
-                            }
+                    
+                    // Criar inscrição na tabela inscricoes
+                    const dadosInscricao = {
+                        utilizador_id: userId,
+                        nome: nome,
+                        plano: plano,
+                        tag: tag,
+                        trofeus: parseInt(trofeus),
+                        nivel: parseInt(nivel),
+                        status: 'pendente',
+                        data_inscricao: new Date().toISOString()
+                    };
+
+                    console.log('Dados da inscrição:', dadosInscricao);
+
+                    const { data: inscricaoData, error: inscricaoError } = await window.supabaseClient
+                        .from('inscricoes')
+                        .insert(dadosInscricao)
+                        .select();
+
+                    console.log('Resposta da inscrição:', { inscricaoData, inscricaoError });
+
+                    if (inscricaoError) {
+                        console.error('Erro ao criar inscrição:', inscricaoError);
+                        throw inscricaoError;
+                    }
+
+                    if (!inscricaoData || inscricaoData.length === 0) {
+                        throw new Error('Não foi possível confirmar a criação da inscrição');
+                    }
+
+                    // Fechar o modal de confirmação
+                    closeModal();
+
+                    // Mostrar modal de sucesso
+                    showSuccessModal();
+                    
+                    // Limpar o formulário
+                    document.getElementById('inscricaoForm').reset();
+                    
+                    // Remover seleção dos planos
+                    document.querySelectorAll('.plano-card').forEach(card => {
+                        card.classList.remove('selected');
+                    });
+                    
+                    // Selecionar plano avançado por padrão
+                    selecionarPlano('avancado');
+                    
+                    return;
+                }
+
+                console.log('Criando novo usuário...');
+                // Se o usuário não existe, criar um novo
+                const { data: authData, error: authError } = await window.supabaseClient.auth.signUp({
+                    email: email,
+                    password: Math.random().toString(36).slice(-8),
+                    options: {
+                        data: {
+                            nome: nome
                         }
+                    }
+                });
+
+                console.log('Resposta do signUp:', { authData, authError });
+
+                if (authError) throw authError;
+                userId = authData.user.id;
+
+                // Criar registro na tabela utilizadores
+                const { error: insertError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .insert({
+                        id: userId,
+                        nome: nome,
+                        email: email,
+                        tipo_conta: 'premium'
                     });
 
-                    console.log('Resposta do signUp:', { authData, authError });
+                console.log('Inserção na tabela utilizadores:', { insertError });
 
-                    if (authError) throw authError;
-                    userId = authData.user.id;
-
-                    // Criar registro na tabela utilizadores
-                    const { error: insertError } = await window.supabaseClient
-                        .from('utilizadores')
-                        .insert({
-                            id: userId,
-                            nome: nome,
-                            email: email,
-                            tipo_conta: 'premium'
-                        });
-
-                    console.log('Inserção na tabela utilizadores:', { insertError });
-
-                    if (insertError) throw insertError;
-                }
+                if (insertError) throw insertError;
 
                 console.log('Criando inscrição...');
                 // Criar inscrição na tabela inscricoes
                 const dadosInscricao = {
                     utilizador_id: userId,
+                    nome: nome,
                     plano: plano,
                     tag: tag,
                     trofeus: parseInt(trofeus),
@@ -830,8 +892,8 @@
                 // Fechar o modal de confirmação
                 closeModal();
 
-                // Mostrar mensagem de sucesso
-                alert('Inscrição realizada com sucesso! Um email foi enviado para você com instruções de acesso.');
+                // Mostrar modal de sucesso
+                showSuccessModal();
                 
                 // Limpar o formulário
                 document.getElementById('inscricaoForm').reset();
@@ -847,9 +909,9 @@
             } catch (error) {
                 console.error('Erro detalhado na inscrição:', error);
                 if (error.message && error.message.includes('already registered')) {
-                    alert('Este email já está registrado. Por favor, faça login ou use outro email.');
+                    alert('Este email já está registado. Por favor, inicia sessão ou utiliza outro email.');
                 } else {
-                    alert('Erro ao realizar a inscrição. Por favor, tente novamente. Erro: ' + error.message);
+                    alert('Erro ao realizar a inscrição. Por favor, tenta novamente. Erro: ' + error.message);
                 }
             }
         }
@@ -892,7 +954,7 @@
                     // Buscar dados do usuário
                     const { data: userData, error: userError } = await window.supabaseClient
                         .from('utilizadores')
-                        .select('nome, email')
+                        .select('nome, email, tag_clash, trofeus')
                         .eq('id', user.id)
                         .single()
 
@@ -901,6 +963,8 @@
                     // Pré-preencher nome e email com os dados do usuário
                     document.getElementById('nome').value = userData.nome || ''
                     document.getElementById('email').value = userData.email || ''
+                    if (userData.tag_clash) document.getElementById('tag').value = userData.tag_clash
+                    if (userData.trofeus) document.getElementById('trofeus').value = userData.trofeus
                 }
             } catch (error) {
                 console.error('Erro ao buscar dados do usuário:', error)
@@ -933,7 +997,7 @@
                         if (!userMenu) {
                             userMenu = document.createElement('div');
                             userMenu.className = 'user-menu';
-                            loginLink.parentNode.insertBefore(userMenu, loginLink.nextSibling);
+                            document.getElementById('userMenuContainer').appendChild(userMenu);
                         }
 
                         userMenu.innerHTML = `
@@ -993,14 +1057,15 @@
         mobileMenuBtn.addEventListener('click', () => {
             mobileMenuBtn.classList.toggle('active');
             navLinks.classList.toggle('active');
-            document.body.classList.toggle('menu-open');
         });
 
         document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenuBtn.classList.remove('active');
-                navLinks.classList.remove('active');
-                document.body.classList.remove('menu-open');
+            link.addEventListener('click', (e) => {
+                // Só fecha o menu mobile se NÃO for um clique no user-menu ou dropdown
+                if (!e.target.closest('.user-menu') && !e.target.closest('.user-dropdown')) {
+                    mobileMenuBtn.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
             });
         });
 
@@ -1021,6 +1086,46 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof checkUser === 'function') checkUser();
+        });
+
+        // Modal de sucesso
+        function showSuccessModal() {
+            const modal = document.getElementById('successModal');
+            modal.style.display = 'block';
+            // Fechar automaticamente após 3 segundos
+            window._successModalTimeout = setTimeout(closeSuccessModal, 3000);
+        }
+        function closeSuccessModal() {
+            const modal = document.getElementById('successModal');
+            modal.style.display = 'none';
+            if (window._successModalTimeout) clearTimeout(window._successModalTimeout);
+        }
+        // Fechar modal de sucesso ao clicar fora
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('successModal');
+            if (modal && modal.style.display === 'block' && event.target === modal) {
+                closeSuccessModal();
+            }
+        });
+
+        // Função para limitar troféus a 9000 se digitar mais de 4 dígitos
+        document.getElementById('trofeus').addEventListener('input', function(e) {
+            let val = e.target.value;
+            if (val.length > 4) {
+                e.target.value = 9000;
+            } else if (parseInt(val) > 9000) {
+                e.target.value = 9000;
+            }
+        });
+
+        // Função para limitar nível do rei a 15 se digitar mais de 2 dígitos
+        document.getElementById('nivel').addEventListener('input', function(e) {
+            let val = e.target.value;
+            if (val.length > 2) {
+                e.target.value = 15;
+            } else if (parseInt(val) > 15) {
+                e.target.value = 15;
+            }
         });
     </script>
 </body>

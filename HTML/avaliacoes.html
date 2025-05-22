@@ -12,6 +12,49 @@
     <script src="../JS/user-menu.js"></script>
     <script src="../JS/avaliacoes.js" defer></script>
     <link rel="icon" type="image/png" href="../IMG/favicon_sem_fundo.png">
+    <style>
+        .stats-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #FFD700;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+
+        .stat-label {
+            color: #fff;
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -39,26 +82,28 @@
 
     <div class="reviews-container" style="background: none; box-shadow: none;">
         <div class="reviews-header animate__animated animate__fadeInDown" style="background: none; box-shadow: none;">
-            <h1 style="color: #FFD700; text-shadow: 0 0 20px #FFD700, 0 0 40px #FFA500; font-size: 3.5rem; font-weight: 800; letter-spacing: 2px; margin-bottom: 1.5rem; background: none;">Avaliações dos Nossos Alunos</h1>
-            <p style="color: #fff; font-size: 1.2rem; max-width: 700px; margin: 0 auto 2.5rem auto; text-align: center;">Descobre o que os nossos alunos dizem sobre a sua experiência na Academia CR</p>
+            <h1 style="color: #FFD700; text-shadow: 0 0 20px #FFD700, 0 0 40px #FFA500; font-size: 3.5rem; font-weight: 800; letter-spacing: 2px; margin-bottom: 0.5rem; background: none;">Avaliações dos Nossos Alunos</h1>
+            <p style="color: #fff; font-size: 1.2rem; max-width: 700px; margin: 0 auto 0.5rem auto; text-align: center;">Descobre o que os nossos alunos dizem sobre a sua experiência na Academia Pinga</p>
         </div>
 
-        <div class="stats-bar animate__animated animate__fadeIn">
-            <div class="stat-item">
-                <div class="stat-treinadores">4.9</div>
-                <div class="stat-treinadores2">Avaliação Média</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-treinadores">98%</div>
-                <div class="stat-treinadores2">Recomendam</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-treinadores">1000+</div>
-                <div class="stat-treinadores2">Avaliações</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-treinadores">9000</div>
-                <div class="stat-treinadores2">Troféus Ganhos</div>
+        <div class="stats-section" style="margin-top: 0.5rem; padding: 15px;">
+            <div class="stats-container" style="gap: 8px;">
+                <div class="stat-item animate__animated animate__fadeInUp" style="padding: 15px;">
+                    <div class="stat-value">5.0</div>
+                    <div class="stat-label">Avaliação Média</div>
+                </div>
+                <div class="stat-item animate__animated animate__fadeInUp" style="animation-delay: 0.2s; padding: 15px;">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Recomendam</div>
+                </div>
+                <div class="stat-item animate__animated animate__fadeInUp" style="animation-delay: 0.4s; padding: 15px;">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">Avaliações</div>
+                </div>
+                <div class="stat-item animate__animated animate__fadeInUp" style="animation-delay: 0.6s; padding: 15px;">
+                    <div class="stat-value">17500</div>
+                    <div class="stat-label">Troféus Ganhos</div>
+                </div>
             </div>
         </div>
 
@@ -67,7 +112,7 @@
         </div>
     </div>
 
-    <a href="#" class="add-review-button animate__animated animate__fadeInUp">Adicionar Avaliação</a>
+    <a href="#" class="add-review-button animate__animated animate__fadeInUp" style="background: #1a1a1a; border: 1px solid #333; color: #FFD700;">Adicionar Avaliação</a>
 
     <!-- Modal de Confirmação de Exclusão -->
     <div id="deleteReviewModal" class="modal">
@@ -172,6 +217,14 @@
 
         document.querySelectorAll('.review-card').forEach((card) => {
             observer.observe(card);
+        });
+
+        // Modificar a função de adicionar avaliação
+        document.querySelector('.add-review-button').addEventListener('click', async function(e) {
+            e.preventDefault();
+            if (await verificarPermissaoAvaliacao()) {
+                abrirModalAdicionar();
+            }
         });
 
         document.addEventListener('DOMContentLoaded', function() {

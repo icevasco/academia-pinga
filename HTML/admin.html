@@ -350,17 +350,91 @@
 
         .action-buttons {
             display: flex;
+            gap: 15px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .action-buttons button {
+            min-width: 120px;
+            justify-content: center;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
             gap: 8px;
         }
 
+        .action-buttons button i {
+            font-size: 14px;
+        }
+
+        .action-buttons button.loading {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        .action-buttons button.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         .approve-button {
-            background: #28a745;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
             color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .approve-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+            background: linear-gradient(135deg, #45a049 0%, #4CAF50 100%);
+        }
+
+        .approve-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .reject-button {
-            background: #dc3545;
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
             color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .reject-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+            background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
+        }
+
+        .reject-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .account-type-select {
@@ -532,14 +606,25 @@
         }
 
         .modal {
-            display: none;
+            display: none !important;
+            visibility: hidden;
+            opacity: 0;
             position: fixed;
-            z-index: 1000;
-            left: 0;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: block !important;
+            visibility: visible;
+            opacity: 1;
         }
 
         .modal-content {
@@ -547,442 +632,227 @@
             color: #fff !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             box-shadow: 0 4px 32px rgba(0,0,0,0.3) !important;
-            margin: 5% auto;
-            padding: 30px;
+            margin: 0 auto;
+            padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 500px;
+            width: 95%;
+            max-width: 800px;
+            max-height: 60vh;
             position: relative;
             animation: modalFadeIn 0.3s ease;
+            box-sizing: border-box;
+            overflow-y: auto;
         }
 
         @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { 
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .modal-header {
-            color: #FFD700 !important;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
+        @media screen and (max-width: 600px) {
+            .modal {
+                padding: 10px;
+            }
+
+            .modal-content {
+                margin: 10px;
+                padding: 15px;
+                max-height: 85vh;
+            }
+        }
+
+        #editAccountModal .modal-content,
+        #deleteAccountModal .modal-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #editAccountModal .modal-header,
+        #deleteAccountModal .modal-header {
+            flex-shrink: 0;
+            background: rgba(26, 26, 26, 0.97);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
         }
 
-        .modal-header h2, .modal-header h3, .modal-header {
-            color: #FFD700 !important;
+        #editAccountModal .modal-body,
+        #deleteAccountModal .modal-body {
+            flex: 1;
+            padding-right: 10px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
-        .modal-body {
+        #editAccountModal .modal-footer,
+        #deleteAccountModal .modal-footer {
+            flex-shrink: 0;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            background: rgba(26, 26, 26, 0.97);
+            z-index: 1;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #deleteAccountModal .warning-list {
+            margin: 10px 0;
+            padding-right: 10px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        #deleteAccountModal .warning-list li {
+            margin: 8px 0;
             color: #fff;
+            list-style-type: none;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        #deleteAccountModal .confirmation-input {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            width: 100%;
         }
 
         .form-group label {
-            color: #FFD700 !important;
+            display: block;
+            margin-bottom: 5px;
+            color: #FFD700;
             font-weight: 500;
         }
 
         .form-group input,
         .form-group select {
-            background: rgba(255,255,255,0.05) !important;
-            border: 1px solid rgba(255,255,255,0.1) !important;
-            color: #fff !important;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #FFD700 !important;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(255,215,0,0.2) !important;
-        }
-
-        .save-button,
-        .edit-button {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%) !important;
-            color: #1a1a1a !important;
-            font-weight: 500;
-        }
-
-        .save-button:hover,
-        .edit-button:hover {
-            background: linear-gradient(135deg, #FFA500 0%, #FFD700 100%) !important;
-            color: #1a1a1a !important;
-        }
-
-        .cancel-button {
-            background: rgba(255,255,255,0.1) !important;
-            color: #fff !important;
-            border: 1px solid rgba(255,255,255,0.2) !important;
-        }
-
-        .cancel-button:hover {
-            background: rgba(255,255,255,0.15) !important;
-            color: #FFD700 !important;
-        }
-
-        .warning-text {
-            color: #ff4444;
-            margin: 15px 0;
-        }
-
-        .warning-list {
-            list-style: none;
-            padding: 0;
-            margin: 15px 0;
-        }
-
-        .warning-list li {
-            padding: 8px 0;
-            padding-left: 25px;
-            position: relative;
-            color: #fff;
-            opacity: 0.8;
-        }
-
-        .warning-list li:before {
-            content: '⚠️';
-            position: absolute;
-            left: 0;
-        }
-
-        .confirmation-input {
-            margin-top: 20px;
-        }
-
-        .confirmation-input label {
-            color: #FFD700;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .confirmation-input input {
             width: 100%;
             padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .confirmation-input input:focus {
-            border-color: #FFD700;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
-        }
-
-        .close {
-            position: absolute;
-            right: 20px;
-            top: 15px;
-            font-size: 28px;
-            font-weight: bold;
-            color: #FFD700;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .close:hover {
-            color: #FFA500;
-        }
-
-        .modal-footer {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        .modal-footer .delete-button {
-            background: #dc3545;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .modal-footer .delete-button:disabled {
-            background: #dc354580;
-            cursor: not-allowed;
-        }
-
-        .modal-footer .delete-button:not(:disabled):hover {
-            background: #c82333;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        #accountsSection {
-            display: none;
-            margin-top: 30px;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        #accountsSection.active {
-            display: block !important;
-        }
-
-        .content-section {
-            display: none;
-            margin-top: 30px;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .content-section.active {
-            display: block !important;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #FFD700;
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.1);
             color: #fff;
             font-size: 14px;
-            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
 
-        .form-control:focus {
-            border-color: #FFD700;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
-        }
-
-        .warning-text {
-            color: #ff4444;
-            margin: 15px 0;
-        }
-
-        .warning-list {
-            list-style: none;
-            padding: 0;
-            margin: 15px 0;
-        }
-
-        .warning-list li {
-            padding: 8px 0;
-            padding-left: 25px;
-            position: relative;
-            color: #fff;
-            opacity: 0.8;
-        }
-
-        .warning-list li:before {
-            content: '⚠️';
-            position: absolute;
-            left: 0;
-        }
-
-        .confirmation-input {
-            margin-top: 20px;
-        }
-
-        .confirmation-input label {
-            display: block;
-            margin-bottom: 8px;
-            color: #FFD700;
-        }
-
-        .confirmation-input input {
-            width: 100%;
+        .modal-footer button {
+            flex: 1;
+            min-width: 120px;
             padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .confirmation-input input:focus {
-            border-color: #FFD700;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
-        }
-
-        .close-button {
-            background: none;
             border: none;
-            font-size: 24px;
+            border-radius: 8px;
             cursor: pointer;
-            color: #FFD700;
-            transition: color 0.3s ease;
-        }
-
-        .close-button:hover {
-            color: #FFA500;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
         }
 
         .account-type-badge {
             padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 14px;
+            border-radius: 15px;
+            font-size: 12px;
             font-weight: 500;
-            display: inline-block;
-            text-transform: capitalize;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .account-type-admin {
-            background: linear-gradient(90deg, #ff5858 0%, #f09819 100%);
-            color: white;
+            background: #FFD700;
+            color: #000;
         }
 
         .account-type-treinador {
-            background: linear-gradient(90deg, #f7971e 0%, #ffd200 100%);
-            color: #222;
+            background: #4CAF50;
+            color: #fff;
         }
 
         .account-type-premium_pro {
-            background: linear-gradient(90deg, #f7971e 0%, #ffd200 100%);
-            color: #222;
+            background: #9C27B0;
+            color: #fff;
         }
 
         .account-type-premium_avancado {
-            background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
-            color: white;
+            background: #2196F3;
+            color: #fff;
         }
 
         .account-type-premium_iniciante {
-            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
-            color: #222;
+            background: #FF9800;
+            color: #fff;
         }
 
         .account-type-gratuito {
-            background: linear-gradient(90deg, #2196F3 0%, #1565c0 100%);
-            color: white;
+            background: #757575;
+            color: #fff;
         }
 
-        @media (max-width: 768px) {
-            .dashboard-container {
-                margin: 100px 1rem 2rem;
-                padding: 1.5rem;
-            }
-
-            .dashboard-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 15px;
-            }
-
-            .dashboard-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .dashboard-sections {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-content {
-                margin: 10% auto;
-                padding: 15px;
-            }
-
-            .modal-footer {
-                flex-direction: column;
-            }
-
-            .action-button {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .form-group {
-                margin-bottom: 15px;
-            }
-
-            .form-control {
-                font-size: 16px;
-            }
-        }
-
-        .modal-footer .edit-button {
-            background: #2196F3;
-            color: white;
-            padding: 12px 25px;
-            border: none;
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
             font-size: 14px;
-            min-width: 150px;
-            justify-content: center;
+            box-sizing: border-box;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px;
+            padding-right: 30px;
         }
 
-        .modal-footer .edit-button:hover {
-            background: #1976D2;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+        .form-group select option {
+            background: #2d2d2d;
+            color: #fff;
+            padding: 10px;
         }
 
-        .modal-footer .edit-button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
+        .form-group select:focus {
+            outline: none;
+            border-color: #FFD700;
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
-        .modal-footer .edit-button i {
-            font-size: 16px;
-        }
-
-        .modal-footer .edit-button.loading {
-            background: #1976D2;
-            cursor: wait;
-            opacity: 0.8;
-        }
-
-        .modal-footer .edit-button.loading i {
-            animation: spin 1s linear infinite;
+        .form-group select:hover {
+            border-color: rgba(255, 255, 255, 0.4);
         }
 
         .treinadores-dashboard {
+            display: none;
             padding: 20px;
         }
 
-        .treinador-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
+        .treinador-header {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
             margin-bottom: 30px;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .treinador-avatar {
@@ -990,229 +860,98 @@
             height: 100px;
             border-radius: 50%;
             object-fit: cover;
+            border: 3px solid #FFD700;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
         }
 
-        .treinador-detalhes h2 {
-            margin: 0;
-            color: #333;
-        }
-
-        .treinador-detalhes p {
-            margin: 5px 0 0;
-            color: #666;
-        }
-
-        .agendamentos-section {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .filtros-agendamentos {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .filtros-agendamentos select {
-            padding: 8px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: white;
-        }
-
-        .lista-agendamentos {
-            display: grid;
-            gap: 15px;
-        }
-
-        .agendamento-card {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .agendamento-info h3 {
-            margin: 0;
-            color: #333;
-        }
-
-        .agendamento-info p {
-            margin: 5px 0;
-            color: #666;
-        }
-
-        .agendamento-acoes {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-confirmar {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .btn-cancelar {
-            background: #f44336;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.8em;
-            font-weight: 500;
-        }
-
-        .status-pendente {
-            background: #FFC107;
-            color: #000;
-        }
-
-        .status-confirmado {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .status-cancelado {
-            background: #f44336;
-            color: white;
-        }
-
-        @media (max-width: 768px) {
-            .treinador-info {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .filtros-agendamentos {
-                flex-direction: column;
-            }
-
-            .agendamento-card {
-                grid-template-columns: 1fr;
-            }
-
-            .agendamento-acoes {
-                justify-content: center;
-            }
-        }
-
-        .treinadores-dashboard {
-            padding: 20px;
-        }
-
-        .treinador-header {
-            background: rgba(24, 24, 24, 0.95);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+        .treinador-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
         }
 
         .treinador-info {
             display: flex;
+            align-items: center;
             gap: 25px;
-            align-items: flex-start;
-            background: none !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
-        }
-
-        .treinador-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid #FFD700;
-            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
-            background: #222;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .treinador-detalhes {
             flex: 1;
-            background: none !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
         }
 
         .treinador-detalhes h2 {
-            margin: 0;
             color: #FFD700;
+            margin: 0 0 10px 0;
             font-size: 24px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .treinador-detalhes p {
-            margin: 5px 0 15px;
             color: #fff;
-            font-size: 16px;
+            margin: 0 0 15px 0;
             opacity: 0.8;
+            font-size: 16px;
         }
 
         .treinador-stats {
             display: flex;
-            gap: 30px;
-            margin-top: 20px;
+            gap: 20px;
+            margin-top: 15px;
         }
 
         .stat-item {
-            text-align: center;
-            padding: 15px;
             background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
             border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             min-width: 120px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 215, 0, 0.3);
         }
 
         .stat-item i {
-            font-size: 24px;
             color: #FFD700;
-            margin-bottom: 8px;
+            font-size: 24px;
+            margin-bottom: 10px;
         }
 
         .stat-item span {
-            display: block;
-            font-size: 24px;
-            font-weight: bold;
             color: #fff;
-            margin: 5px 0;
+            font-size: 20px;
+            font-weight: bold;
         }
 
         .stat-item label {
             color: #fff;
             opacity: 0.8;
             font-size: 14px;
+            margin-top: 5px;
         }
 
         .dashboard-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
-            margin-bottom: 30px;
+            margin-top: 30px;
         }
 
         .dashboard-card {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
             padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
@@ -1220,757 +959,99 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
         }
 
         .card-header i {
-            font-size: 20px;
             color: #FFD700;
+            font-size: 20px;
         }
 
         .card-header h3 {
-            margin: 0;
             color: #FFD700;
+            margin: 0;
             font-size: 18px;
         }
 
-        .card-content {
-            min-height: 200px;
-        }
-
         .aula-card {
             background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
             border-radius: 10px;
-            margin-bottom: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .aula-card h4 {
-            margin: 0 0 5px 0;
-            color: #fff;
-        }
-
-        .aula-card p {
-            margin: 0;
-            color: #fff;
-            opacity: 0.8;
-            font-size: 14px;
-        }
-
-        .avaliacao-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .avaliacao-card h4 {
-            margin: 0 0 5px 0;
-            color: #fff;
-        }
-
-        .estrelas {
-            color: #FFD700;
-            margin: 5px 0;
-        }
-
-        .avaliacao-card p {
-            margin: 5px 0;
-            color: #fff;
-            opacity: 0.8;
-        }
-
-        .avaliacao-card small {
-            color: #fff;
-            opacity: 0.6;
-            font-size: 12px;
-        }
-
-        @media (max-width: 768px) {
-            .treinador-header {
-                flex-direction: column;
-            }
-
-            .treinador-info {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-
-            .treinador-stats {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-
-        .avatar-upload-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            padding: 15px;
-            border: 2px dashed #ddd;
-            border-radius: 8px;
-            background: #f8f9fa;
-        }
-
-        .avatar-upload-container:hover {
-            border-color: #2196F3;
-            background: #f0f7ff;
-        }
-
-        /* Estilos do Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 500px;
-            position: relative;
-            animation: modalFadeIn 0.3s ease;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .close {
-            position: absolute;
-            right: 20px;
-            top: 15px;
-            font-size: 28px;
-            font-weight: bold;
-            color: #666;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .close:hover {
-            color: #333;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e1e1;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #2196F3;
-            outline: none;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
-        }
-
-        .save-button,
-        .cancel-button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 500;
             transition: all 0.3s ease;
         }
 
-        .save-button {
-            background: #2196F3;
-            color: white;
-            flex: 1;
-        }
-
-        .save-button:hover {
-            background: #1976D2;
+        .aula-card:hover {
             transform: translateY(-2px);
-        }
-
-        .cancel-button {
-            background: #f5f5f5;
-            color: #333;
-        }
-
-        .cancel-button:hover {
-            background: #e0e0e0;
-            transform: translateY(-2px);
-        }
-
-        .account-type-premium_iniciante {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .account-type-premium_avancado {
-            background: #e3f2fd;
-            color: #1565c0;
-        }
-
-        .account-type-premium_pro {
-            background: #fce4ec;
-            color: #c2185b;
-        }
-
-        .form-group select, .account-type-select {
-            background: rgba(26,26,26,0.95) !important;
-            color: #FFD700 !important;
-            border: 1.5px solid #FFD700 !important;
-            border-radius: 8px !important;
-            font-weight: 500;
-            appearance: none !important;
-            -webkit-appearance: none !important;
-            -moz-appearance: none !important;
-            -ms-appearance: none !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            padding-right: 32px;
-            transition: border-color 0.3s;
-            /* Seta dourada personalizada */
-            background-image: url('data:image/svg+xml;utf8,<svg fill="%23FFD700" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5.516 7.548a1 1 0 0 1 1.415-.032L10 10.414l3.07-2.898a1 1 0 1 1 1.383 1.447l-3.762 3.55a1 1 0 0 1-1.383 0l-3.762-3.55a1 1 0 0 1-.032-1.415z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 20px 20px;
-        }
-        .form-group select:focus, .account-type-select:focus {
-            border-color: #FFA500 !important;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(255,215,0,0.2) !important;
-        }
-        /* Para navegadores que suportam ::-ms-expand e ::placeholder */
-        .form-group select::-ms-expand, .account-type-select::-ms-expand {
-            display: none;
-        }
-        /* Dropdown aberto (pode não funcionar em todos navegadores) */
-        select option {
-            background: #222 !important;
-            color: #FFD700 !important;
-        }
-
-        #accountsSection, .content-section {
-            background: rgba(26, 26, 26, 0.97) !important;
-            color: #fff !important;
-            border-radius: 20px !important;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
-            border: 1px solid rgba(255,255,255,0.08) !important;
-        }
-        .table-container {
-            background: rgba(34, 34, 34, 0.98) !important;
-            border-radius: 16px !important;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.18) !important;
-            border: 1px solid rgba(255,255,255,0.08) !important;
-        }
-        table {
-            background: transparent !important;
-        }
-        th, td {
-            background: transparent !important;
-        }
-        .modal-content {
-            /* ...outros estilos... */
-            max-width: 1000px !important;
-            width: 95% !important;
-        }
-       .confirm-modal-small {
-            max-width: 350px !important;
-            width: 95% !important;
-            padding: 20px 10px !important;
-        }
-        .confirm-modal-small {
-            max-width: 240px !important;
-            width: 90% !important;
-            padding: 10px 5px !important;
-            font-size: 14px !important;
-        }
-        #confirmActionModal .modal-content h3 {
-            font-size: 16px !important;
-        }
-        #confirmActionModal .modal-content p {
-            font-size: 13px !important;
-        }
-        #confirmActionModal .modal-footer button {
-            font-size: 13px !important;
-            padding: 6px 14px !important;
-        }
-        .confirm-modal-small {
-            max-width: 240px !important;
-            width: 90% !important;
-            padding: 4px 5px 4px 5px !important;
-            font-size: 13px !important;
-            max-height: 300px !important;
-            margin: 0 auto !important;
-        }
-        #confirmActionModal .modal-content h3 {
-            font-size: 15px !important;
-            margin: 8px 0 4px 0 !important;
-        }
-        #confirmActionModal .modal-content p {
-            font-size: 12px !important;
-            margin: 4px 0 8px 0 !important;
-        }
-        #confirmActionModal .modal-footer {
-            margin-top: 6px !important;
-            padding-top: 6px !important;
-            gap: 6px !important;
-        }
-        #confirmActionModal .modal-footer button {
-            font-size: 12px !important;
-            padding: 4px 10px !important;
-        }
-        #confirmActionModal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-        }
-        #confirmActionModal.active {
-            display: flex !important;
-        }
-        #confirmActionModal .modal-content.confirm-modal-small {
-            position: relative;
-            top: unset;
-            left: unset;
-            right: unset;
-            bottom: unset;
-            margin: 0 auto !important;
-            transform: none !important;
-        }
-        #successModal .modal-content {
-            background-color: #4CAF50 !important;
-            color: white !important;
-        }
-        #successModal .modal-content h3 {
-            color: white !important;
-        }
-        #successModal .modal-content p {
-            color: white !important;
-        }
-        #successModal .modal-footer button {
-            background-color: white !important;
-            color: #4CAF50 !important;
-        }
-        #successModal .modal-footer button:hover {
-            background-color: #e0e0e0 !important;
-        }
-        #successModal .modal-footer button:active {
-            background-color: #c0c0c0 !important;
-        }
-        #successModal .close {
-            color: white !important;
-        }
-        #successModal .close:hover {
-            color: #FFA500 !important;
-        }
-        #successModal .close:active {
-            color: #FFD700 !important;
-        }
-        #successModal .modal-content.confirm-modal-small {
-            max-width: 350px !important;
-            width: 95% !important;
-            padding: 20px 10px !important;
-        }
-        #successModal .modal-content h3 {
-            font-size: 16px !important;
-        }
-        #successModal .modal-content p {
-            font-size: 13px !important;
-        }
-        #successModal .modal-footer button {
-            font-size: 13px !important;
-            padding: 6px 14px !important;
-        }
-        #successModal .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            margin-top: 6px !important;
-            padding-top: 6px !important;
-            gap: 6px !important;
-        }
-        #successModal .modal-footer button {
-            font-size: 12px !important;
-            padding: 4px 10px !important;
-        }
-        #successModal .modal-content.confirm-modal-small {
-            position: relative;
-            top: unset;
-            left: unset;
-            right: unset;
-            bottom: unset;
-            margin: 0 auto !important;
-            transform: none !important;
-        }
-        #confirmActionModal .modal-content p {
-            color: #fff !important;
-        }
-
-        .section-card {
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .section-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-
-        .section-card::after {
-            content: 'Clique para acessar';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 215, 0, 0.1);
-            padding: 8px;
-            text-align: center;
-            font-size: 12px;
-            color: #FFD700;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .section-card:hover::after {
-            opacity: 1;
-        }
-
-        .section-card i {
-            font-size: 32px;
-            color: #FFD700;
-            margin-bottom: 15px;
-        }
-
-        .section-card h2 {
-            color: #FFD700;
-            margin-bottom: 10px;
-        }
-
-        .section-card p {
-            color: #fff;
-            opacity: 0.8;
-        }
-
-        .availability-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .availability-slot {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .availability-checkbox {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .availability-slot label {
-            color: #fff;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .availability-slot:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .no-data {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-        }
-
-        .aula-card, .avaliacao-card {
-            background: #2a2a2a;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-        }
-
-        .aula-card p, .avaliacao-card p {
-            margin: 5px 0;
-        }
-
-        .estrelas {
-            color: #ffd700;
-            margin: 5px 0;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: #1a1a1a;
-            margin: 10% auto;
-            padding: 20px;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 5px;
-            position: relative;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-header h3 {
-            margin: 0;
-            color: #fff;
-        }
-
-        .close-button {
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .modal-body {
-            margin-bottom: 20px;
-        }
-
-        .modal-footer {
-            text-align: right;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            color: #fff;
-        }
-
-        .form-group input[type="text"],
-        .form-group input[type="date"],
-        .form-group input[type="time"],
-        .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            background: #2a2a2a;
-            border: 1px solid #444;
-            color: #fff;
-            border-radius: 4px;
-        }
-
-        .form-group textarea {
-            height: 100px;
-            resize: vertical;
-        }
-
-        .edit-button, .delete-button, .cancel-button {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-
-        .edit-button {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .delete-button {
-            background: #f44336;
-            color: white;
-        }
-
-        .cancel-button {
-            background: #666;
-            color: white;
-        }
-
-        .edit-button:hover {
-            background: #45a049;
-        }
-
-        .delete-button:hover {
-            background: #da190b;
-        }
-
-        .cancel-button:hover {
-            background: #555;
-        }
-
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 5px;
-            color: white;
-            z-index: 1000;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .notification.success {
-            background: #4CAF50;
-        }
-
-        .notification.error {
-            background: #f44336;
-        }
-
-        .aula-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 215, 0, 0.3);
         }
 
         .aula-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            gap: 8px;
         }
 
-        .aula-header h4 {
-            margin: 0;
+        .aula-info i {
             color: #FFD700;
-        }
-
-        .aula-info {
-            margin-bottom: 15px;
-        }
-
-        .aula-info p {
-            margin: 5px 0;
-            color: #fff;
-            opacity: 0.8;
         }
 
         .aula-actions {
             display: flex;
             gap: 10px;
-            margin-top: 15px;
         }
 
-        .action-button {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 14px;
+        .avaliacao-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
 
-        .approve-button {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .reject-button {
-            background: #f44336;
-            color: white;
-        }
-
-        .action-button:hover {
+        .avaliacao-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 215, 0, 0.3);
         }
 
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 15px;
+        .avaliacao-card h4 {
+            color: #FFD700;
+            margin: 0 0 15px 0;
+            font-size: 18px;
+        }
+
+        .estrelas {
+            color: #FFD700;
+            font-size: 20px;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .avaliacao-card p {
+            color: #fff;
+            margin: 10px 0;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .avaliacao-card small {
+            color: #fff;
+            opacity: 0.6;
             font-size: 12px;
-            font-weight: 500;
+            display: block;
+            margin-top: 10px;
         }
 
-        .status-confirmado {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .status-pendente {
-            background: #FFC107;
-            color: #000;
-        }
-
-        .status-cancelado {
-            background: #f44336;
-            color: white;
+        .no-data {
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -1993,7 +1074,7 @@
                 <a href="sobre.html">Sobre</a>
                 <a href="avaliacoes.html">Avaliações</a>
                 <a href="outros-jogos.html">Outros Jogos</a>
-                <a href="admin.html" id="adminLink" style="display: none;">Painel Admin</a>
+                <a href="admin.html" id="adminLink" style="display: none;">Painel de Administração</a>
                 <a href="../login.html" id="loginLink">Iniciar Sessão/Registo</a>
             </div>
         </div>
@@ -2004,7 +1085,7 @@
             <div class="dashboard-header">
                 <h1 class="dashboard-title">
                     <i class="fas fa-tachometer-alt"></i>
-                    Painel Administrativo
+                    Painel de Administração
                 </h1>
                 <button class="refresh-button" onclick="refreshDashboard()">
                     <i class="fas fa-sync-alt"></i>
@@ -2015,7 +1096,7 @@
 
             <div class="dashboard-stats">
                 <div class="stat-card">
-                    <h3>Total de Usuários</h3>
+                    <h3>Total de Utilizadores</h3>
                     <div class="value" id="totalUsers">0</div>
                 </div>
                 <div class="stat-card">
@@ -2049,31 +1130,42 @@
             </div>
 
             <div class="dashboard-sections">
-                <div class="section-card" onclick="showSection('accounts')">
+                <div class="section-card" data-section="accounts">
                     <i class="fas fa-users"></i>
                     <h2>Todas as Contas</h2>
-                    <p>Gerencie todas as contas de usuários</p>
+                    <p>Gerir todas as contas de utilizadores</p>
                 </div>
-                <div class="section-card" onclick="showSection('forms')">
+                <div class="section-card" data-section="forms">
                     <i class="fas fa-file-alt"></i>
-                    <h2>Inscrições Cursos</h2>
-                    <p>Visualize e gerencie inscrições em cursos</p>
+                    <h2>Inscrições em Cursos</h2>
+                    <p>Visualizar e gerir inscrições em cursos</p>
                 </div>
-                <div class="section-card" onclick="showSection('treinadores')">
+                <div class="section-card" data-section="treinadores">
                     <i class="fas fa-chalkboard-teacher"></i>
-                    <h2>Dashboard Treinador</h2>
-                    <p>Gerencie agendamentos e perfil de treinador</p>
+                    <h2>Painel do Treinador</h2>
+                    <p>Gerir agendamentos e perfil de treinador</p>
                 </div>
             </div>
         </div>
 
         <div id="accountsSection" class="content-section">
-            <button class="back-button" onclick="showMainDashboard()">
+            <button class="back-button">
                 <i class="fas fa-arrow-left"></i> Voltar
             </button>
             <h2>Todas as Contas</h2>
-            <div style="margin-bottom: 20px;">
-                <input type="text" id="searchAccountsInput" placeholder="Pesquisar por nome ou email..." style="width: 100%; max-width: 350px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+            <div style="margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
+                <input type="text" id="searchAccountsInput" placeholder="Pesquisar por nome ou email..." style="width: 100%; max-width: 350px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;" onkeyup="searchAccounts(this.value)">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <select id="sortType" class="account-type-select" onchange="updateSort()" style="min-width: 200px;">
+                        <option value="tipo_conta">Ordenar por Cargo</option>
+                        <option value="nome">Ordenar por Nome</option>
+                        <option value="data_criacao">Ordenar por Data de Criação</option>
+                    </select>
+                    <button class="edit-button" onclick="toggleSortOrder()" style="display: flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-sort"></i>
+                        <span id="sortButtonText">↓</span>
+                    </button>
+                </div>
             </div>
             <div class="table-container">
                 <table id="accountsTable">
@@ -2091,7 +1183,7 @@
         </div>
 
         <div id="formsSection" class="content-section">
-            <button class="back-button" onclick="showMainDashboard()">
+            <button class="back-button">
                 <i class="fas fa-arrow-left"></i> Voltar
             </button>
             <h2>Inscrições Cursos</h2>
@@ -2176,7 +1268,7 @@
         </div>
 
         <div id="treinadoresSection" class="content-section">
-            <button class="back-button" id="backButtonTreinador" onclick="showMainDashboard()" style="display: none !important;">
+            <button class="back-button" id="backButtonTreinador" style="display: none !important;">
                 <i class="fas fa-arrow-left"></i> Voltar
             </button>
             <h2>Dashboard Treinador</h2>
@@ -2227,26 +1319,26 @@
         <div id="deleteAccountModal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Exclusão</h3>
+                    <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Eliminação</h3>
                     <button class="close-button" onclick="closeDeleteModal()">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <p>Tem certeza que deseja excluir esta conta?</p>
+                    <p>Tem a certeza que deseja eliminar esta conta?</p>
                     <p class="warning-text">Esta ação é <strong>irreversível</strong> e irá:</p>
                     <ul class="warning-list">
-                        <li>Excluir permanentemente todos os dados do usuário</li>
+                        <li>Eliminar permanentemente todos os dados do utilizador</li>
                         <li>Remover todas as inscrições associadas</li>
                         <li>Cancelar qualquer acesso ativo</li>
                     </ul>
                     <div class="confirmation-input">
-                        <label for="deleteConfirmation">Digite "EXCLUIR" para confirmar:</label>
-                        <input type="text" id="deleteConfirmation" placeholder="Digite EXCLUIR">
+                        <label for="deleteConfirmation">Escreva "ELIMINAR" para confirmar:</label>
+                        <input type="text" id="deleteConfirmation" placeholder="Escreva ELIMINAR">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button class="cancel-button" onclick="closeDeleteModal()">Cancelar</button>
                     <button class="delete-button" onclick="confirmDeleteAccount()" disabled>
-                        <i class="fas fa-trash"></i> Excluir Conta
+                        <i class="fas fa-trash"></i> Eliminar Conta
                     </button>
                 </div>
             </div>
@@ -2301,16 +1393,16 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="editNome">Nome:</label>
-                    <input type="text" id="editNome" class="form-control" placeholder="Seu nome">
+                    <input type="text" id="editNome" class="form-control" placeholder="O seu nome">
                 </div>
                 <div class="form-group">
                     <label for="editEspecialidade">Especialidade:</label>
-                    <input type="text" id="editEspecialidade" class="form-control" placeholder="Sua especialidade">
+                    <input type="text" id="editEspecialidade" class="form-control" placeholder="A sua especialidade">
                 </div>
                 <div class="form-group">
-                    <label for="avatarUpload">Foto de Perfil:</label>
+                    <label for="avatarUpload">Fotografia de Perfil:</label>
                     <div class="avatar-upload-container">
-                        <img id="avatarPreview" src="" alt="Preview" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+                        <img id="avatarPreview" src="" alt="Pré-visualização" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
                         <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="previewImage(event)">
                         <button class="action-button secondary" onclick="document.getElementById('avatarUpload').click()">
                             <i class="fas fa-upload"></i> Escolher Imagem
@@ -2398,7 +1490,148 @@
     </div>
 
     <script>
-        // Funções globais
+        // Definir funções globais necessárias
+        window.closeConfirmActionModal = function() {
+            const modal = document.getElementById('confirmActionModal');
+            modal.style.display = 'none';
+            modal.classList.remove('active');
+        };
+
+        window.closeSuccessModal = function() {
+            const modal = document.getElementById('successModal');
+            modal.style.display = 'none';
+            modal.classList.remove('active');
+        };
+
+        window.closeEditProfileModal = function() {
+            const modal = document.getElementById('editProfileModal');
+            modal.style.display = 'none';
+        };
+
+        window.previewImage = function(event) {
+            const preview = document.getElementById('avatarPreview');
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        window.salvarPerfilTreinador = async function() {
+            try {
+                const nome = document.getElementById('editNome').value;
+                const especialidade = document.getElementById('editEspecialidade').value;
+                const avatarFile = document.getElementById('avatarUpload').files[0];
+
+                const { data: { user }, error: userError } = await window.supabaseClient.auth.getUser();
+                if (userError) throw userError;
+
+                let avatarUrl = null;
+                if (avatarFile) {
+                    const fileExt = avatarFile.name.split('.').pop();
+                    const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+                    const { error: uploadError } = await window.supabaseClient.storage
+                        .from('avatars')
+                        .upload(fileName, avatarFile);
+                    
+                    if (uploadError) throw uploadError;
+                    
+                    const { data: { publicUrl } } = window.supabaseClient.storage
+                        .from('avatars')
+                        .getPublicUrl(fileName);
+                    
+                    avatarUrl = publicUrl;
+                }
+
+                const { error: updateError } = await window.supabaseClient
+                    .from('treinadores')
+                    .update({
+                        nome,
+                        especialidade,
+                        ...(avatarUrl && { avatar_url: avatarUrl })
+                    })
+                    .eq('user_id', user.id);
+
+                if (updateError) throw updateError;
+
+                showNotification('Perfil atualizado com sucesso!', 'success');
+                closeEditProfileModal();
+                loadTreinadorDashboard();
+            } catch (error) {
+                console.error('Erro ao salvar perfil:', error);
+                showNotification('Erro ao salvar perfil', 'error');
+            }
+        };
+
+        // Adicionar event listeners quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event listeners para os botões de seção
+            document.querySelectorAll('.section-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    if (section) {
+                        window.showSection(section);
+                    }
+                });
+            });
+
+            // Event listener para o botão de atualizar
+            const refreshButton = document.querySelector('.refresh-button');
+            if (refreshButton) {
+                refreshButton.addEventListener('click', window.refreshDashboard);
+            }
+
+            // Event listeners para os botões de voltar
+            document.querySelectorAll('.back-button').forEach(button => {
+                button.addEventListener('click', window.showMainDashboard);
+            });
+
+            // Event listener para o campo de confirmação de exclusão
+            const deleteConfirmation = document.getElementById('deleteConfirmation');
+            if (deleteConfirmation) {
+                deleteConfirmation.addEventListener('input', function() {
+                    const deleteButton = document.querySelector('#deleteAccountModal .delete-button');
+                    deleteButton.disabled = this.value !== 'ELIMINAR';
+                });
+            }
+
+            // Inicializar o dashboard
+            window.checkAdminAccess();
+        });
+
+        // Definir showSection no escopo global antes de qualquer uso
+        window.showSection = function(section) {
+            console.log('Mostrando seção:', section);
+            if (section === 'treinadores') {
+                window.location.href = 'dashboard-treinador.html';
+                return;
+            }
+
+            document.getElementById('mainDashboard').style.display = 'none';
+            document.getElementById('accountsSection').classList.remove('active');
+            document.getElementById('formsSection').classList.remove('active');
+            document.getElementById('treinadoresSection').classList.remove('active');
+
+            if (section === 'accounts') {
+                document.getElementById('accountsSection').classList.add('active');
+                if (window.loadAccounts) window.loadAccounts();
+            } else if (section === 'forms') {
+                document.getElementById('formsSection').classList.add('active');
+                if (window.loadForms) window.loadForms();
+            }
+        };
+
+        window.showMainDashboard = function() {
+            document.getElementById('mainDashboard').style.display = 'block';
+            document.getElementById('accountsSection').classList.remove('active');
+            document.getElementById('formsSection').classList.remove('active');
+            document.getElementById('treinadoresSection').classList.remove('active');
+            loadStats(); // Recarregar estatísticas ao voltar
+        };
+
         async function confirmarAula(aulaId) {
             try {
                 const { error } = await window.supabaseClient
@@ -2433,95 +1666,25 @@
             }
         }
 
-        function showSection(section) {
-            console.log('Mostrando seção:', section);
-            document.getElementById('mainDashboard').style.display = 'none';
-            document.getElementById('accountsSection').classList.remove('active');
-            document.getElementById('formsSection').classList.remove('active');
-            document.getElementById('treinadoresSection').classList.remove('active');
-
-            if (section === 'accounts') {
-                document.getElementById('accountsSection').classList.add('active');
-                loadAccounts();
-            } else if (section === 'forms') {
-                document.getElementById('formsSection').classList.add('active');
-                loadForms();
-            } else if (section === 'treinadores') {
-                document.getElementById('treinadoresSection').classList.add('active');
-                const dashboard = document.querySelector('.treinadores-dashboard');
-                if (dashboard) {
-                    dashboard.style.display = 'block';
-                    // Renderizar sempre o HTML base da dashboard
-                    dashboard.innerHTML = `
-                        <div class="treinador-header">
-                            <div class="treinador-info">
-                                <img src="https://vhswdfifhhcqmtpnhoso.supabase.co/storage/v1/object/public/avatars/avatar_default.png" alt="Avatar do Treinador" class="treinador-avatar" id="treinadorAvatar">
-                                <div class="treinador-detalhes">
-                                    <h2 id="treinadorNome">Nome do Treinador</h2>
-                                    <p id="treinadorEspecialidade">Especialidade</p>
-                                    <div class="treinador-stats">
-                                        <div class="stat-item">
-                                            <i class="fas fa-star"></i>
-                                            <span id="mediaAvaliacoes">0.0</span>
-                                            <label>Média Avaliações</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="dashboard-cards">
-                            <div class="dashboard-card">
-                                <div class="card-header">
-                                    <i class="fas fa-calendar"></i>
-                                    <h3>Próximas Aulas</h3>
-                                </div>
-                                <div class="card-content" id="proximasAulas">
-                                    <div class="no-data">Sem aulas agendadas para este treinador.</div>
-                                </div>
-                            </div>
-                            <div class="dashboard-card">
-                                <div class="card-header">
-                                    <i class="fas fa-star"></i>
-                                    <h3>Últimas Avaliações</h3>
-                                </div>
-                                <div class="card-content" id="ultimasAvaliacoes">
-                                    <div class="no-data">Sem avaliações recentes para este treinador.</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    `;
-                }
-                loadTreinadorDashboard();
-            }
-        }
-
-        function showMainDashboard() {
-            document.getElementById('mainDashboard').style.display = 'block';
-            document.getElementById('accountsSection').classList.remove('active');
-            document.getElementById('formsSection').classList.remove('active');
-            document.getElementById('treinadoresSection').classList.remove('active');
-        }
-
         function openEditAccountModal(id, nome, email, tipo_conta) {
             document.getElementById('editAccountId').value = id;
             document.getElementById('editAccountName').value = nome;
             document.getElementById('editAccountEmail').value = email;
             document.getElementById('editAccountType').value = tipo_conta;
-            document.getElementById('editAccountModal').style.display = 'block';
+            document.getElementById('editAccountModal').classList.add('active');
         }
 
         function openDeleteModal(id) {
             document.getElementById('editAccountId').value = id;
-            document.getElementById('deleteAccountModal').style.display = 'block';
+            document.getElementById('deleteAccountModal').classList.add('active');
         }
 
         function closeEditModal() {
-            document.getElementById('editAccountModal').style.display = 'none';
+            document.getElementById('editAccountModal').classList.remove('active');
         }
 
         function closeDeleteModal() {
-            document.getElementById('deleteAccountModal').style.display = 'none';
+            document.getElementById('deleteAccountModal').classList.remove('active');
             document.getElementById('deleteConfirmation').value = '';
             document.querySelector('#deleteAccountModal .delete-button').disabled = true;
         }
@@ -2529,59 +1692,53 @@
         async function saveAccountChanges() {
             try {
                 const id = document.getElementById('editAccountId').value;
-                const nome = document.getElementById('editAccountName').value;
-                const email = document.getElementById('editAccountEmail').value;
                 const tipo_conta = document.getElementById('editAccountType').value;
 
-                const { error } = await window.supabaseClient
+                // Primeiro, buscar o ID do treinador
+                const { data: treinadorData, error: treinadorError } = await window.supabaseClient
+                    .from('treinadores')
+                    .select('id')
+                    .eq('user_id', id)
+                    .single();
+
+                if (treinadorError && treinadorError.code !== 'PGRST116') throw treinadorError;
+
+                // Se for um treinador, atualizar os agendamentos primeiro
+                if (treinadorData) {
+                    // Atualizar os agendamentos para inativo
+                    const { error: agendamentosError } = await window.supabaseClient
+                        .from('agendamentos')
+                        .update({ status: 'inativo' })
+                        .eq('treinador_id', treinadorData.id);
+
+                    if (agendamentosError) {
+                        console.error('Erro ao atualizar agendamentos:', agendamentosError);
+                        throw agendamentosError;
+                    }
+                }
+
+                // Atualizar o tipo de conta
+                const { error: updateError } = await window.supabaseClient
                     .from('utilizadores')
-                    .update({
-                        nome,
-                        email,
-                        tipo_conta
-                    })
+                    .update({ tipo_conta })
                     .eq('id', id);
 
-                if (error) throw error;
+                if (updateError) {
+                    console.error('Erro ao atualizar tipo de conta:', updateError);
+                    throw updateError;
+                }
 
-                showNotification('Conta atualizada com sucesso!', 'success');
+                showNotification('Tipo de conta atualizado com sucesso!', 'success');
                 closeEditModal();
                 loadAccounts();
                 loadStats();
             } catch (error) {
-                console.error('Erro ao salvar alterações:', error);
-                showNotification('Erro ao salvar alterações', 'error');
+                console.error('Erro ao atualizar tipo de conta:', error);
+                showNotification('Erro ao atualizar tipo de conta: ' + (error.message || 'Erro desconhecido'), 'error');
             }
         }
 
-        async function confirmDeleteAccount() {
-            try {
-                const id = document.getElementById('editAccountId').value;
-                const confirmation = document.getElementById('deleteConfirmation').value;
-
-                if (confirmation !== 'EXCLUIR') {
-                    showNotification('Por favor, digite EXCLUIR para confirmar', 'error');
-                    return;
-                }
-
-                const { error } = await window.supabaseClient
-                    .from('utilizadores')
-                    .delete()
-                    .eq('id', id);
-
-                if (error) throw error;
-
-                showNotification('Conta excluída com sucesso!', 'success');
-                closeDeleteModal();
-                loadAccounts();
-                loadStats();
-            } catch (error) {
-                console.error('Erro ao excluir conta:', error);
-                showNotification('Erro ao excluir conta', 'error');
-            }
-        }
-
-        function showNotification(message, type = 'info') {
+        window.showNotification = function(message, type = 'info') {
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
             notification.textContent = message;
@@ -2599,7 +1756,31 @@
             }, 3000);
         }
 
-        window.addEventListener('DOMContentLoaded', function() {
+        // Adicionar função para verificar sessão
+        async function checkSession() {
+            try {
+                const { data: { session }, error } = await window.supabaseClient.auth.getSession();
+                
+                if (error) {
+                    console.error('Erro ao verificar sessão:', error);
+                    return false;
+                }
+
+                if (!session) {
+                    console.log('Nenhuma sessão ativa encontrada');
+                    return false;
+                }
+
+                console.log('Sessão ativa encontrada:', session);
+                return true;
+            } catch (error) {
+                console.error('Erro ao verificar sessão:', error);
+                return false;
+            }
+        }
+
+        // Modificar o evento DOMContentLoaded
+        window.addEventListener('DOMContentLoaded', async function() {
             // Inicializar Supabase
             if (!window.supabaseClient) {
                 const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co'
@@ -2607,242 +1788,179 @@
                 window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey)
             }
 
-            // Verificação de acesso
-            async function checkAdminAccess() {
-                try {
-                    console.log('Iniciando verificação de acesso...');
-                    
-                    // Verificar se o cliente Supabase está inicializado
-                    if (!window.supabaseClient) {
-                        console.error('Cliente Supabase não inicializado');
-                        window.location.href = '../login.html';
-                        return;
-                    }
-
-                    // Obter usuário atual
-                    const { data: { user }, error: authError } = await window.supabaseClient.auth.getUser();
-                    
-                    if (authError) {
-                        console.error('Erro ao obter usuário:', authError);
-                        showNotification('Erro ao verificar autenticação', 'error');
-                        window.location.href = '../login.html';
-                        return;
-                    }
-
-                    if (!user) {
-                        console.error('Nenhum usuário autenticado encontrado');
-                        showNotification('Por favor, faça login para continuar', 'error');
-                        window.location.href = '../login.html';
-                        return;
-                    }
-
-                    console.log('Usuário encontrado:', user);
-
-                    // Buscar dados do usuário
-                    const { data: userData, error: dbError } = await window.supabaseClient
-                        .from('utilizadores')
-                        .select('tipo_conta, nome')
-                        .eq('id', user.id)
-                        .single();
-
-                    if (dbError) {
-                        console.error('Erro ao buscar dados do usuário:', dbError);
-                        showNotification('Erro ao carregar dados do usuário', 'error');
-                        window.location.href = '../login.html';
-                        return;
-                    }
-
-                    if (!userData) {
-                        console.error('Dados do usuário não encontrados');
-                        showNotification('Dados do usuário não encontrados', 'error');
-                        window.location.href = '../login.html';
-                        return;
-                    }
-
-                    console.log('Dados do usuário:', userData);
-
-                    // Verificar tipo de conta
-                    if (userData.tipo_conta !== 'admin' && userData.tipo_conta !== 'treinador') {
-                        console.error('Tipo de conta não permitido:', userData.tipo_conta);
-                        showNotification('Acesso não autorizado', 'error');
-                        window.location.href = '../index.html';
-                        return;
-                    }
-
-                    console.log('Acesso permitido. Tipo de conta:', userData.tipo_conta);
-
-                    // Configurar interface baseada no tipo de conta
-                    if (userData.tipo_conta === 'admin') {
-                        console.log('Configurando interface de admin');
-                        setupAdminInterface();
-                    } else {
-                        console.log('Configurando interface de treinador');
-                        setupTreinadorInterface();
-                    }
-
-                    // Carregar dados iniciais
-                    await Promise.all([
-                        loadStats(),
-                        loadAccounts()
-                    ]).catch(error => {
-                        console.error('Erro ao carregar dados iniciais:', error);
-                        showNotification('Erro ao carregar alguns dados', 'error');
-                    });
-
-                } catch (error) {
-                    console.error('Erro na verificação de acesso:', error);
-                    showNotification('Erro ao verificar acesso', 'error');
-                    window.location.href = '../login.html';
-                }
+            // Verificar sessão antes de prosseguir
+            const hasSession = await checkSession();
+            if (!hasSession) {
+                console.log('Redirecionando para login - sem sessão ativa');
+                window.location.href = '../login.html';
+                return;
             }
 
-            // Configuração da interface
-            function setupAdminInterface() {
-                document.querySelectorAll('.section-card').forEach(card => {
-                    card.addEventListener('click', () => {
-                        const section = card.getAttribute('onclick').match(/'([^']+)'/)[1];
+            // Continuar com a inicialização se houver sessão
+            await checkAdminAccess();
+            
+            // Adicionar event listeners para os botões
+            document.querySelectorAll('.section-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    if (section) {
                         showSection(section);
-                    });
-                });
-
-                const refreshButton = document.querySelector('.refresh-button');
-                if (refreshButton) {
-                    refreshButton.addEventListener('click', refreshDashboard);
-                }
-
-                setupModalListeners();
-            }
-
-            function setupTreinadorInterface() {
-                console.log('Iniciando setup da interface de treinador');
-                // Esconder dashboard principal
-                const mainDashboard = document.getElementById('mainDashboard');
-                if (mainDashboard) {
-                    mainDashboard.style.display = 'none';
-                    console.log('Dashboard principal escondida');
-                } else {
-                    console.error('Elemento mainDashboard não encontrado');
-                }
-                // Mostrar seção de treinadores
-                const treinadoresSection = document.getElementById('treinadoresSection');
-                if (treinadoresSection) {
-                    treinadoresSection.classList.add('active');
-                    console.log('Seção de treinadores ativada');
-                } else {
-                    console.error('Elemento treinadoresSection não encontrado');
-                }
-                // Mostrar dashboard de treinadores
-                const treinadoresDashboard = document.querySelector('.treinadores-dashboard');
-                if (treinadoresDashboard) {
-                    treinadoresDashboard.style.display = 'block';
-                    console.log('Dashboard de treinadores exibida');
-                } else {
-                    console.error('Elemento treinadores-dashboard não encontrado');
-                }
-                console.log('Carregando dashboard do treinador');
-                
-                // Obter o ID do usuário atual
-                window.supabaseClient.auth.getUser().then(({ data: { user } }) => {
-                    if (user) {
-                        console.log('ID do usuário atual:', user.id);
-                        loadTreinadorDashboard(user.id);
-                    } else {
-                        console.error('Nenhum usuário autenticado encontrado');
                     }
                 });
+            });
+
+            // Adicionar event listener para o botão de atualizar
+            const refreshButton = document.querySelector('.refresh-button');
+            if (refreshButton) {
+                refreshButton.addEventListener('click', refreshDashboard);
             }
 
-            function setupModalListeners() {
-                document.querySelectorAll('.close-button').forEach(button => {
-                    button.addEventListener('click', () => {
-                        const modal = button.closest('.modal');
-                        if (modal) {
-                            modal.style.display = 'none';
-                        }
-                    });
-                });
+            // Adicionar event listener para o botão de voltar
+            const backButtons = document.querySelectorAll('.back-button');
+            backButtons.forEach(button => {
+                button.addEventListener('click', showMainDashboard);
+            });
 
-                window.addEventListener('click', (event) => {
-                    document.querySelectorAll('.modal').forEach(modal => {
-                        if (event.target === modal) {
-                            modal.style.display = 'none';
-                        }
-                    });
-                });
-            }
+            // Garantir que todos os modais estejam fechados inicialmente
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        });
 
-            // Funções de carregamento de dados
-            async function loadStats() {
-                try {
-                    const { data: users, error } = await window.supabaseClient
-                        .from('utilizadores')
-                        .select('*');
-
-                    if (error) throw error;
-
-                    // Inicializar contadores
-                    const stats = {
-                        total: 0,
-                        admins: 0,
-                        treinadores: 0,
-                        gratuito: 0,
-                        premiumIniciante: 0,
-                        premiumAvancado: 0,
-                        premiumPro: 0,
-                        pendingSubscriptions: 0
-                    };
-
-                    // Contar usuários por tipo
-                    users.forEach(user => {
-                        stats.total++;
-                        switch(user.tipo_conta) {
-                            case 'admin':
-                                stats.admins++;
-                                break;
-                            case 'treinador':
-                                stats.treinadores++;
-                                break;
-                            case 'gratuito':
-                                stats.gratuito++;
-                                break;
-                            case 'premium_iniciante':
-                                stats.premiumIniciante++;
-                                break;
-                            case 'premium_avancado':
-                                stats.premiumAvancado++;
-                                break;
-                            case 'premium_pro':
-                                stats.premiumPro++;
-                                break;
-                        }
-                    });
-
-                    // Atualizar elementos na interface
-                    document.getElementById('totalUsers').textContent = stats.total;
-                    document.getElementById('adminUsers').textContent = stats.admins;
-                    document.getElementById('treinadorUsers').textContent = stats.treinadores;
-                    document.getElementById('gratuitoUsers').textContent = stats.gratuito;
-                    document.getElementById('premiumInicianteUsers').textContent = stats.premiumIniciante;
-                    document.getElementById('premiumAvancadoUsers').textContent = stats.premiumAvancado;
-                    document.getElementById('premiumProUsers').textContent = stats.premiumPro;
-                    document.getElementById('pendingSubscriptions').textContent = stats.pendingSubscriptions;
-
-                } catch (error) {
-                    console.error('Erro ao carregar estatísticas:', error);
-                    showNotification('Erro ao carregar estatísticas', 'error');
+        // Verificação de acesso
+        async function checkAdminAccess() {
+            try {
+                console.log('Iniciando verificação de acesso...');
+                
+                // Verificar se o cliente Supabase está inicializado
+                if (!window.supabaseClient) {
+                    console.error('Cliente Supabase não inicializado');
+                    window.location.href = '../login.html';
+                    return;
                 }
+
+                // Obter usuário atual
+                const { data: { user }, error: authError } = await window.supabaseClient.auth.getUser();
+                
+                if (authError) {
+                    console.error('Erro ao obter usuário:', authError);
+                    showNotification('Erro ao verificar autenticação', 'error');
+                    window.location.href = '../login.html';
+                    return;
+                }
+
+                if (!user) {
+                    console.error('Nenhum usuário autenticado encontrado');
+                    showNotification('Por favor, faça login para continuar', 'error');
+                    window.location.href = '../login.html';
+                    return;
+                }
+
+                console.log('Usuário encontrado:', user);
+
+                // Buscar dados do usuário
+                const { data: userData, error: dbError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('tipo_conta, nome')
+                    .eq('id', user.id)
+                    .single();
+
+                if (dbError) {
+                    console.error('Erro ao buscar dados do usuário:', dbError);
+                    showNotification('Erro ao carregar dados do usuário', 'error');
+                    window.location.href = '../login.html';
+                    return;
+                }
+
+                if (!userData) {
+                    console.error('Dados do usuário não encontrados');
+                    showNotification('Dados do usuário não encontrados', 'error');
+                    window.location.href = '../login.html';
+                    return;
+                }
+
+                console.log('Dados do usuário:', userData);
+
+                // Verificar tipo de conta
+                if (userData.tipo_conta !== 'admin' && userData.tipo_conta !== 'treinador') {
+                    console.error('Tipo de conta não permitido:', userData.tipo_conta);
+                    showNotification('Acesso não autorizado', 'error');
+                    window.location.href = '../index.html';
+                    return;
+                }
+
+                // Carregar dados iniciais
+                await loadStats();
+                if (userData.tipo_conta === 'treinador') {
+                    await loadTreinadorDashboard();
+                }
+            } catch (error) {
+                console.error('Erro na verificação de acesso:', error);
+                showNotification('Erro ao verificar acesso', 'error');
+                window.location.href = '../login.html';
+            }
+        }
+
+        // Funções globais
+        window.showSection = function(section) {
+            console.log('Mostrando seção:', section);
+            if (section === 'treinadores') {
+                window.location.href = 'dashboard-treinador.html';
+                return;
             }
 
-            async function loadAccounts() {
-                try {
-                    const { data: users, error } = await window.supabaseClient
-                        .from('utilizadores')
-                        .select('*');
+            document.getElementById('mainDashboard').style.display = 'none';
+            document.getElementById('accountsSection').classList.remove('active');
+            document.getElementById('formsSection').classList.remove('active');
+            document.getElementById('treinadoresSection').classList.remove('active');
 
+            if (section === 'accounts') {
+                document.getElementById('accountsSection').classList.add('active');
+                if (window.loadAccounts) window.loadAccounts();
+            } else if (section === 'forms') {
+                document.getElementById('formsSection').classList.add('active');
+                if (window.loadForms) window.loadForms();
+            }
+        };
+
+        window.showMainDashboard = function() {
+            document.getElementById('mainDashboard').style.display = 'block';
+            document.getElementById('accountsSection').classList.remove('active');
+            document.getElementById('formsSection').classList.remove('active');
+            document.getElementById('treinadoresSection').classList.remove('active');
+            loadStats(); // Recarregar estatísticas ao voltar
+        };
+
+        let currentSortOrder = 'asc';
+        let currentSortType = 'tipo_conta';
+
+        window.updateSort = function() {
+            currentSortType = document.getElementById('sortType').value;
+            loadAccounts();
+        };
+
+        window.toggleSortOrder = function() {
+            currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+            document.getElementById('sortButtonText').textContent = currentSortOrder === 'asc' ? '↓' : '↑';
+            loadAccounts();
+        };
+
+        window.loadAccounts = async function() {
+            try {
+                let query = window.supabaseClient
+                    .from('utilizadores')
+                    .select('*');
+
+                // Aplicar ordenação
+                if (currentSortType === 'data_criacao') {
+                    query = query.order('data_criacao', { ascending: currentSortOrder === 'asc' });
+                } else if (currentSortType === 'tipo_conta') {
+                    // Ordenação personalizada para tipo_conta
+                    const { data: accounts, error } = await query;
                     if (error) throw error;
 
-                    // Ordenar usuários por tipo de conta
-                    const ordemCargos = {
+                    // Definir a ordem de prioridade dos cargos
+                    const cargoOrder = {
                         'admin': 1,
                         'treinador': 2,
                         'premium_pro': 3,
@@ -2851,387 +1969,340 @@
                         'gratuito': 6
                     };
 
-                    users.sort((a, b) => {
-                        return ordemCargos[a.tipo_conta] - ordemCargos[b.tipo_conta];
+                    // Função para formatar o tipo de conta em português
+                    const formatarTipoConta = (tipo) => {
+                        switch(tipo) {
+                            case 'admin':
+                                return 'Administrador';
+                            case 'treinador':
+                                return 'Treinador';
+                            case 'premium_pro':
+                                return 'Premium Pro';
+                            case 'premium_avancado':
+                                return 'Premium Avançado';
+                            case 'premium_iniciante':
+                                return 'Premium Iniciante';
+                            case 'gratuito':
+                                return 'Gratuito';
+                            default:
+                                return tipo;
+                        }
+                    };
+
+                    // Ordenar os resultados
+                    const sortedAccounts = accounts.sort((a, b) => {
+                        const orderA = cargoOrder[a.tipo_conta] || 999;
+                        const orderB = cargoOrder[b.tipo_conta] || 999;
+                        return currentSortOrder === 'asc' ? orderA - orderB : orderB - orderA;
                     });
 
+                    // Atualizar a tabela com os resultados ordenados
                     const tbody = document.querySelector('#accountsTable tbody');
                     tbody.innerHTML = '';
 
-                    users.forEach(user => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${user.nome || ''}</td>
-                            <td>${user.email || ''}</td>
-                            <td><span class="account-type-badge account-type-${user.tipo_conta}">${user.tipo_conta}</span></td>
+                    if (sortedAccounts.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="4" style="text-align: center; padding: 20px;">
+                                    Nenhuma conta encontrada
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+
+                    sortedAccounts.forEach(account => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${account.nome || '-'}</td>
+                            <td>${account.email || '-'}</td>
                             <td>
-                                <button class="edit-button" onclick="openEditAccountModal('${user.id}', '${user.nome || ''}', '${user.email || ''}', '${user.tipo_conta || ''}')">
+                                <span class="account-type-badge account-type-${account.tipo_conta}">
+                                    ${formatarTipoConta(account.tipo_conta)}
+                                </span>
+                            </td>
+                            <td>
+                                <div style="display: flex; gap: 15px;">
+                                    <button class="edit-button" onclick="openEditAccountModal('${account.id}', '${account.nome}', '${account.email}', '${account.tipo_conta}')" style="border-radius: 8px; padding: 8px 15px;">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button class="delete-button" onclick="openDeleteModal('${account.id}')" style="border-radius: 8px; padding: 8px 15px;">
+                                        <i class="fas fa-trash"></i> Excluir
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                    return;
+                } else {
+                    query = query.order(currentSortType, { ascending: currentSortOrder === 'asc' });
+                }
+
+                const { data: accounts, error } = await query;
+
+                if (error) {
+                    console.error('Erro na query:', error);
+                    throw error;
+                }
+
+                if (!accounts || accounts.length === 0) {
+                    const tbody = document.querySelector('#accountsTable tbody');
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 20px;">
+                                Nenhuma conta encontrada
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                // Função para formatar o tipo de conta em português
+                const formatarTipoConta = (tipo) => {
+                    switch(tipo) {
+                        case 'admin':
+                            return 'Administrador';
+                        case 'treinador':
+                            return 'Treinador';
+                        case 'premium_pro':
+                            return 'Premium Pro';
+                        case 'premium_avancado':
+                            return 'Premium Avançado';
+                        case 'premium_iniciante':
+                            return 'Premium Iniciante';
+                        case 'gratuito':
+                            return 'Gratuito';
+                        default:
+                            return tipo;
+                    }
+                };
+
+                const tbody = document.querySelector('#accountsTable tbody');
+                tbody.innerHTML = '';
+
+                accounts.forEach(account => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${account.nome || '-'}</td>
+                        <td>${account.email || '-'}</td>
+                        <td>
+                            <span class="account-type-badge account-type-${account.tipo_conta}">
+                                ${formatarTipoConta(account.tipo_conta)}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 15px;">
+                                <button class="edit-button" onclick="openEditAccountModal('${account.id}', '${account.nome}', '${account.email}', '${account.tipo_conta}')" style="border-radius: 8px; padding: 8px 15px;">
                                     <i class="fas fa-edit"></i> Editar
                                 </button>
-                                <button class="delete-button" onclick="openDeleteModal('${user.id}')">
+                                <button class="delete-button" onclick="openDeleteModal('${account.id}')" style="border-radius: 8px; padding: 8px 15px;">
                                     <i class="fas fa-trash"></i> Excluir
                                 </button>
-                            </td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-                } catch (error) {
-                    console.error('Erro ao carregar contas:', error);
-                    showNotification('Erro ao carregar contas', 'error');
-                }
-            }
-
-            // Funções de atualização
-            function refreshDashboard() {
-                const refreshButton = document.querySelector('.refresh-button');
-                refreshButton.classList.add('loading');
-                
-                Promise.all([
-                    loadStats(),
-                    loadAccounts()
-                ])
-                .then(() => {
-                    showNotification('Dashboard atualizado com sucesso!', 'success');
-                })
-                .catch((error) => {
-                    console.error('Erro ao atualizar dashboard:', error);
-                    showNotification('Erro ao atualizar dashboard', 'error');
-                })
-                .finally(() => {
-                    refreshButton.classList.remove('loading');
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
                 });
-            }
-
-            // Adicionar evento de clique ao botão de atualização
-            document.addEventListener('DOMContentLoaded', function() {
-                const refreshButton = document.querySelector('.refresh-button');
-                if (refreshButton) {
-                    refreshButton.addEventListener('click', refreshDashboard);
-                }
-            });
-
-            // Event listeners
-            document.getElementById('deleteConfirmation').addEventListener('input', function(e) {
-                const deleteButton = document.querySelector('#deleteAccountModal .delete-button');
-                deleteButton.disabled = e.target.value !== 'EXCLUIR';
-            });
-
-            // Inicialização
-            checkAdminAccess();
-        });
-
-        // Funções para gerenciar formulários de curso
-        function abrirTab(tabName) {
-            const tabs = document.querySelectorAll('.tab-content');
-            const buttons = document.querySelectorAll('.tab-button');
-            
-            tabs.forEach(tab => tab.classList.remove('active'));
-            buttons.forEach(button => button.classList.remove('active'));
-            
-            document.getElementById(tabName).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
-        function showFormTab(tabName) {
-            const tabs = document.querySelectorAll('.form-tab');
-            const buttons = document.querySelectorAll('.forms-tabs .tab-button');
-            
-            tabs.forEach(tab => tab.classList.remove('active'));
-            buttons.forEach(button => button.classList.remove('active'));
-            
-            document.getElementById(tabName + 'Tab').classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
-        async function loadForms() {
-            try {
-                console.log('A carregar inscrições de cursos...');
-                // Buscar todas as inscrições
-                const { data: inscricoes, error: inscricoesError } = await window.supabaseClient
-                    .from('inscricoes')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                if (inscricoesError) throw inscricoesError;
-
-                // Buscar todos os utilizadores
-                const { data: utilizadores, error: utilizadoresError } = await window.supabaseClient
-                    .from('utilizadores')
-                    .select('id, nome, email');
-                if (utilizadoresError) throw utilizadoresError;
-
-                // Criar um mapa de utilizadores por id
-                const utilizadoresMap = {};
-                utilizadores.forEach(u => utilizadoresMap[u.id] = u);
-
-                const pendentesTable = document.querySelector('#pendentesTable tbody');
-                const vistosTable = document.querySelector('#vistosTable tbody');
-                
-                pendentesTable.innerHTML = '';
-                vistosTable.innerHTML = '';
-
-                let pendentesCount = 0;
-                let vistosCount = 0;
-
-                if (!inscricoes || inscricoes.length === 0) {
-                    console.log('Nenhuma inscrição encontrada na base de dados.');
-                }
-
-                inscricoes.forEach(form => {
-                    const user = utilizadoresMap[form.utilizador_id] || {};
-                    const nome = user.nome || '';
-                    const email = user.email || '';
-                    const idLimpo = (form.id || '').toString().trim();
-                    const status = (form.status || '').trim().toLowerCase();
-                    if (status === 'pendente') {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${nome}</td>
-                            <td>${email}</td>
-                            <td>${form.tag || ''}</td>
-                            <td>${form.plano || ''}</td>
-                            <td>${form.trofeus || 0}</td>
-                            <td>${form.nivel || 0}</td>
-                            <td></td>
-                            <td>${new Date(form.data_inscricao || form.created_at).toLocaleDateString()}</td>
-                            <td>
-                                <button class="approve-button" data-id="${idLimpo}">
-                                    <i class="fas fa-check"></i> Aprovar
-                                </button>
-                                <button class="reject-button" data-id="${idLimpo}">
-                                    <i class="fas fa-times"></i> Rejeitar
-                                </button>
-                            </td>
-                        `;
-                        pendentesTable.appendChild(row);
-                        pendentesCount++;
-                    } else {
-                        const badge = status === 'aprovado'
-                            ? '<span style="background:#4CAF50;color:#fff;padding:4px 10px;border-radius:12px;font-size:12px;">Aprovado</span>'
-                            : '<span style="background:#f44336;color:#fff;padding:4px 10px;border-radius:12px;font-size:12px;">Rejeitado</span>';
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${nome}</td>
-                            <td>${email}</td>
-                            <td>${form.tag || ''}</td>
-                            <td>${form.plano || ''}</td>
-                            <td>${form.trofeus || 0}</td>
-                            <td>${form.nivel || 0}</td>
-                            <td>${badge}</td>
-                            <td>${new Date(form.data_inscricao || form.created_at).toLocaleDateString()}</td>
-                            <td></td>
-                        `;
-                        vistosTable.appendChild(row);
-                        vistosCount++;
-                    }
-                });
-
-                document.getElementById('pendentesCount').textContent = pendentesCount;
-                document.getElementById('vistosCount').textContent = vistosCount;
-
-                // Adicionar eventos aos botões
-                addAprovarRejeitarListeners();
             } catch (error) {
-                console.error('Erro ao carregar inscrições:', error);
-                showNotification('Erro ao carregar inscrições', 'error');
-            }
-        }
-
-        // Modal de confirmação
-        let actionToConfirm = null;
-        let actionIdToConfirm = null;
-
-        function showConfirmActionModal(action, id) {
-            actionToConfirm = action;
-            actionIdToConfirm = id;
-            const modal = document.getElementById('confirmActionModal');
-            const title = document.getElementById('confirmActionTitle');
-            const text = document.getElementById('confirmActionText');
-            if (action === 'aprovar') {
-                title.textContent = 'Confirmar Aprovação';
-                text.textContent = 'Tem a certeza que deseja aprovar esta inscrição?';
-            } else {
-                title.textContent = 'Confirmar Rejeição';
-                text.textContent = 'Tem a certeza que deseja rejeitar esta inscrição?';
-            }
-            modal.classList.add('active');
-        }
-
-        function closeConfirmActionModal() {
-            document.getElementById('confirmActionModal').classList.remove('active');
-            actionToConfirm = null;
-            actionIdToConfirm = null;
-        }
-
-        document.getElementById('confirmActionBtn').onclick = async function() {
-            if (actionToConfirm && actionIdToConfirm) {
-                if (actionToConfirm === 'aprovar') {
-                    await aprovarFormulario(actionIdToConfirm, true);
-                } else {
-                    await rejeitarFormulario(actionIdToConfirm, true);
-                }
-                closeConfirmActionModal();
+                console.error('Erro ao carregar contas:', error);
+                const tbody = document.querySelector('#accountsTable tbody');
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 20px; color: #ff4444;">
+                            Erro ao carregar contas. Por favor, tente novamente.
+                        </td>
+                    </tr>
+                `;
+                showNotification('Erro ao carregar contas', 'error');
             }
         };
 
-        // Alterar listeners dos botões para abrir o modal
-        function addAprovarRejeitarListeners() {
-            document.querySelectorAll('.approve-button').forEach(btn => {
-                btn.onclick = function() { showConfirmActionModal('aprovar', this.getAttribute('data-id')); };
-            });
-            document.querySelectorAll('.reject-button').forEach(btn => {
-                btn.onclick = function() { showConfirmActionModal('rejeitar', this.getAttribute('data-id')); };
-            });
-        }
-
-        // Chamar addAprovarRejeitarListeners() no final do loadForms
-        // ... existing code ...
-        // Alterar funções aprovarFormulario e rejeitarFormulario para aceitar um segundo argumento (skipConfirm)
-        async function aprovarFormulario(id, skipConfirm) {
-            if (!skipConfirm) {
-                showConfirmActionModal('aprovar', id);
-                return;
-            }
+        window.loadForms = async function() {
             try {
-                const idStr = String(id).trim();
-                console.log('ID usado no update aprovado:', idStr);
-                const { data, error } = await window.supabaseClient
+                console.log('Iniciando busca de formulários...');
+                
+                // Primeiro, verificar se o usuário é admin
+                const { data: { user }, error: userError } = await window.supabaseClient.auth.getUser();
+                if (userError) throw userError;
+                
+                console.log('Usuário atual:', user);
+                
+                // Verificar dados do usuário
+                const { data: userData, error: userDataError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('tipo_conta')
+                    .eq('id', user.id)
+                    .single();
+                    
+                if (userDataError) throw userDataError;
+                
+                console.log('Dados do usuário:', userData);
+                
+                // Verificar se o usuário é admin
+                if (userData.tipo_conta !== 'admin') {
+                    console.error('Usuário não é admin');
+                    throw new Error('Acesso não autorizado');
+                }
+                
+                // Verificar se a tabela existe e tem dados
+                console.log('Verificando tabela inscricoes...');
+                const { count, error: countError } = await window.supabaseClient
                     .from('inscricoes')
-                    .update({ status: 'aprovado' })
-                    .eq('id', idStr)
-                    .select();
-                console.log('Update aprovado:', { data, error });
-                if (error) throw error;
-                if (!data || data.length === 0) {
-                    alert('Nenhuma inscrição foi atualizada! O id pode não corresponder ao da base de dados.');
-                    return;
+                    .select('*', { count: 'exact', head: true });
+                    
+                if (countError) {
+                    console.error('Erro ao contar inscrições:', countError);
+                    throw countError;
                 }
-                showSuccessModal('Inscrição aprovada com sucesso!');
-            } catch (error) {
-                console.error('Erro ao aprovar inscrição:', error);
-                showNotification('Erro ao aprovar inscrição', 'error');
-            }
-        }
-
-        async function rejeitarFormulario(id, skipConfirm) {
-            if (!skipConfirm) {
-                showConfirmActionModal('rejeitar', id);
-                return;
-            }
-            try {
-                const idStr = String(id).trim();
-                console.log('ID usado no update rejeitado:', idStr);
-                const { data, error } = await window.supabaseClient
+                
+                console.log('Total de inscrições na tabela:', count);
+                
+                // Buscar inscrições com mais detalhes
+                console.log('Buscando inscrições...');
+                const { data: forms, error } = await window.supabaseClient
                     .from('inscricoes')
-                    .update({ status: 'rejeitado' })
-                    .eq('id', idStr)
-                    .select();
-                console.log('Update rejeitado:', { data, error });
-                if (error) throw error;
-                if (!data || data.length === 0) {
-                    alert('Nenhuma inscrição foi atualizada! O id pode não corresponder ao da base de dados.');
-                    return;
+                    .select('*')
+                    .order('data_inscricao', { ascending: false });
+
+                if (error) {
+                    console.error('Erro ao buscar inscrições:', error);
+                    throw error;
                 }
-                showSuccessModal('Inscrição rejeitada com sucesso!');
-            } catch (error) {
-                console.error('Erro ao rejeitar inscrição:', error);
-                showNotification('Erro ao rejeitar inscrição', 'error');
-            }
-        }
-        // ... existing code ...
 
-        function filterForms() {
-            const planoFilter = document.getElementById('planoFilter').value;
-            const rows = document.querySelectorAll('#pendentesTable tbody tr, #vistosTable tbody tr');
-            
-            rows.forEach(row => {
-                const plano = row.cells[3].textContent.toLowerCase();
-                if (planoFilter === 'todos' || plano === planoFilter.toLowerCase()) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-
-        function searchForms(query) {
-            query = query.toLowerCase();
-            const rows = document.querySelectorAll('#pendentesTable tbody tr, #vistosTable tbody tr');
-            
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(query) ? '' : 'none';
-            });
-        }
-
-        // Adicionar ao DOMContentLoaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // ... código existente ...
-            
-            // Carregar formulários quando a seção de formulários for aberta
-            const formsSection = document.querySelector('.section-card[onclick="showSection(\'forms\')"]');
-            if (formsSection) {
-                formsSection.addEventListener('click', () => {
-                    setTimeout(loadForms, 100); // Pequeno delay para garantir que a seção está visível
+                console.log('Query executada com sucesso');
+                console.log('Inscrições encontradas:', forms);
+                console.log('Detalhes da query:', {
+                    count: forms?.length,
+                    firstForm: forms?.[0],
+                    lastForm: forms?.[forms?.length - 1]
                 });
-            }
-        });
 
-        // Adicionar função de pesquisa de contas
-        function filterAccountsTable() {
-            const input = document.getElementById('searchAccountsInput');
-            const filter = input.value.toLowerCase();
-            const table = document.getElementById('accountsTable');
-            const trs = table.getElementsByTagName('tr');
-            for (let i = 1; i < trs.length; i++) { // começa em 1 para ignorar o header
-                const tds = trs[i].getElementsByTagName('td');
-                if (tds.length > 1) {
-                    const nome = tds[0].textContent.toLowerCase();
-                    const email = tds[1].textContent.toLowerCase();
-                    if (nome.includes(filter) || email.includes(filter)) {
-                        trs[i].style.display = '';
-                    } else {
-                        trs[i].style.display = 'none';
-                    }
+                // Ajustando a lógica de filtragem
+                const pendentes = forms.filter(form => form.status === 'pendente' || !form.status);
+                const vistos = forms.filter(form => form.status === 'aprovado' || form.status === 'rejeitado');
+
+                console.log('Inscrições pendentes:', pendentes);
+                console.log('Inscrições vistas:', vistos);
+
+                document.getElementById('pendentesCount').textContent = pendentes.length;
+                document.getElementById('vistosCount').textContent = vistos.length;
+
+                const pendentesTbody = document.querySelector('#pendentesTable tbody');
+                pendentesTbody.innerHTML = '';
+
+                pendentes.forEach(form => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${form.nome || '-'}</td>
+                        <td>${form.email || '-'}</td>
+                        <td>${form.tag || '-'}</td>
+                        <td>${form.plano || '-'}</td>
+                        <td>${form.trofeus || '0'}</td>
+                        <td>${form.nivel || '0'}</td>
+                        <td>${form.data_inscricao ? new Date(form.data_inscricao).toLocaleDateString() : '-'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="approve-button" onclick="aprovarFormulario('${form.id}', this)">
+                                    <i class="fas fa-check"></i> Aprovar
+                                </button>
+                                <button class="reject-button" onclick="rejeitarFormulario('${form.id}', this)">
+                                    <i class="fas fa-times"></i> Rejeitar
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    pendentesTbody.appendChild(row);
+                });
+
+                if (pendentes.length === 0) {
+                    pendentesTbody.innerHTML = `
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 20px;">
+                                Nenhuma inscrição pendente encontrada
+                            </td>
+                        </tr>
+                    `;
                 }
+
+                const vistosTbody = document.querySelector('#vistosTable tbody');
+                vistosTbody.innerHTML = '';
+
+                if (vistos.length === 0) {
+                    vistosTbody.innerHTML = `
+                        <tr>
+                            <td colspan="9" style="text-align: center; padding: 20px;">
+                                Nenhuma inscrição vista encontrada
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    vistos.forEach(form => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${form.nome || '-'}</td>
+                            <td>${form.email || '-'}</td>
+                            <td>${form.tag || '-'}</td>
+                            <td>${form.plano || '-'}</td>
+                            <td>${form.trofeus || '0'}</td>
+                            <td>${form.nivel || '0'}</td>
+                            <td>
+                                <span class="status-badge status-${form.status === 'aprovado' ? 'aprovado' : 'rejeitado'}">
+                                    ${form.status === 'aprovado' ? 'Aprovado' : 'Rejeitado'}
+                                </span>
+                            </td>
+                            <td>${form.data_inscricao ? new Date(form.data_inscricao).toLocaleDateString() : '-'}</td>
+                            <td>
+                                <button class="edit-button" onclick="verDetalhesFormulario('${form.id}')">
+                                    <i class="fas fa-eye"></i> Ver Detalhes
+                                </button>
+                            </td>
+                        `;
+                        vistosTbody.appendChild(row);
+                    });
+                }
+
+                document.getElementById('vistosEmptyMsg').style.display = vistos.length === 0 ? 'block' : 'none';
+
+            } catch (error) {
+                console.error('Erro ao carregar inscrições:', error);
+                showNotification('Erro ao carregar inscrições', 'error');
+                
+                const pendentesTbody = document.querySelector('#pendentesTable tbody');
+                const vistosTbody = document.querySelector('#vistosTable tbody');
+                
+                pendentesTbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 20px; color: #ff4444;">
+                            Erro ao carregar inscrições pendentes
+                        </td>
+                    </tr>
+                `;
+                
+                vistosTbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 20px; color: #ff4444;">
+                            Erro ao carregar inscrições vistas
+                        </td>
+                    </tr>
+                `;
             }
-        }
-        document.getElementById('searchAccountsInput').addEventListener('input', filterAccountsTable);
+        };
 
-        // Garantir pesquisa e filtro em tempo real
-        document.querySelectorAll('.search-input').forEach(input => {
-            input.addEventListener('input', function() {
-                searchForms(this.value);
-            });
-        });
-        document.getElementById('planoFilter').addEventListener('change', filterForms);
-
-        let reloadAfterSuccess = false;
-        function showSuccessModal(msg) {
-            document.getElementById('successModalText').textContent = msg;
-            document.getElementById('successModal').classList.add('active');
-            reloadAfterSuccess = true;
-        }
-        function closeSuccessModal() {
-            document.getElementById('successModal').classList.remove('active');
-            if (reloadAfterSuccess) {
-                reloadAfterSuccess = false;
-                loadForms();
-            }
-        }
-
-        // Função para carregar dados do treinador
-        async function loadTreinadorDashboard() {
+        window.loadTreinadorDashboard = async function() {
             try {
-                console.log('Iniciando carregamento da dashboard do treinador');
+                console.log('Iniciando carregamento do dashboard do treinador...');
+                
+                // Obter usuário atual
                 const { data: { user }, error: userError } = await window.supabaseClient.auth.getUser();
                 if (userError) throw userError;
 
                 console.log('Usuário autenticado:', user);
 
-                // Buscar o ID do treinador na tabela treinadores
-                const { data: treinadorData, error: treinadorError } = await window.supabaseClient
+                // Buscar dados do treinador
+                const { data: treinador, error: treinadorError } = await window.supabaseClient
                     .from('treinadores')
-                    .select('id, especialidade, avatar_url')
+                    .select('*')
                     .eq('user_id', user.id)
                     .single();
 
@@ -3240,139 +2311,78 @@
                     throw treinadorError;
                 }
 
-                if (!treinadorData || !treinadorData.id) {
-                    console.error('Dados do treinador não encontrados');
-                    throw new Error('Dados do treinador não encontrados');
-                }
+                console.log('Dados do treinador:', treinador);
 
-                const treinadorId = treinadorData.id;
-                console.log('ID do treinador encontrado:', treinadorId);
+                // Atualizar informações do treinador
+                document.getElementById('treinadorNome').textContent = treinador.nome || 'Nome não definido';
+                document.getElementById('treinadorEspecialidade').textContent = treinador.especialidade || 'Especialidade não definida';
+                
+                // Corrigir URL do avatar
+                const avatarUrl = treinador.avatar_url && treinador.avatar_url.startsWith('http') && !treinador.avatar_url.includes('google.com')
+                    ? treinador.avatar_url 
+                    : 'https://vhswdfifhhcqmtpnhoso.supabase.co/storage/v1/object/public/avatars/avatar_default.png';
+                document.getElementById('treinadorAvatar').src = avatarUrl;
 
-                // Atualizar informações do perfil
-                const treinadorNome = document.getElementById('treinadorNome');
-                const treinadorEspecialidade = document.getElementById('treinadorEspecialidade');
-                const treinadorAvatar = document.getElementById('treinadorAvatar');
-
-                if (treinadorNome) treinadorNome.textContent = user.user_metadata?.nome || user.email;
-                if (treinadorEspecialidade) treinadorEspecialidade.textContent = treinadorData.especialidade || 'Sem especialidade definida';
-                if (treinadorAvatar) {
-                    treinadorAvatar.src = treinadorData.avatar_url || 'https://vhswdfifhhcqmtpnhoso.supabase.co/storage/v1/object/public/avatars/avatar_default.png';
-                }
-
-                // Buscar aulas agendadas
-                console.log('Buscando aulas para o treinador ID:', treinadorId);
-                const { data: aulas, error: aulasError } = await window.supabaseClient
-                    .from('agendamentos')
-                    .select('*, utilizadores:aluno_id (nome)')
-                    .eq('treinador_id', treinadorId)
-                    .order('data', { ascending: true });
-
-                console.log('Resultado da busca de aulas:', { aulas, error: aulasError });
-
-                if (aulasError) {
-                    console.error('Erro ao buscar aulas:', aulasError);
-                    throw aulasError;
-                }
-
-                // Buscar avaliações
-                console.log('Buscando avaliações para o treinador ID:', treinadorId);
+                // Buscar avaliações do treinador
                 const { data: avaliacoes, error: avaliacoesError } = await window.supabaseClient
                     .from('avaliacoes_treinadores')
                     .select('*')
-                    .eq('treinador_id', treinadorId)
-                    .order('data', { ascending: false })
-                    .limit(5);
-
-                console.log('Resultado da busca de avaliações:', { avaliacoes, error: avaliacoesError });
+                    .eq('treinador_id', treinador.id)
+                    .order('data', { ascending: false });
 
                 if (avaliacoesError) {
                     console.error('Erro ao buscar avaliações:', avaliacoesError);
                     throw avaliacoesError;
                 }
 
-                // Buscar nomes dos usuários que fizeram as avaliações
-                let avaliacoesComNomes = [];
-                if (avaliacoes && avaliacoes.length > 0) {
-                    const userIds = avaliacoes.map(a => a.user_id);
-                    const { data: users, error: usersError } = await window.supabaseClient
+                console.log('Avaliações encontradas:', avaliacoes);
+
+                // Buscar nomes dos usuários que fizeram avaliações
+                const userIds = avaliacoes?.map(a => a.user_id) || [];
+                let usuariosMap = {};
+                
+                if (userIds.length > 0) {
+                    const { data: usuarios, error: usuariosError } = await window.supabaseClient
                         .from('utilizadores')
                         .select('id, nome')
                         .in('id', userIds);
 
-                    if (usersError) {
-                        console.error('Erro ao buscar nomes dos usuários:', usersError);
-                        throw usersError;
+                    if (usuariosError) {
+                        console.error('Erro ao buscar usuários:', usuariosError);
+                        throw usuariosError;
                     }
 
-                    // Criar um mapa de usuários para fácil acesso
-                    const userMap = {};
-                    users.forEach(user => {
-                        userMap[user.id] = user.nome;
-                    });
+                    console.log('Usuários encontrados:', usuarios);
 
-                    // Adicionar nomes às avaliações
-                    avaliacoesComNomes = avaliacoes.map(avaliacao => ({
-                        ...avaliacao,
-                        nome_usuario: userMap[avaliacao.user_id] || 'Usuário desconhecido'
-                    }));
+                    // Criar mapa de usuários para fácil acesso
+                    usuariosMap = usuarios?.reduce((acc, user) => {
+                        acc[user.id] = user.nome;
+                        return acc;
+                    }, {}) || {};
                 }
 
-                // Atualizar a interface com os dados
-                updateTreinadorDashboard(aulas, avaliacoesComNomes);
-
-                console.log('Dashboard do treinador carregada com sucesso');
-            } catch (error) {
-                console.error('Erro ao carregar dashboard do treinador:', error);
-                showNotification('Erro ao carregar dashboard', 'error');
-            }
-        }
-
-        function updateTreinadorDashboard(aulas, avaliacoes) {
-            try {
-                console.log('Atualizando dashboard com:', { aulas, avaliacoes });
+                // Calcular média das avaliações
+                const avaliacoesValidas = avaliacoes?.filter(a => a.estrelas != null) || [];
+                const mediaAvaliacoes = avaliacoesValidas.length > 0
+                    ? (avaliacoesValidas.reduce((acc, curr) => acc + curr.estrelas, 0) / avaliacoesValidas.length).toFixed(1)
+                    : '0.0';
                 
-                // Atualizar seção de próximas aulas
-                const proximasAulasContainer = document.getElementById('proximasAulas');
-                if (proximasAulasContainer) {
-                    if (aulas && aulas.length > 0) {
-                        proximasAulasContainer.innerHTML = aulas.map(aula => `
-                            <div class="aula-card">
-                                <div class="aula-header">
-                                    <h4>${aula.titulo || 'Aula'}</h4>
-                                    <span class="status-badge ${aula.status === 'confirmado' ? 'status-confirmado' : 'status-pendente'}">
-                                        ${aula.status === 'confirmado' ? 'Confirmado' : 'Pendente'}
-                                    </span>
-                                </div>
-                                <div class="aula-info">
-                                    <p><i class="fas fa-user"></i> ${aula.utilizadores?.nome || 'Aluno'}</p>
-                                    <p><i class="fas fa-calendar"></i> ${new Date(aula.data).toLocaleDateString()}</p>
-                                    <p><i class="fas fa-clock"></i> ${aula.hora_inicio} - ${aula.hora_fim}</p>
-                                    ${aula.observacoes ? `<p><i class="fas fa-info-circle"></i> ${aula.observacoes}</p>` : ''}
-                                </div>
-                                ${aula.status !== 'confirmado' ? `
-                                    <div class="aula-actions">
-                                        <button class="action-button approve-button" onclick="confirmarAula('${aula.id}')">
-                                            <i class="fas fa-check"></i> Confirmar
-                                        </button>
-                                        <button class="action-button reject-button" onclick="cancelarAula('${aula.id}')">
-                                            <i class="fas fa-times"></i> Cancelar
-                                        </button>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `).join('');
-                    } else {
-                        proximasAulasContainer.innerHTML = '<div class="no-data">Sem aulas agendadas para este treinador.</div>';
-                    }
-                }
+                document.getElementById('mediaAvaliacoes').textContent = mediaAvaliacoes;
 
-                // Atualizar seção de avaliações
-                const ultimasAvaliacoesContainer = document.getElementById('ultimasAvaliacoes');
-                if (ultimasAvaliacoesContainer) {
-                    if (avaliacoes && avaliacoes.length > 0) {
-                        ultimasAvaliacoesContainer.innerHTML = avaliacoes.map(avaliacao => `
+                // Atualizar lista de avaliações
+                const ultimasAvaliacoesDiv = document.getElementById('ultimasAvaliacoes');
+                if (ultimasAvaliacoesDiv) {
+                    if (!avaliacoesValidas || avaliacoesValidas.length === 0) {
+                        ultimasAvaliacoesDiv.innerHTML = `
+                            <div class="no-data">
+                                <i class="fas fa-star" style="font-size: 48px; color: #FFD700; margin-bottom: 20px;"></i>
+                                <p>Ainda não recebeu nenhuma avaliação.</p>
+                            </div>
+                        `;
+                    } else {
+                        ultimasAvaliacoesDiv.innerHTML = avaliacoesValidas.map(avaliacao => `
                             <div class="avaliacao-card">
-                                <h4>${avaliacao.nome_usuario}</h4>
+                                <h4>Avaliação de ${usuariosMap[avaliacao.user_id] || 'Aluno'}</h4>
                                 <div class="estrelas">
                                     ${'★'.repeat(avaliacao.estrelas)}${'☆'.repeat(5 - avaliacao.estrelas)}
                                 </div>
@@ -3380,28 +2390,512 @@
                                 <small>${new Date(avaliacao.data).toLocaleDateString()}</small>
                             </div>
                         `).join('');
-
-                        // Calcular e atualizar média das avaliações
-                        const media = avaliacoes.reduce((acc, curr) => acc + curr.estrelas, 0) / avaliacoes.length;
-                        const mediaElement = document.getElementById('mediaAvaliacoes');
-                        if (mediaElement) {
-                            mediaElement.textContent = media.toFixed(1);
-                        }
-                    } else {
-                        ultimasAvaliacoesContainer.innerHTML = '<div class="no-data">Sem avaliações recentes para este treinador.</div>';
-                        const mediaElement = document.getElementById('mediaAvaliacoes');
-                        if (mediaElement) {
-                            mediaElement.textContent = '0.0';
-                        }
                     }
                 }
 
-                console.log('Dashboard atualizada com sucesso');
+                // Mostrar o dashboard
+                document.querySelector('.treinadores-dashboard').style.display = 'block';
+
+                // Buscar agendamentos do treinador
+                const { data: agendamentos, error: agendamentosError } = await window.supabaseClient
+                    .from('agendamentos')
+                    .select('*')
+                    .eq('treinador_id', treinador.id)
+                    .order('data', { ascending: true });
+
+                if (agendamentosError) {
+                    console.error('Erro ao buscar agendamentos:', agendamentosError);
+                    throw agendamentosError;
+                }
+
+                // Buscar nomes dos alunos
+                const alunoIds = agendamentos?.map(a => a.aluno_id) || [];
+                let alunosMap = {};
+                
+                if (alunoIds.length > 0) {
+                    const { data: alunos, error: alunosError } = await window.supabaseClient
+                        .from('utilizadores')
+                        .select('id, nome')
+                        .in('id', alunoIds);
+
+                    if (alunosError) {
+                        console.error('Erro ao buscar alunos:', alunosError);
+                        throw alunosError;
+                    }
+
+                    // Criar mapa de alunos para fácil acesso
+                    alunosMap = alunos?.reduce((acc, aluno) => {
+                        acc[aluno.id] = aluno.nome;
+                        return acc;
+                    }, {}) || {};
+                }
+
+                // Atualizar lista de próximas aulas
+                const proximasAulasDiv = document.getElementById('proximasAulas');
+                if (proximasAulasDiv) {
+                    const agendamentosFuturos = agendamentos?.filter(a => 
+                        new Date(a.data) > new Date() && a.status !== 'cancelado'
+                    ) || [];
+
+                    if (agendamentosFuturos.length === 0) {
+                        proximasAulasDiv.innerHTML = `
+                            <div class="no-data">
+                                <i class="fas fa-calendar" style="font-size: 48px; color: #FFD700; margin-bottom: 20px;"></i>
+                                <p>Nenhuma aula agendada.</p>
+                            </div>
+                        `;
+                    } else {
+                        proximasAulasDiv.innerHTML = agendamentosFuturos.map(aula => `
+                            <div class="aula-card">
+                                <div class="aula-header">
+                                    <h4>Aula com ${alunosMap[aula.aluno_id] || 'Aluno'}</h4>
+                                    <div class="aula-actions">
+                                        ${aula.status === 'pendente' ? `
+                                            <button class="approve-button" onclick="confirmarAula('${aula.id}')">
+                                                <i class="fas fa-check"></i> Confirmar
+                                            </button>
+                                            <button class="reject-button" onclick="cancelarAula('${aula.id}')">
+                                                <i class="fas fa-times"></i> Cancelar
+                                            </button>
+                                        ` : `
+                                            <span class="status-badge status-${aula.status}">
+                                                ${aula.status === 'confirmado' ? 'Confirmado' : 'Cancelado'}
+                                            </span>
+                                        `}
+                                    </div>
+                                </div>
+                                <div class="aula-info">
+                                    <p><i class="fas fa-calendar"></i> ${new Date(aula.data).toLocaleDateString()}</p>
+                                    <p><i class="fas fa-clock"></i> ${new Date(aula.data).toLocaleTimeString()}</p>
+                                    <p><i class="fas fa-map-marker-alt"></i> ${aula.local || 'Local não definido'}</p>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+
+            } catch (error) {
+                console.error('Erro ao carregar dashboard do treinador:', error);
+                showNotification('Erro ao carregar dashboard do treinador: ' + (error.message || 'Erro desconhecido'), 'error');
+                
+                // Mostrar mensagem de erro no dashboard
+                const dashboard = document.querySelector('.treinadores-dashboard');
+                if (dashboard) {
+                    dashboard.innerHTML = `
+                        <div class="no-data">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ff4444; margin-bottom: 20px;"></i>
+                            <p>Erro ao carregar o dashboard. Por favor, tente novamente mais tarde.</p>
+                        </div>
+                    `;
+                    dashboard.style.display = 'block';
+                }
+            }
+        };
+
+        window.loadStats = async function() {
+            try {
+                console.log('Carregando estatísticas...');
+                const { data: users, error } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('tipo_conta');
+
+                if (error) throw error;
+
+                // Contar usuários por tipo de conta
+                const stats = {
+                    total: users.length,
+                    admin: users.filter(u => u.tipo_conta === 'admin').length,
+                    treinador: users.filter(u => u.tipo_conta === 'treinador').length,
+                    premium_iniciante: users.filter(u => u.tipo_conta === 'premium_iniciante').length,
+                    premium_avancado: users.filter(u => u.tipo_conta === 'premium_avancado').length,
+                    premium_pro: users.filter(u => u.tipo_conta === 'premium_pro').length,
+                    gratuito: users.filter(u => u.tipo_conta === 'gratuito').length
+                };
+
+                console.log('Estatísticas carregadas:', stats);
+
+                // Atualizar contadores
+                document.getElementById('totalUsers').textContent = stats.total;
+                document.getElementById('adminUsers').textContent = stats.admin;
+                document.getElementById('treinadorUsers').textContent = stats.treinador;
+                document.getElementById('premiumInicianteUsers').textContent = stats.premium_iniciante;
+                document.getElementById('premiumAvancadoUsers').textContent = stats.premium_avancado;
+                document.getElementById('premiumProUsers').textContent = stats.premium_pro;
+                document.getElementById('gratuitoUsers').textContent = stats.gratuito;
+
+                // Buscar inscrições pendentes
+                const { count: pendentesCount, error: pendentesError } = await window.supabaseClient
+                    .from('inscricoes')
+                    .select('*', { count: 'exact', head: true })
+                    .or('status.eq.pendente,status.is.null');
+
+                if (pendentesError) {
+                    console.error('Erro ao contar inscrições pendentes:', pendentesError);
+                    document.getElementById('pendingSubscriptions').textContent = '0';
+                } else {
+                    document.getElementById('pendingSubscriptions').textContent = pendentesCount;
+                }
+
+            } catch (error) {
+                console.error('Erro ao carregar estatísticas:', error);
+                showNotification('Erro ao carregar estatísticas', 'error');
+            }
+        };
+
+        window.refreshDashboard = async function() {
+            try {
+                const button = document.querySelector('.refresh-button');
+                button.classList.add('loading');
+
+                await loadStats();
+
+                // Recarregar a seção atual
+                const accountsSection = document.getElementById('accountsSection');
+                const formsSection = document.getElementById('formsSection');
+                const treinadoresSection = document.getElementById('treinadoresSection');
+
+                if (accountsSection.classList.contains('active')) {
+                    await loadAccounts();
+                } else if (formsSection.classList.contains('active')) {
+                    await loadForms();
+                } else if (treinadoresSection.classList.contains('active')) {
+                    await loadTreinadorDashboard();
+                }
+
+                showNotification('Dashboard atualizado com sucesso!', 'success');
             } catch (error) {
                 console.error('Erro ao atualizar dashboard:', error);
                 showNotification('Erro ao atualizar dashboard', 'error');
+            } finally {
+                const button = document.querySelector('.refresh-button');
+                button.classList.remove('loading');
             }
+        };
+
+        window.showFormTab = function(tab) {
+            // Atualizar botões
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`.tab-button[onclick="showFormTab('${tab}')"]`).classList.add('active');
+
+            // Atualizar conteúdo
+            document.querySelectorAll('.form-tab').forEach(tabContent => {
+                tabContent.classList.remove('active');
+            });
+            document.getElementById(`${tab}Tab`).classList.add('active');
+        };
+
+        window.filterForms = function() {
+            const plano = document.getElementById('planoFilter').value;
+            const rows = document.querySelectorAll('#pendentesTable tbody tr, #vistosTable tbody tr');
+
+            rows.forEach(row => {
+                const planoCell = row.querySelector('td:nth-child(4)');
+                if (plano === 'todos' || planoCell.textContent.toLowerCase() === plano) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        };
+
+        window.aprovarFormulario = async function(formId, button) {
+            try {
+                // Desabilitar botões durante o processamento
+                const actionButtons = button.closest('.action-buttons');
+                const buttons = actionButtons.querySelectorAll('button');
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('loading');
+                });
+
+                const { error } = await window.supabaseClient
+                    .from('inscricoes')
+                    .update({ 
+                        status: 'aprovado',
+                        data_aprovacao: new Date().toISOString()
+                    })
+                    .eq('id', formId);
+
+                if (error) throw error;
+
+                showNotification('Inscrição aprovada com sucesso!', 'success');
+                loadForms();
+                loadStats();
+            } catch (error) {
+                console.error('Erro ao aprovar inscrição:', error);
+                showNotification('Erro ao aprovar inscrição', 'error');
+            } finally {
+                // Reabilitar botões após o processamento
+                const actionButtons = button.closest('.action-buttons');
+                const buttons = actionButtons.querySelectorAll('button');
+                buttons.forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('loading');
+                });
+            }
+        };
+
+        window.rejeitarFormulario = async function(formId, button) {
+            try {
+                // Desabilitar botões durante o processamento
+                const actionButtons = button.closest('.action-buttons');
+                const buttons = actionButtons.querySelectorAll('button');
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('loading');
+                });
+
+                const { error } = await window.supabaseClient
+                    .from('inscricoes')
+                    .update({ 
+                        status: 'rejeitado',
+                        data_aprovacao: new Date().toISOString()
+                    })
+                    .eq('id', formId);
+
+                if (error) throw error;
+
+                showNotification('Inscrição rejeitada com sucesso!', 'success');
+                loadForms();
+                loadStats();
+            } catch (error) {
+                console.error('Erro ao rejeitar inscrição:', error);
+                showNotification('Erro ao rejeitar inscrição', 'error');
+            } finally {
+                // Reabilitar botões após o processamento
+                const actionButtons = button.closest('.action-buttons');
+                const buttons = actionButtons.querySelectorAll('button');
+                buttons.forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('loading');
+                });
+            }
+        };
+
+        window.verDetalhesFormulario = async function(formId) {
+            try {
+                const { data: form, error } = await window.supabaseClient
+                    .from('inscricoes')
+                    .select('*')
+                    .eq('id', formId)
+                    .single();
+
+                if (error) throw error;
+
+                // Mostrar modal com detalhes
+                const modal = document.getElementById('confirmActionModal');
+                const modalTitle = document.getElementById('confirmActionTitle');
+                const modalText = document.getElementById('confirmActionText');
+                const modalBtn = document.getElementById('confirmActionBtn');
+
+                modalTitle.textContent = 'Detalhes da Inscrição';
+                modalText.innerHTML = `
+                    <p><strong>Nome:</strong> ${form.nome || '-'}</p>
+                    <p><strong>Email:</strong> ${form.email || '-'}</p>
+                    <p><strong>Tag:</strong> ${form.tag || '-'}</p>
+                    <p><strong>Plano:</strong> ${form.plano || '-'}</p>
+                    <p><strong>Troféus:</strong> ${form.trofeus || '0'}</p>
+                    <p><strong>Nível:</strong> ${form.nivel || '0'}</p>
+                    <p><strong>Status:</strong> ${form.aprovado ? 'Aprovado' : 'Rejeitado'}</p>
+                    <p><strong>Data de Inscrição:</strong> ${form.data_inscricao ? new Date(form.data_inscricao).toLocaleDateString() : '-'}</p>
+                    ${form.data_aprovacao ? `<p><strong>Data de Aprovação:</strong> ${new Date(form.data_aprovacao).toLocaleDateString()}</p>` : ''}
+                `;
+
+                modalBtn.textContent = 'Fechar';
+                modalBtn.onclick = closeConfirmActionModal;
+
+                modal.style.display = 'flex';
+                modal.classList.add('active');
+            } catch (error) {
+                console.error('Erro ao carregar detalhes da inscrição:', error);
+                showNotification('Erro ao carregar detalhes da inscrição', 'error');
+            }
+        };
+
+        window.searchForms = function(query) {
+            const rows = document.querySelectorAll('#pendentesTable tbody tr, #vistosTable tbody tr');
+            query = query.toLowerCase();
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        };
+
+        // Inicializar o dashboard quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAccess();
+        });
+
+        // Adicionar função para verificar a estrutura da tabela
+        window.checkTableStructure = async function() {
+            try {
+                const { data, error } = await window.supabaseClient
+                    .from('utilizadores')
+                    .select('*')
+                    .limit(1);
+
+                if (error) throw error;
+
+                if (data && data.length > 0) {
+                    const columns = Object.keys(data[0]);
+                    console.log('Colunas disponíveis:', columns);
+                    return columns;
+                }
+                return [];
+            } catch (error) {
+                console.error('Erro ao verificar estrutura da tabela:', error);
+                return [];
+            }
+        };
+
+        // Modificar a função updateSort para verificar a coluna antes de ordenar
+        window.updateSort = async function() {
+            currentSortType = document.getElementById('sortType').value;
+            
+            // Se for ordenar por data de criação, verificar se a coluna existe
+            if (currentSortType === 'data_criacao') {
+                const columns = await checkTableStructure();
+                if (!columns.includes('data_criacao')) {
+                    showNotification('Coluna de data de criação não encontrada', 'error');
+                    document.getElementById('sortType').value = 'tipo_conta';
+                    currentSortType = 'tipo_conta';
+                }
+            }
+            
+            loadAccounts();
+        };
+
+        // Adicionar função de pesquisa
+        window.searchAccounts = function(searchTerm) {
+            const rows = document.querySelectorAll('#accountsTable tbody tr');
+            searchTerm = searchTerm.toLowerCase();
+
+            rows.forEach(row => {
+                const nome = row.cells[0].textContent.toLowerCase();
+                const email = row.cells[1].textContent.toLowerCase();
+                
+                if (nome.includes(searchTerm) || email.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Verificar se há resultados
+            const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+            const tbody = document.querySelector('#accountsTable tbody');
+            
+            if (visibleRows.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 20px;">
+                            Nenhuma conta encontrada para a pesquisa
+                        </td>
+                    </tr>
+                `;
+            }
+        };
+
+        // Adicionar event listener para fechar modal ao clicar fora
+        document.addEventListener('click', function(event) {
+            const modals = document.querySelectorAll('.modal.active');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    if (modal.id === 'editAccountModal') {
+                        closeEditModal();
+                    } else if (modal.id === 'deleteAccountModal') {
+                        closeDeleteModal();
+                    } else if (modal.id === 'editProfileModal') {
+                        closeEditProfileModal();
+                    } else if (modal.id === 'confirmActionModal') {
+                        closeConfirmActionModal();
+                    } else if (modal.id === 'successModal') {
+                        closeSuccessModal();
+                    }
+                }
+            });
+        });
+
+        window.atualizarAvatarTreinador = async function() {
+            try {
+                const { data: { user }, error: userError } = await window.supabaseClient.auth.getUser();
+                if (userError) throw userError;
+
+                const { data: treinador, error: treinadorError } = await window.supabaseClient
+                    .from('treinadores')
+                    .select('avatar_url')
+                    .eq('user_id', user.id)
+                    .single();
+
+                if (treinadorError) throw treinadorError;
+
+                const avatarUrl = treinador.avatar_url && treinador.avatar_url.startsWith('http') && !treinador.avatar_url.includes('google.com')
+                    ? treinador.avatar_url 
+                    : 'https://vhswdfifhhcqmtpnhoso.supabase.co/storage/v1/object/public/avatars/avatar_default.png';
+                
+                document.getElementById('treinadorAvatar').src = avatarUrl;
+            } catch (error) {
+                console.error('Erro ao atualizar avatar:', error);
+                showNotification('Erro ao atualizar avatar', 'error');
+            }
+        };
+
+        window.verificarNovasAvaliacoes = async function() {
+            try {
+                const { data: { user }, error: userError } = await window.supabaseClient.auth.getUser();
+                if (userError) throw userError;
+
+                const { data: treinador, error: treinadorError } = await window.supabaseClient
+                    .from('treinadores')
+                    .select('id')
+                    .eq('user_id', user.id)
+                    .single();
+
+                if (treinadorError) throw treinadorError;
+
+                const { data: avaliacoes, error: avaliacoesError } = await window.supabaseClient
+                    .from('avaliacoes_treinadores')
+                    .select('*')
+                    .eq('treinador_id', treinador.id)
+                    .order('data', { ascending: false });
+
+                if (avaliacoesError) throw avaliacoesError;
+
+                if (avaliacoes && avaliacoes.length > 0) {
+                    const ultimaAvaliacao = avaliacoes[0];
+                    const dataUltimaAvaliacao = new Date(ultimaAvaliacao.data);
+                    const agora = new Date();
+                    const diferenca = agora - dataUltimaAvaliacao;
+
+                    // Se houver uma nova avaliação nos últimos 5 minutos
+                    if (diferenca < 5 * 60 * 1000) {
+                        showNotification('Nova avaliação recebida!', 'success');
+                        loadTreinadorDashboard();
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao verificar novas avaliações:', error);
+            }
+        };
+
+        // Iniciar verificação periódica
+        setInterval(verificarNovasAvaliacoes, 5 * 60 * 1000); // Verificar a cada 5 minutos
+
+        function showDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function selectUser(user) {
+            if (user.tipo === 'treinador') {
+                window.location.href = 'dashboard-treinador.html';
+                return;
+            }
+            // ... existing code ...
         }
     </script>
 </body>
-</html> 
+</html>

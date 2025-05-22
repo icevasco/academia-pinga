@@ -16,7 +16,10 @@
             max-width: 1200px;
             margin: 50px auto;
             padding: 20px;
-            background: #181818 !important;
+            background: rgba(24, 24, 24, 0.8) !important;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
         }
 
         .deck-header {
@@ -26,13 +29,14 @@
         }
 
         .deck-header h1 {
-            font-size: 2em;
+            font-size: 2.5em;
             margin-bottom: 10px;
-            color: #1a237e;
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
         }
 
         .deck-header p {
-            color: #666;
+            color: #fff;
             font-size: 1.1em;
             max-width: 600px;
             margin: 0 auto;
@@ -46,32 +50,33 @@
         }
 
         .deck-card {
-            background: #181818;
+            background: rgba(24, 24, 24, 0.9);
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
             position: relative;
-            border: 1px solid rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 215, 0, 0.1);
             color: #fff;
         }
 
         .deck-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+            border-color: rgba(255, 215, 0, 0.3);
         }
 
         .deck-tag {
             position: absolute;
             top: 15px;
             right: 15px;
-            background: linear-gradient(45deg, #1a237e, #283593);
-            color: white;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000;
             padding: 5px 15px;
             border-radius: 20px;
             font-weight: bold;
             font-size: 0.9em;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             z-index: 1;
         }
 
@@ -84,6 +89,7 @@
             margin-bottom: 15px;
             color: #FFD700;
             font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
         }
 
         .deck-description {
@@ -99,7 +105,7 @@
             align-items: center;
             margin-top: 20px;
             padding-top: 15px;
-            border-top: 1px solid #333;
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
         }
 
         .deck-stats {
@@ -116,27 +122,32 @@
         }
 
         .deck-stats i {
-            color: #1a237e;
+            color: #FFD700;
         }
 
         .explore-button {
             background: #FFD700 !important;
-            color: #111 !important;
+            color: #000 !important;
             border: 2px solid #FFD700 !important;
             outline: none !important;
             transition: all 0.3s ease;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .explore-button:hover {
-            background: #fff !important;
+            background: transparent !important;
             color: #FFD700 !important;
-            border: 2px solid #FFD700 !important;
+            transform: scale(1.05);
         }
 
         .deck-features {
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
         }
 
         .feature-list {
@@ -150,12 +161,12 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 8px;
-            color: #666;
+            color: #fff;
             font-size: 0.95em;
         }
 
         .feature-list i {
-            color: #1a237e;
+            color: #FFD700;
             font-size: 0.9em;
         }
 
@@ -163,7 +174,7 @@
             width: 100%;
             height: 200px;
             object-fit: cover;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
             transition: transform 0.3s ease;
         }
 
@@ -257,7 +268,7 @@
                     <div class="deck-meta">
                         <div class="deck-stats">
                             <span><i class="fas fa-star"></i> 4,8★</span>
-                            <span><i class="fas fa-users"></i> 1M+ Alunos</span>
+                            <span><i class="fas fa-users"></i> 1M+ Jogadores Diários</span>
                         </div>
                         <a href="https://supercell.com/en/games/clashofclans/" target="_blank" class="explore-button">Explorar</a>
                     </div>
@@ -280,7 +291,7 @@
                     <div class="deck-meta">
                         <div class="deck-stats">
                             <span><i class="fas fa-star"></i> 4,7★</span>
-                            <span><i class="fas fa-users"></i> 800k+ Alunos</span>
+                            <span><i class="fas fa-users"></i> 800k+ Jogadores Diários</span>
                         </div>
                         <a href="https://supercell.com/en/games/brawlstars/" target="_blank" class="explore-button">Explorar</a>
                     </div>
@@ -302,7 +313,7 @@
                     <div class="deck-meta">
                         <div class="deck-stats">
                             <span><i class="fas fa-star"></i> 4,6★</span>
-                            <span><i class="fas fa-users"></i> 500k+ Alunos</span>
+                            <span><i class="fas fa-users"></i> 500k+ Jogadores Diários</span>
                         </div>
                         <a href="https://supercell.com/en/games/hayday/" target="_blank" class="explore-button">Explorar</a>
                     </div>
@@ -324,7 +335,7 @@
                     <div class="deck-meta">
                         <div class="deck-stats">
                             <span><i class="fas fa-star"></i> 4,5★</span>
-                            <span><i class="fas fa-users"></i> 300k+ Alunos</span>
+                            <span><i class="fas fa-users"></i> 300k+ Jogadores Diários</span>
                         </div>
                         <a href="https://supercell.com/en/games/boombeach/" target="_blank" class="explore-button">Explorar</a>
                     </div>
@@ -347,7 +358,7 @@
                     <div class="deck-meta">
                         <div class="deck-stats">
                             <span><i class="fas fa-star"></i> 4,9★</span>
-                            <span><i class="fas fa-users"></i> 2M+ Alunos</span>
+                            <span><i class="fas fa-users"></i> 2M+ Jogadores Diários</span>
                         </div>
                         <a href="https://squadbusters.supercell.com/en/" target="_blank" class="explore-button">Explorar</a>
                     </div>

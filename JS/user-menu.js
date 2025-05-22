@@ -88,7 +88,7 @@ async function checkUser() {
                             <i class="fas fa-user-shield"></i> Painel Admin
                         </a>
                     ` : userData.tipo_conta === 'treinador' ? `
-                        <a href="${getBasePath()}HTML/admin.html" class="dropdown-item">
+                        <a href="${getBasePath()}HTML/dashboard-treinador.html" class="dropdown-item">
                             <i class="fas fa-chalkboard-teacher"></i> Dashboard Treinador
                         </a>
                     ` : ''}
@@ -108,18 +108,26 @@ async function checkUser() {
             // Adicionar eventos do dropdown
             const userInfo = userMenu.querySelector('.user-info')
             const dropdown = userMenu.querySelector('.user-dropdown')
-            const chevron = userInfo.querySelector('.fa-chevron-down')
-            
+
+            let isDropdownOpen = false
+
             userInfo.addEventListener('click', (e) => {
-                e.stopPropagation()
+                e.stopPropagation(); // Impede propagação para o menu mobile
+                isDropdownOpen = !isDropdownOpen
                 dropdown.classList.toggle('active')
-                chevron.style.transform = dropdown.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0)'
+                userInfo.querySelector('i').style.transform = isDropdownOpen ? 'rotate(180deg)' : 'rotate(0)'
             })
 
+            // Impedir que clique dentro do dropdown feche o menu mobile
+            dropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
             document.addEventListener('click', (e) => {
-                if (!userMenu.contains(e.target) && dropdown.classList.contains('active')) {
+                if (!userMenu.contains(e.target) && isDropdownOpen) {
+                    isDropdownOpen = false
                     dropdown.classList.remove('active')
-                    chevron.style.transform = 'rotate(0)'
+                    userInfo.querySelector('i').style.transform = 'rotate(0)'
                 }
             })
         }
