@@ -212,6 +212,132 @@
         .stat-card h3.cargo-gratuito, .stat-card h3.cargo-gratuito i {
             color: #2196F3;
         }
+
+        .label-with-info {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .info-button {
+            background: none;
+            border: none;
+            color: #FFD700;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 0;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-button:hover {
+            color: #FFA500;
+        }
+
+        .tutorial-content {
+            padding: 20px;
+            max-height: calc(90vh - 100px);
+            overflow-y: auto;
+        }
+
+        .tutorial-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .step-number {
+            background: #FFD700;
+            color: #1a1a1a;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex-grow: 1;
+        }
+
+        .step-content h3 {
+            color: #FFD700;
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+
+        .step-content p {
+            color: #333;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .tag-example {
+            margin-top: 10px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .tag-label {
+            color: #666;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .tag-value {
+            color: #2196F3;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .tutorial-note {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .tutorial-note i {
+            color: #2196F3;
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        .tutorial-note p {
+            color: #333;
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .stat-header p {
+            margin: 0;
+            color: #FFD700;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 <body>
@@ -264,7 +390,12 @@
                 <h3 id="lastLogin">Carregando...</h3>
             </div>
             <div class="stat-card">
-                <p>Tag do Clash Royale</p>
+                <div class="stat-header">
+                    <p>Tag do Clash Royale</p>
+                    <button type="button" class="info-button" onclick="showTagTutorial()">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                </div>
                 <h3 id="clashTag" style="display: inline-block; vertical-align: middle;">Carregando...</h3>
                 <button id="editClashTagBtn" style="display:none; margin-left: 8px; padding: 4px 10px; border-radius: 5px; border: none; background: #FFD700; color: #1a1a1a; font-size: 0.95em; font-weight: bold; cursor: pointer; vertical-align: middle;">Editar</button>
                 <button id="setClashTagBtn" style="display:none; margin-top: 8px; padding: 6px 16px; border-radius: 6px; border: none; background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #1a1a1a; font-weight: bold; cursor: pointer;">Definir Tag do Clash Royale</button>
@@ -342,6 +473,66 @@
           <button id="cancelMaxLigaBtn" style="background: #888; color: #fff; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer;">Cancelar</button>
         </div>
       </div>
+    </div>
+
+    <!-- Modal do tutorial da tag -->
+    <div id="tagTutorialModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeTagTutorial()">&times;</span>
+            <h2>Como Encontrar a Tua Tag do Clash Royale</h2>
+            <div class="tutorial-content">
+                <div class="tutorial-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Abrir o Clash Royale</h3>
+                        <p>Inicia o jogo no teu dispositivo móvel</p>
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Aceder ao Teu Perfil</h3>
+                        <p>Toca no ícone do teu perfil no canto superior esquerdo do ecrã</p>
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Encontrar a Tua Tag</h3>
+                        <p>A tua tag aparece logo abaixo do teu nome de utilizador, começando com o símbolo #</p>
+                        <div class="tag-example">
+                            <span class="tag-label">Nome:</span>
+                            <span class="tag-value">Manoel Pinga</span>
+                        </div>
+                        <div class="tag-example" style="margin-top: 5px;">
+                            <span class="tag-label">Tag:</span>
+                            <span class="tag-value">#ABC123XYZ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Copiar a Tag</h3>
+                        <p>Clica na tag e aparecerá um botão para copiar. Clica no botão para copiar a tag completa.</p>
+                        <div class="tag-example" style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+                            <span class="tag-value">#ABC123XYZ</span>
+                            <button class="copy-button" style="background: #2196F3; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                                <i class="fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tutorial-note">
+                    <i class="fas fa-info-circle"></i>
+                    <p>A tua tag é única e serve como identificador do teu perfil no jogo. É essencial para o processo de inscrição.</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -631,7 +822,7 @@
                 showNotification('Erro ao definir tag', 'error');
             }
         });
-        // Fechar modal ao clicar fora dele
+        // Fechar modal ao clicar fora
         clashTagModal.addEventListener('click', (e) => {
             if (e.target === clashTagModal) {
                 clashTagModal.style.display = 'none';
@@ -741,6 +932,26 @@
             if (event.target === trofeusModal) trofeusModal.style.display = 'none';
             if (event.target === maxLigaModal) maxLigaModal.style.display = 'none';
         });
+
+        // Função para mostrar tutorial da tag
+        function showTagTutorial() {
+            const modal = document.getElementById('tagTutorialModal');
+            modal.style.display = 'block';
+        }
+
+        // Função para fechar tutorial da tag
+        function closeTagTutorial() {
+            const modal = document.getElementById('tagTutorialModal');
+            modal.style.display = 'none';
+        }
+
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            const tagTutorialModal = document.getElementById('tagTutorialModal');
+            if (event.target === tagTutorialModal) {
+                closeTagTutorial();
+            }
+        }
     </script>
 </body>
 </html> 

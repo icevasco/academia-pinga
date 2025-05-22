@@ -2,18 +2,19 @@
 .user-menu {
     position: relative;
     cursor: pointer;
-    z-index: 1000;
+    z-index: 1002;
 }
 
 .user-info {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 8px;
+    gap: 0.5rem;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
     transition: all 0.3s ease;
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(5px);
 }
 
 .user-info:hover {
@@ -22,39 +23,37 @@
 
 .user-name {
     font-weight: 500;
-    color: #fff;
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
-.fa-chevron-down {
-    color: #fff;
+.user-info i {
     transition: transform 0.3s ease;
+}
+
+.user-menu:hover .user-name::after {
+    transform: translateY(-50%) rotate(180deg);
 }
 
 .user-dropdown {
     position: absolute;
-    right: 0;
     top: 100%;
-    margin-top: 16px;
-    background: rgba(33, 33, 33, 0.98) !important;
+    right: 0;
+    background: rgba(33, 33, 33, 0.98);
     backdrop-filter: blur(10px);
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     min-width: 220px;
-    display: none;
-    z-index: 9999 !important;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1002;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .user-dropdown.active {
-    display: block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    z-index: 9999 !important;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 .account-type {
@@ -73,22 +72,6 @@
 .account-type i {
     font-size: 1.1em;
     color: #FFD700;
-}
-
-/* Estilos específicos para cada tipo de conta */
-.account-type:has(i.fa-crown) {
-    background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.2));
-    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-}
-
-.account-type:has(i.fa-user-shield) {
-    background: linear-gradient(45deg, rgba(255, 0, 0, 0.1), rgba(255, 0, 0, 0.2));
-    border-bottom: 1px solid rgba(255, 0, 0, 0.2);
-}
-
-.account-type:has(i.fa-chalkboard-teacher) {
-    background: linear-gradient(45deg, rgba(0, 128, 0, 0.1), rgba(0, 128, 0, 0.2));
-    border-bottom: 1px solid rgba(0, 128, 0, 0.2);
 }
 
 .dropdown-item {
@@ -115,49 +98,85 @@
     font-size: 1.1em;
 }
 
-.dropdown-item.logout {
+.logout {
     color: #ff6b6b;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     margin-top: 8px;
     cursor: pointer;
 }
 
-.dropdown-item.logout:hover {
+.logout:hover {
     background: rgba(255, 107, 107, 0.1);
 }
 
-.dropdown-item.logout i {
+.logout i {
     color: #ff6b6b;
 }
 
-/* Responsividade */
+/* Estilos específicos para mobile */
 @media (max-width: 768px) {
-    .user-dropdown {
-        position: fixed;
-        top: auto;
-        bottom: 0;
-        left: 0;
-        right: 0;
+    .user-menu {
         width: 100%;
-        border-radius: 20px 20px 0 0;
-        transform: translateY(100%);
-        margin: 0;
-        padding: 20px;
-        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.1);
+        margin-top: 1rem;
     }
 
-    .user-dropdown.active {
-        transform: translateY(0);
+    .user-info {
+        justify-content: center;
+        padding: 1rem;
     }
 
-    .dropdown-item {
-        padding: 16px;
-        margin: 8px 0;
+    .user-dropdown {
+        position: static;
+        width: 100%;
+        margin-top: 0.5rem;
+        box-shadow: none;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        max-height: 60vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        display: flex;
+        flex-direction: column;
     }
 
     .account-type {
-        border-radius: 0;
-        margin: -20px -20px 0 -20px;
+        color: white;
+        border-bottom-color: rgba(255, 255, 255, 0.2);
+        position: sticky;
+        top: 0;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 1;
+        padding: 1rem;
+    }
+
+    .dropdown-item {
+        color: white;
+        padding: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--accent-color);
+    }
+
+    .logout {
+        color: var(--error-color);
+        position: sticky;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        margin-top: auto;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        width: 100%;
+        box-sizing: border-box;
+        padding: 1rem;
+    }
+
+    .logout:hover {
+        background: var(--error-color);
+        color: white;
     }
 }
 
@@ -281,5 +300,65 @@ header {
     .dropdown-item {
         padding: 0.6rem 0.8rem;
         font-size: 0.9rem;
+    }
+}
+
+/* Estilos para o botão de menu móvel */
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1001;
+}
+
+.mobile-menu-btn i {
+    transition: transform 0.3s ease;
+}
+
+.mobile-menu-btn.active i {
+    transform: rotate(90deg);
+}
+
+/* Responsividade para smartphones */
+@media (max-width: 600px) {
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 70px);
+        background: rgba(0, 0, 0, 0.95);
+        flex-direction: column;
+        padding: 2rem;
+        transition: left 0.3s ease;
+        z-index: 999;
+    }
+
+    .nav-links.active {
+        left: 0;
+    }
+
+    .nav-links a {
+        font-size: 1.2rem !important;
+        padding: 1rem 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-links a::after {
+        display: none;
+    }
+
+    .nav-links a:hover {
+        background: rgba(255, 215, 0, 0.1);
+        border-radius: 8px;
     }
 } 

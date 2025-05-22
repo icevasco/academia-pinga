@@ -1074,7 +1074,7 @@
                 <a href="sobre.html">Sobre</a>
                 <a href="avaliacoes.html">Avaliações</a>
                 <a href="outros-jogos.html">Outros Jogos</a>
-                <a href="admin.html" id="adminLink" style="display: none;">Painel Admin</a>
+                <a href="admin.html" id="adminLink" style="display: none;">Painel de Administração</a>
                 <a href="../login.html" id="loginLink">Iniciar Sessão/Registo</a>
             </div>
         </div>
@@ -1085,7 +1085,7 @@
             <div class="dashboard-header">
                 <h1 class="dashboard-title">
                     <i class="fas fa-tachometer-alt"></i>
-                    Painel Administrativo
+                    Painel de Administração
                 </h1>
                 <button class="refresh-button" onclick="refreshDashboard()">
                     <i class="fas fa-sync-alt"></i>
@@ -1096,7 +1096,7 @@
 
             <div class="dashboard-stats">
                 <div class="stat-card">
-                    <h3>Total de Usuários</h3>
+                    <h3>Total de Utilizadores</h3>
                     <div class="value" id="totalUsers">0</div>
                 </div>
                 <div class="stat-card">
@@ -1133,17 +1133,17 @@
                 <div class="section-card" data-section="accounts">
                     <i class="fas fa-users"></i>
                     <h2>Todas as Contas</h2>
-                    <p>Gerencie todas as contas de usuários</p>
+                    <p>Gerir todas as contas de utilizadores</p>
                 </div>
                 <div class="section-card" data-section="forms">
                     <i class="fas fa-file-alt"></i>
-                    <h2>Inscrições Cursos</h2>
-                    <p>Visualize e gerencie inscrições em cursos</p>
+                    <h2>Inscrições em Cursos</h2>
+                    <p>Visualizar e gerir inscrições em cursos</p>
                 </div>
                 <div class="section-card" data-section="treinadores">
                     <i class="fas fa-chalkboard-teacher"></i>
-                    <h2>Dashboard Treinador</h2>
-                    <p>Gerencie agendamentos e perfil de treinador</p>
+                    <h2>Painel do Treinador</h2>
+                    <p>Gerir agendamentos e perfil de treinador</p>
                 </div>
             </div>
         </div>
@@ -1319,26 +1319,26 @@
         <div id="deleteAccountModal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Exclusão</h3>
+                    <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Eliminação</h3>
                     <button class="close-button" onclick="closeDeleteModal()">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <p>Tem certeza que deseja excluir esta conta?</p>
+                    <p>Tem a certeza que deseja eliminar esta conta?</p>
                     <p class="warning-text">Esta ação é <strong>irreversível</strong> e irá:</p>
                     <ul class="warning-list">
-                        <li>Excluir permanentemente todos os dados do usuário</li>
+                        <li>Eliminar permanentemente todos os dados do utilizador</li>
                         <li>Remover todas as inscrições associadas</li>
                         <li>Cancelar qualquer acesso ativo</li>
                     </ul>
                     <div class="confirmation-input">
-                        <label for="deleteConfirmation">Digite "EXCLUIR" para confirmar:</label>
-                        <input type="text" id="deleteConfirmation" placeholder="Digite EXCLUIR">
+                        <label for="deleteConfirmation">Escreva "ELIMINAR" para confirmar:</label>
+                        <input type="text" id="deleteConfirmation" placeholder="Escreva ELIMINAR">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button class="cancel-button" onclick="closeDeleteModal()">Cancelar</button>
                     <button class="delete-button" onclick="confirmDeleteAccount()" disabled>
-                        <i class="fas fa-trash"></i> Excluir Conta
+                        <i class="fas fa-trash"></i> Eliminar Conta
                     </button>
                 </div>
             </div>
@@ -1393,16 +1393,16 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="editNome">Nome:</label>
-                    <input type="text" id="editNome" class="form-control" placeholder="Seu nome">
+                    <input type="text" id="editNome" class="form-control" placeholder="O seu nome">
                 </div>
                 <div class="form-group">
                     <label for="editEspecialidade">Especialidade:</label>
-                    <input type="text" id="editEspecialidade" class="form-control" placeholder="Sua especialidade">
+                    <input type="text" id="editEspecialidade" class="form-control" placeholder="A sua especialidade">
                 </div>
                 <div class="form-group">
-                    <label for="avatarUpload">Foto de Perfil:</label>
+                    <label for="avatarUpload">Fotografia de Perfil:</label>
                     <div class="avatar-upload-container">
-                        <img id="avatarPreview" src="" alt="Preview" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+                        <img id="avatarPreview" src="" alt="Pré-visualização" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
                         <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="previewImage(event)">
                         <button class="action-button secondary" onclick="document.getElementById('avatarUpload').click()">
                             <i class="fas fa-upload"></i> Escolher Imagem
@@ -1594,7 +1594,7 @@
             if (deleteConfirmation) {
                 deleteConfirmation.addEventListener('input', function() {
                     const deleteButton = document.querySelector('#deleteAccountModal .delete-button');
-                    deleteButton.disabled = this.value !== 'EXCLUIR';
+                    deleteButton.disabled = this.value !== 'ELIMINAR';
                 });
             }
 
@@ -2376,7 +2376,7 @@
                         ultimasAvaliacoesDiv.innerHTML = `
                             <div class="no-data">
                                 <i class="fas fa-star" style="font-size: 48px; color: #FFD700; margin-bottom: 20px;"></i>
-                                <p>Nenhuma avaliação recebida ainda.</p>
+                                <p>Ainda não recebeu nenhuma avaliação.</p>
                             </div>
                         `;
                     } else {

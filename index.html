@@ -6,10 +6,12 @@
     <title>Academia Pinga Clash Royale - Torne-se um Pro Player</title>
     <link rel="icon" type="image/png" href="IMG/favicon_sem_fundo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="CSS/styles.css">
     <link rel="stylesheet" href="CSS/user-menu.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="JS/user-menu.js" defer></script>
+    <script src="JS/mobile-menu.js" defer></script>
 </head>
 <body>
     <nav class="navbar">
@@ -18,7 +20,7 @@
                 <img src="IMG/academia_pinga_sem_fundo.png" alt="Academia Pinga" style="height: 50px; margin-right: 10px;">
                 Academia Pinga
             </a>
-            <button class="mobile-menu-btn">
+            <button class="mobile-menu-btn" aria-label="Menu">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -145,24 +147,6 @@
     </section>
 
     <script>
-        // Menu Mobile
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn')
-        const navLinks = document.querySelector('.nav-links')
-
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenuBtn.classList.toggle('active')
-            navLinks.classList.toggle('active')
-            document.body.classList.toggle('menu-open')
-        })
-
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenuBtn.classList.remove('active')
-                navLinks.classList.remove('active')
-                document.body.classList.remove('menu-open')
-            })
-        })
-
         // Animações de scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
