@@ -1,15 +1,27 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+require('dotenv').config({ path: './api.env' });
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-// Configuração do CORS
-app.use(cors());
+// Configuração do CORS para aceitar todas as origens
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
-// Chave da API do Clash Royale
-const CLASH_API_KEY = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjM4MDFlOGM5LWRhYjctNDdmMi1hYzA0LTgxNTdiODVhYmZiMSIsImlhdCI6MTc0ODc5ODA4MCwic3ViIjoiZGV2ZWxvcGVyLzJjMjhkZjZiLTY0N2ItN2IxNi04NjZlLWFhODVlMGU0ZjdkYiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3OC4xMzcuMjEzLjMwIl0sInR5cGUiOiJjbGllbnQifV19.SCuXaJ1GgDzBhvDyqQrNblIp6NU3xKA2nBnc-7KnyzysVQfbJLLf1jQd3SLdTKX6IP1T7qLTHrB81D0cnjUnvA';
+// Middleware para logging de requisições
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    next();
+});
+
+// Middleware para limitar o tamanho do corpo das requisições
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Rota para a API do Clash Royale
 app.get('/api/clash/:tag', async (req, res) => {
@@ -18,7 +30,7 @@ app.get('/api/clash/:tag', async (req, res) => {
         
         const response = await axios.get(`https://api.clashroyale.com/v1/players/%23${tag}`, {
             headers: {
-                'Authorization': `Bearer ${CLASH_API_KEY}`,
+                'Authorization': `Bearer ${process.env.CLASH_API_KEY}`,
                 'Accept': 'application/json'
             }
         });
@@ -33,6 +45,23 @@ app.get('/api/clash/:tag', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
+// Rota de teste para verificar se a API está funcionando
+app.get('/api/test', (req, res) => {
+    res.json({ message: 'API está funcionando!' });
+});
+
+// Tratamento de erros 404
+app.use((req, res) => {
+    res.status(404).json({ error: true, message: 'Rota não encontrada' });
+});
+
+// Tratamento de erros globais
+app.use((err, req, res, next) => {
+    console.error('Erro global:', err);
+    res.status(500).json({ error: true, message: 'Erro interno do servidor' });
+});
+
+app.listen(port, '0.0.0.0', () => {
     console.log(`Servidor rodando na porta ${port}`);
+    console.log(`Acessível em: http://localhost:${port}`);
 }); 
