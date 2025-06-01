@@ -338,6 +338,19 @@
             font-weight: bold;
             letter-spacing: 0.5px;
         }
+
+        /* Removendo estilos relacionados a amigos */
+        .friends-list,
+        .friend-card,
+        .friend-avatar,
+        .friend-info,
+        .friend-name,
+        .friend-trophies,
+        .friend-actions,
+        .friend-action-btn,
+        .no-friends {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -407,13 +420,35 @@
             <div class="profile-stats">
                 <div class="stat-card">
                     <p>Troféus</p>
-                    <h3 id="trofeus" style="display: inline-block; vertical-align: middle;">0</h3>
-                    <button id="editTrofeusBtn" style="display:inline-block; margin-left: 8px; padding: 4px 10px; border-radius: 5px; border: none; background: #FFD700; color: #1a1a1a; font-size: 0.95em; font-weight: bold; cursor: pointer; vertical-align: middle;">Editar</button>
+                    <h3 id="trofeus">0</h3>
                 </div>
                 <div class="stat-card">
                     <p>Max Liga</p>
-                    <h3 id="maxLiga" style="display: inline-block; vertical-align: middle;">N/A</h3>
-                    <button id="editMaxLigaBtn" style="display:inline-block; margin-left: 8px; padding: 4px 10px; border-radius: 5px; border: none; background: #FFD700; color: #1a1a1a; font-size: 0.95em; font-weight: bold; cursor: pointer; vertical-align: middle;">Editar</button>
+                    <h3 id="maxLiga">N/A</h3>
+                </div>
+                <div class="stat-card">
+                    <p>Nível</p>
+                    <h3 id="nivelJogador">N/A</h3>
+                </div>
+                <div class="stat-card">
+                    <p>Vitórias</p>
+                    <h3 id="vitorias">N/A</h3>
+                </div>
+                <div class="stat-card">
+                    <p>Derrotas</p>
+                    <h3 id="derrotas">N/A</h3>
+                </div>
+                <div class="stat-card">
+                    <p>Taxa de Vitória</p>
+                    <h3 id="taxaVitoria">N/A</h3>
+                </div>
+                <div class="stat-card">
+                    <p>Recorde de Troféus</p>
+                    <h3 id="melhorPosicao">N/A</h3>
+                </div>
+                <div class="stat-card">
+                    <p>Clã Atual</p>
+                    <h3 id="clanAtual">N/A</h3>
                 </div>
             </div>
         </div>
@@ -437,41 +472,6 @@
         <button id="closeSuccessModal" style="position: absolute; top: 10px; right: 10px; background: transparent; border: none; color: #FFD700; font-size: 1.5rem; cursor: pointer;">&times;</button>
         <i class="fas fa-check-circle" style="color: #FFD700; font-size: 2.5rem; margin-bottom: 1rem;"></i>
         <div id="successModalMsg" style="color: #FFD700; font-size: 1.2rem; text-align: center;"></div>
-      </div>
-    </div>
-
-    <!-- Modal para editar troféus -->
-    <div id="trofeusModal" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
-      <div style="background: #222; padding: 2rem 1.5rem; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); min-width: 320px; max-width: 90vw; display: flex; flex-direction: column; align-items: center;">
-        <h2 style="color: #FFD700; margin-bottom: 1rem;">Editar Troféus</h2>
-        <input id="trofeusInput" type="number" min="0" max="9000" style="width: 90%; padding: 10px; border-radius: 6px; border: 1px solid #FFD700; font-size: 1.1rem; margin-bottom: 1.5rem;" />
-        <div style="display: flex; gap: 1rem;">
-          <button id="saveTrofeusBtn" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #1a1a1a; font-weight: bold; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer;">Guardar</button>
-          <button id="cancelTrofeusBtn" style="background: #888; color: #fff; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer;">Cancelar</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal para editar max liga -->
-    <div id="maxLigaModal" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
-      <div style="background: #222; padding: 2rem 1.5rem; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); min-width: 320px; max-width: 90vw; display: flex; flex-direction: column; align-items: center;">
-        <h2 style="color: #FFD700; margin-bottom: 1rem;">Editar Max Liga</h2>
-        <select id="maxLigaInput" style="width: 90%; padding: 10px; border-radius: 6px; border: 1px solid #FFD700; font-size: 1.1rem; margin-bottom: 1.5rem;">
-          <option value="Desafiante I">Desafiante I</option>
-          <option value="Desafiante II">Desafiante II</option>
-          <option value="Desafiante III">Desafiante III</option>
-          <option value="Mestre I">Mestre I</option>
-          <option value="Mestre II">Mestre II</option>
-          <option value="Mestre III">Mestre III</option>
-          <option value="Campeão">Campeão</option>
-          <option value="Grande Campeão">Grande Campeão</option>
-          <option value="Campeão Real">Campeão Real</option>
-          <option value="Maior Campeão">Maior Campeão</option>
-        </select>
-        <div style="display: flex; gap: 1rem;">
-          <button id="saveMaxLigaBtn" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #1a1a1a; font-weight: bold; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer;">Guardar</button>
-          <button id="cancelMaxLigaBtn" style="background: #888; color: #fff; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer;">Cancelar</button>
-        </div>
       </div>
     </div>
 
@@ -535,11 +535,164 @@
         </div>
     </div>
 
+    <!-- Modal para adicionar amigo -->
+    <div id="addFriendModal" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+        <div style="background: #222; padding: 2rem 1.5rem; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); min-width: 320px; max-width: 90vw; display: flex; flex-direction: column; align-items: center;">
+            <h2 style="color: #FFD700; margin-bottom: 1rem;">Adicionar Amigo</h2>
+            <input id="friendTagInput" type="text" placeholder="Digite a tag do amigo" style="width: 90%; padding: 10px; border-radius: 6px; border: 1px solid #FFD700; font-size: 1.1rem; margin-bottom: 1.5rem;" />
+            <div style="display: flex; gap: 1rem;">
+                <button id="saveFriendBtn" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #1a1a1a; font-weight: bold; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer;">Adicionar</button>
+                <button id="cancelFriendBtn" style="background: #888; color: #fff; border: none; border-radius: 6px; padding: 8px 22px; cursor: pointer;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Inicializar Supabase
         const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co'
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3dkZmlmaGhjcW10cG5ob3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTUzMDksImV4cCI6MjA2MDQzMTMwOX0.Q50xEMRQLTjuOKtn0f92GX5NKY9GgWWYVfHlmE5yhUs'
         const supabase = window.supabaseClient || window.supabase.createClient(supabaseUrl, supabaseKey)
+
+        // Função para buscar dados do Clash Royale
+        async function buscarDadosClashRoyale(tag) {
+            try {
+                // Remove o # da tag se existir e garante que está em maiúsculas
+                const tagFormatada = tag.replace('#', '').toUpperCase();
+                console.log('Buscando dados para tag:', tagFormatada);
+                
+                // Usando o servidor local
+                const response = await fetch(`http://localhost:3000/api/clash/${tagFormatada}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Erro na resposta da API:', errorData);
+                    throw new Error(errorData.reason || 'Erro ao buscar dados do Clash Royale');
+                }
+
+                const data = await response.json();
+                console.log('Dados recebidos da API:', data);
+                return data;
+            } catch (error) {
+                console.error('Erro ao buscar dados do Clash Royale:', error);
+                throw error;
+            }
+        }
+
+        // Função para atualizar dados do perfil com informações do Clash Royale
+        async function atualizarDadosClashRoyale(tag) {
+            try {
+                const dadosClash = await buscarDadosClashRoyale(tag);
+                
+                // Atualizar troféus
+                console.log('Dados completos do Clash Royale:', dadosClash);
+                console.log('Trophies:', dadosClash.trophies);
+                console.log('Best Path:', dadosClash.bestPathOfLegendSeasonResult);
+                
+                const trofeus = dadosClash.trophies || 0;
+                document.getElementById('trofeus').textContent = trofeus;
+                console.log('Troféus atualizados:', trofeus);
+                
+                // Atualizar max liga usando o leagueNumber
+                let maxLiga = 'N/A';
+                if (dadosClash.bestPathOfLegendSeasonResult && dadosClash.bestPathOfLegendSeasonResult.leagueNumber) {
+                    console.log('League Number recebido:', dadosClash.bestPathOfLegendSeasonResult.leagueNumber);
+                    const ligas = [
+                        'Desafiante I',
+                        'Desafiante II',
+                        'Desafiante III',
+                        'Mestre I',
+                        'Mestre II',
+                        'Mestre III',
+                        'Campeão',
+                        'Grande Campeão',
+                        'Campeão Real',
+                        'Maior Campeão'
+                    ];
+                    const leagueNumber = dadosClash.bestPathOfLegendSeasonResult.leagueNumber;
+                    console.log('League Number processado:', leagueNumber);
+                    if (leagueNumber >= 1 && leagueNumber <= 10) {
+                        maxLiga = ligas[leagueNumber - 1];
+                        console.log('Max Liga definida como:', maxLiga);
+                    }
+                }
+                document.getElementById('maxLiga').textContent = maxLiga;
+                
+                // Atualizar nível do jogador
+                const nivelJogador = dadosClash.expLevel || 'N/A';
+                document.getElementById('nivelJogador').textContent = nivelJogador;
+                console.log('Nível do jogador atualizado:', nivelJogador);
+                
+                // Atualizar vitórias
+                const vitorias = dadosClash.wins || 'N/A';
+                document.getElementById('vitorias').textContent = vitorias;
+                console.log('Vitórias atualizadas:', vitorias);
+                
+                // Atualizar derrotas
+                const derrotas = dadosClash.losses || 'N/A';
+                document.getElementById('derrotas').textContent = derrotas;
+                console.log('Derrotas atualizadas:', derrotas);
+                
+                // Calcular e atualizar taxa de vitória
+                const totalJogos = (dadosClash.wins || 0) + (dadosClash.losses || 0);
+                const taxaVitoria = totalJogos > 0 ? ((dadosClash.wins / totalJogos) * 100).toFixed(1) + '%' : 'N/A';
+                document.getElementById('taxaVitoria').textContent = taxaVitoria;
+                console.log('Taxa de vitória atualizada:', taxaVitoria);
+                
+                // Atualizar recorde de troféus
+                const melhorPosicao = dadosClash.bestTrophies || 'N/A';
+                document.getElementById('melhorPosicao').textContent = melhorPosicao;
+                console.log('Recorde de troféus atualizado:', melhorPosicao);
+                
+                // Atualizar clã atual
+                const clanAtual = dadosClash.clan?.name || 'Sem Clã';
+                document.getElementById('clanAtual').textContent = clanAtual;
+                console.log('Clã atual atualizado:', clanAtual);
+
+                // Atualizar no banco de dados
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    // Tentar fazer update primeiro
+                    const estatisticasData = {
+                        user_id: session.user.id,
+                        trofeus: trofeus,
+                        max_liga: maxLiga,
+                        nivel_jogador: nivelJogador,
+                        vitorias: vitorias,
+                        derrotas: derrotas,
+                        taxa_vitoria: taxaVitoria,
+                        melhor_posicao: melhorPosicao,
+                        clan_atual: clanAtual
+                    };
+
+                    console.log('Tentando salvar estatísticas:', estatisticasData);
+
+                    // Usar upsert para criar ou atualizar o registro
+                    const { data, error } = await supabase
+                        .from('estatisticas')
+                        .upsert(estatisticasData, {
+                            onConflict: 'user_id',
+                            ignoreDuplicates: false
+                        });
+
+                    if (error) {
+                        console.error('Erro ao salvar estatísticas:', error);
+                        throw error;
+                    }
+
+                    console.log('Estatísticas salvas com sucesso:', data);
+                }
+
+                showSuccessModal('Dados do Clash Royale atualizados com sucesso!');
+            } catch (error) {
+                console.error('Erro ao atualizar dados do Clash Royale:', error);
+                showNotification(error.message || 'Erro ao atualizar dados do Clash Royale', 'error');
+            }
+        }
 
         // Função para carregar o perfil do usuário
         async function carregarPerfil() {
@@ -552,6 +705,7 @@
                 let userData;
                 
                 if (isViewing && userId) {
+                    console.log('Carregando perfil do treinador ID:', userId);
                     // Carregar perfil de outro usuário
                     const { data: treinador, error: treinadorError } = await supabase
                         .from('treinadores')
@@ -563,6 +717,8 @@
                         console.error('Erro ao buscar treinador:', treinadorError);
                         throw treinadorError;
                     }
+
+                    console.log('Dados do treinador:', treinador);
 
                     // Buscar dados do usuário associado ao treinador
                     const { data: user, error: userError } = await supabase
@@ -576,7 +732,144 @@
                         throw userError;
                     }
 
-                    userData = { ...user, ...treinador };
+                    console.log('Dados do usuário:', user);
+
+                    // Buscar estatísticas do usuário
+                    const { data: estatisticas, error: estatisticasError } = await supabase
+                        .from('estatisticas')
+                        .select('*')
+                        .eq('user_id', treinador.user_id)
+                        .maybeSingle();
+
+                    if (estatisticasError) {
+                        console.error('Erro ao buscar estatísticas:', estatisticasError);
+                        throw estatisticasError;
+                    }
+
+                    console.log('Estatísticas encontradas:', estatisticas);
+
+                    userData = { ...user, ...treinador, ...estatisticas };
+                    console.log('Dados combinados:', userData);
+
+                    // Se o treinador tiver uma tag do Clash Royale, buscar dados atualizados
+                    if (userData.tag_clash) {
+                        console.log('Tag do Clash Royale encontrada:', userData.tag_clash);
+                        try {
+                            const dadosClash = await buscarDadosClashRoyale(userData.tag_clash);
+                            console.log('Dados do Clash Royale recebidos:', dadosClash);
+                            
+                            // Atualizar estatísticas com dados do Clash Royale
+                            console.log('Atualizando campos com dados do Clash Royale:', dadosClash);
+                            
+                            // Atualizar troféus
+                            const trofeus = dadosClash.trophies || 0;
+                            document.getElementById('trofeus').textContent = trofeus;
+                            console.log('Troféus atualizados:', trofeus);
+                            
+                            // Atualizar max liga usando o leagueNumber
+                            let maxLiga = 'N/A';
+                            if (dadosClash.bestPathOfLegendSeasonResult && dadosClash.bestPathOfLegendSeasonResult.leagueNumber) {
+                                console.log('League Number recebido:', dadosClash.bestPathOfLegendSeasonResult.leagueNumber);
+                                const ligas = [
+                                    'Desafiante I',
+                                    'Desafiante II',
+                                    'Desafiante III',
+                                    'Mestre I',
+                                    'Mestre II',
+                                    'Mestre III',
+                                    'Campeão',
+                                    'Grande Campeão',
+                                    'Campeão Real',
+                                    'Maior Campeão'
+                                ];
+                                const leagueNumber = dadosClash.bestPathOfLegendSeasonResult.leagueNumber;
+                                console.log('League Number processado:', leagueNumber);
+                                if (leagueNumber >= 1 && leagueNumber <= 10) {
+                                    maxLiga = ligas[leagueNumber - 1];
+                                    console.log('Max Liga definida como:', maxLiga);
+                                }
+                            }
+                            document.getElementById('maxLiga').textContent = maxLiga;
+                            
+                            // Atualizar nível do jogador
+                            const nivelJogador = dadosClash.expLevel || 'N/A';
+                            document.getElementById('nivelJogador').textContent = nivelJogador;
+                            console.log('Nível do jogador atualizado:', nivelJogador);
+                            
+                            // Atualizar vitórias
+                            const vitorias = dadosClash.wins || 'N/A';
+                            document.getElementById('vitorias').textContent = vitorias;
+                            console.log('Vitórias atualizadas:', vitorias);
+                            
+                            // Atualizar derrotas
+                            const derrotas = dadosClash.losses || 'N/A';
+                            document.getElementById('derrotas').textContent = derrotas;
+                            console.log('Derrotas atualizadas:', derrotas);
+                            
+                            // Calcular e atualizar taxa de vitória
+                            const totalJogos = (dadosClash.wins || 0) + (dadosClash.losses || 0);
+                            const taxaVitoria = totalJogos > 0 ? ((dadosClash.wins / totalJogos) * 100).toFixed(1) + '%' : 'N/A';
+                            document.getElementById('taxaVitoria').textContent = taxaVitoria;
+                            console.log('Taxa de vitória atualizada:', taxaVitoria);
+                            
+                            // Atualizar recorde de troféus
+                            const melhorPosicao = dadosClash.bestTrophies || 'N/A';
+                            document.getElementById('melhorPosicao').textContent = melhorPosicao;
+                            console.log('Recorde de troféus atualizado:', melhorPosicao);
+                            
+                            // Atualizar clã atual
+                            const clanAtual = dadosClash.clan?.name || 'Sem Clã';
+                            document.getElementById('clanAtual').textContent = clanAtual;
+                            console.log('Clã atual atualizado:', clanAtual);
+
+                            // Atualizar no banco de dados
+                            try {
+                                const estatisticasData = {
+                                    user_id: treinador.user_id,
+                                    trofeus: trofeus,
+                                    max_liga: maxLiga,
+                                    nivel_jogador: nivelJogador,
+                                    vitorias: vitorias,
+                                    derrotas: derrotas,
+                                    taxa_vitoria: taxaVitoria,
+                                    melhor_posicao: melhorPosicao,
+                                    clan_atual: clanAtual
+                                };
+
+                                console.log('Tentando salvar estatísticas:', estatisticasData);
+
+                                // Usar upsert para criar ou atualizar o registro
+                                const { data, error } = await supabase
+                                    .from('estatisticas')
+                                    .upsert(estatisticasData, {
+                                        onConflict: 'user_id',
+                                        ignoreDuplicates: false
+                                    });
+
+                                if (error) {
+                                    console.error('Erro ao salvar estatísticas:', error);
+                                    throw error;
+                                }
+
+                                console.log('Estatísticas salvas com sucesso:', data);
+                            } catch (error) {
+                                console.error('Erro ao atualizar estatísticas:', error);
+                            }
+                        } catch (error) {
+                            console.error('Erro ao buscar dados do Clash Royale:', error);
+                            // Se houver erro, usar os dados do banco
+                            document.getElementById('trofeus').textContent = userData.trofeus || 'N/A';
+                            document.getElementById('maxLiga').textContent = userData.max_liga || 'N/A';
+                            document.getElementById('nivelJogador').textContent = userData.nivel_jogador || 'N/A';
+                            document.getElementById('vitorias').textContent = userData.vitorias || 'N/A';
+                            document.getElementById('derrotas').textContent = userData.derrotas || 'N/A';
+                            document.getElementById('taxaVitoria').textContent = userData.taxa_vitoria || 'N/A';
+                            document.getElementById('melhorPosicao').textContent = userData.melhor_posicao || 'N/A';
+                            document.getElementById('clanAtual').textContent = userData.clan_atual || 'N/A';
+                        }
+                    } else {
+                        console.log('Nenhuma tag do Clash Royale encontrada');
+                    }
                 } else {
                     // Carregar perfil do usuário logado
                     const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -589,7 +882,139 @@
                         .single();
 
                     if (error) throw error;
-                    userData = data;
+
+                    // Buscar estatísticas do usuário
+                    const { data: estatisticas, error: estatisticasError } = await supabase
+                        .from('estatisticas')
+                        .select('*')
+                        .eq('user_id', user.id)
+                        .maybeSingle();
+
+                    if (estatisticasError) {
+                        console.error('Erro ao buscar estatísticas:', estatisticasError);
+                        throw estatisticasError;
+                    }
+
+                    console.log('Estatísticas encontradas:', estatisticas);
+
+                    userData = { ...data, ...estatisticas };
+
+                    // Se o usuário tiver uma tag do Clash Royale, buscar dados atualizados
+                    if (userData.tag_clash) {
+                        try {
+                            const dadosClash = await buscarDadosClashRoyale(userData.tag_clash);
+                            console.log('Dados do Clash Royale recebidos:', dadosClash);
+                            
+                            // Atualizar estatísticas com dados do Clash Royale
+                            console.log('Atualizando campos com dados do Clash Royale:', dadosClash);
+                            
+                            // Atualizar troféus
+                            const trofeus = dadosClash.trophies || 0;
+                            document.getElementById('trofeus').textContent = trofeus;
+                            console.log('Troféus atualizados:', trofeus);
+                            
+                            // Atualizar max liga usando o leagueNumber
+                            let maxLiga = 'N/A';
+                            if (dadosClash.bestPathOfLegendSeasonResult && dadosClash.bestPathOfLegendSeasonResult.leagueNumber) {
+                                console.log('League Number recebido:', dadosClash.bestPathOfLegendSeasonResult.leagueNumber);
+                                const ligas = [
+                                    'Desafiante I',
+                                    'Desafiante II',
+                                    'Desafiante III',
+                                    'Mestre I',
+                                    'Mestre II',
+                                    'Mestre III',
+                                    'Campeão',
+                                    'Grande Campeão',
+                                    'Campeão Real',
+                                    'Maior Campeão'
+                                ];
+                                const leagueNumber = dadosClash.bestPathOfLegendSeasonResult.leagueNumber;
+                                console.log('League Number processado:', leagueNumber);
+                                if (leagueNumber >= 1 && leagueNumber <= 10) {
+                                    maxLiga = ligas[leagueNumber - 1];
+                                    console.log('Max Liga definida como:', maxLiga);
+                                }
+                            }
+                            document.getElementById('maxLiga').textContent = maxLiga;
+                            
+                            // Atualizar nível do jogador
+                            const nivelJogador = dadosClash.expLevel || 'N/A';
+                            document.getElementById('nivelJogador').textContent = nivelJogador;
+                            console.log('Nível do jogador atualizado:', nivelJogador);
+                            
+                            // Atualizar vitórias
+                            const vitorias = dadosClash.wins || 'N/A';
+                            document.getElementById('vitorias').textContent = vitorias;
+                            console.log('Vitórias atualizadas:', vitorias);
+                            
+                            // Atualizar derrotas
+                            const derrotas = dadosClash.losses || 'N/A';
+                            document.getElementById('derrotas').textContent = derrotas;
+                            console.log('Derrotas atualizadas:', derrotas);
+                            
+                            // Calcular e atualizar taxa de vitória
+                            const totalJogos = (dadosClash.wins || 0) + (dadosClash.losses || 0);
+                            const taxaVitoria = totalJogos > 0 ? ((dadosClash.wins / totalJogos) * 100).toFixed(1) + '%' : 'N/A';
+                            document.getElementById('taxaVitoria').textContent = taxaVitoria;
+                            console.log('Taxa de vitória atualizada:', taxaVitoria);
+                            
+                            // Atualizar recorde de troféus
+                            const melhorPosicao = dadosClash.bestTrophies || 'N/A';
+                            document.getElementById('melhorPosicao').textContent = melhorPosicao;
+                            console.log('Recorde de troféus atualizado:', melhorPosicao);
+                            
+                            // Atualizar clã atual
+                            const clanAtual = dadosClash.clan?.name || 'Sem Clã';
+                            document.getElementById('clanAtual').textContent = clanAtual;
+                            console.log('Clã atual atualizado:', clanAtual);
+
+                            // Atualizar no banco de dados
+                            try {
+                                const estatisticasData = {
+                                    user_id: user.id,
+                                    trofeus: trofeus,
+                                    max_liga: maxLiga,
+                                    nivel_jogador: nivelJogador,
+                                    vitorias: vitorias,
+                                    derrotas: derrotas,
+                                    taxa_vitoria: taxaVitoria,
+                                    melhor_posicao: melhorPosicao,
+                                    clan_atual: clanAtual
+                                };
+
+                                console.log('Tentando salvar estatísticas:', estatisticasData);
+
+                                // Usar upsert para criar ou atualizar o registro
+                                const { data, error } = await supabase
+                                    .from('estatisticas')
+                                    .upsert(estatisticasData, {
+                                        onConflict: 'user_id',
+                                        ignoreDuplicates: false
+                                    });
+
+                                if (error) {
+                                    console.error('Erro ao salvar estatísticas:', error);
+                                    throw error;
+                                }
+
+                                console.log('Estatísticas salvas com sucesso:', data);
+                            } catch (error) {
+                                console.error('Erro ao atualizar estatísticas:', error);
+                            }
+                        } catch (error) {
+                            console.error('Erro ao buscar dados do Clash Royale:', error);
+                            // Se houver erro, usar os dados do banco
+                            document.getElementById('trofeus').textContent = userData.trofeus || 'N/A';
+                            document.getElementById('maxLiga').textContent = userData.max_liga || 'N/A';
+                            document.getElementById('nivelJogador').textContent = userData.nivel_jogador || 'N/A';
+                            document.getElementById('vitorias').textContent = userData.vitorias || 'N/A';
+                            document.getElementById('derrotas').textContent = userData.derrotas || 'N/A';
+                            document.getElementById('taxaVitoria').textContent = userData.taxa_vitoria || 'N/A';
+                            document.getElementById('melhorPosicao').textContent = userData.melhor_posicao || 'N/A';
+                            document.getElementById('clanAtual').textContent = userData.clan_atual || 'N/A';
+                        }
+                    }
                 }
 
                 console.log('Dados do usuário:', userData);
@@ -601,28 +1026,35 @@
                 // Atualizar avatar
                 const profileImage = document.getElementById('profileImage');
                 const defaultAvatar = document.getElementById('defaultAvatar');
-                // Tenta usar foto_perfil_url, se não existir tenta avatar_url
-                const fotoUrl = userData.foto_perfil_url || userData.avatar_url;
-                if (fotoUrl) {
-                    if (fotoUrl.startsWith('http')) {
-                        profileImage.src = fotoUrl;
+                if (profileImage && defaultAvatar) {
+                    const fotoUrl = userData.foto_perfil_url || userData.avatar_url;
+                    if (fotoUrl) {
+                        if (fotoUrl.startsWith('http')) {
+                            profileImage.src = fotoUrl;
+                        } else {
+                            profileImage.src = `${supabaseUrl}/storage/v1/object/public/avatars/${fotoUrl}`;
+                        }
+                        profileImage.onerror = function() {
+                            profileImage.style.display = 'none';
+                            defaultAvatar.style.display = 'block';
+                        };
+                        profileImage.style.display = 'block';
+                        defaultAvatar.style.display = 'none';
                     } else {
-                        profileImage.src = `${supabaseUrl}/storage/v1/object/public/avatars/${fotoUrl}`;
-                    }
-                    profileImage.onerror = function() {
                         profileImage.style.display = 'none';
                         defaultAvatar.style.display = 'block';
-                    };
-                    profileImage.style.display = 'block';
-                    defaultAvatar.style.display = 'none';
-                } else {
-                    profileImage.style.display = 'none';
-                    defaultAvatar.style.display = 'block';
+                    }
                 }
 
                 // Atualizar estatísticas
                 document.getElementById('trofeus').textContent = userData.trofeus || '0';
                 document.getElementById('maxLiga').textContent = userData.max_liga || 'N/A';
+                document.getElementById('nivelJogador').textContent = userData.nivel_jogador || 'N/A';
+                document.getElementById('vitorias').textContent = userData.vitorias || 'N/A';
+                document.getElementById('derrotas').textContent = userData.derrotas || 'N/A';
+                document.getElementById('taxaVitoria').textContent = userData.taxa_vitoria || 'N/A';
+                document.getElementById('melhorPosicao').textContent = userData.melhor_posicao || 'N/A';
+                document.getElementById('clanAtual').textContent = userData.clan_atual || 'N/A';
 
                 // Atualizar cargo
                 const cargoElement = document.getElementById('userRole');
@@ -644,7 +1076,9 @@
                 // Atualizar tag do Clash Royale
                 const clashTag = document.getElementById('clashTag');
                 if (userData.tag_clash) {
-                    clashTag.textContent = userData.tag_clash;
+                    // Garantir que a tag comece com #
+                    const tagFormatada = userData.tag_clash.startsWith('#') ? userData.tag_clash : `#${userData.tag_clash}`;
+                    clashTag.textContent = tagFormatada;
                     document.getElementById('editClashTagBtn').style.display = 'inline-block';
                     document.getElementById('setClashTagBtn').style.display = 'none';
                 } else {
@@ -655,13 +1089,9 @@
 
                 // No JS, dentro da função carregarPerfil, depois de carregar userData:
                 if (isViewing) {
-                    document.getElementById('editTrofeusBtn').style.display = 'none';
-                    document.getElementById('editMaxLigaBtn').style.display = 'none';
                     document.getElementById('editClashTagBtn').style.display = 'none';
                     document.getElementById('setClashTagBtn').style.display = 'none';
                 } else {
-                    document.getElementById('editTrofeusBtn').style.display = 'inline-block';
-                    document.getElementById('editMaxLigaBtn').style.display = 'inline-block';
                     if (userData.tag_clash) {
                         document.getElementById('editClashTagBtn').style.display = 'inline-block';
                         document.getElementById('setClashTagBtn').style.display = 'none';
@@ -735,6 +1165,7 @@
                 clashTagInput.setSelectionRange(1, 1);
             }, 100);
         });
+
         // Forçar letras maiúsculas no input
         clashTagInput.addEventListener('input', function() {
             // Mantém o # no início e força o resto para maiúsculas
@@ -749,9 +1180,11 @@
                 this.setSelectionRange(this.value.length, this.value.length);
             }
         });
+
         cancelClashTagBtn.addEventListener('click', () => {
             clashTagModal.style.display = 'none';
         });
+
         // Botão de editar tag
         window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('editClashTagBtn').addEventListener('click', () => {
@@ -768,6 +1201,7 @@
                 }, 100);
             });
         });
+
         saveClashTagBtn.addEventListener('click', async () => {
             const tag = clashTagInput.value.trim();
             // Se só tiver #, apaga a tag
@@ -817,11 +1251,15 @@
                 editClashTagBtn.style.display = 'inline-block';
                 clashTagModal.style.display = 'none';
                 showSuccessModal('Tag atualizada com sucesso!');
+
+                // Buscar e atualizar dados do Clash Royale
+                await atualizarDadosClashRoyale(tag);
             } catch (error) {
                 console.error('Erro ao definir tag:', error);
                 showNotification('Erro ao definir tag', 'error');
             }
         });
+
         // Fechar modal ao clicar fora
         clashTagModal.addEventListener('click', (e) => {
             if (e.target === clashTagModal) {
@@ -850,88 +1288,6 @@
                 }
             };
         }
-
-        // Eventos para editar troféus
-        const trofeusModal = document.getElementById('trofeusModal');
-        document.getElementById('editTrofeusBtn').onclick = () => {
-            const valorAtual = parseInt(document.getElementById('trofeus').textContent, 10) || 0;
-            document.getElementById('trofeusInput').value = valorAtual;
-            trofeusModal.style.display = 'flex';
-            setTimeout(() => document.getElementById('trofeusInput').focus(), 100);
-        };
-        document.getElementById('trofeusInput').oninput = function() {
-            if (this.value.length > 4 || parseInt(this.value, 10) > 9000) {
-                this.value = 9000;
-            }
-            if (parseInt(this.value, 10) < 0) {
-                this.value = 0;
-            }
-        };
-        document.getElementById('cancelTrofeusBtn').onclick = () => {
-            trofeusModal.style.display = 'none';
-        };
-        document.getElementById('saveTrofeusBtn').onclick = async () => {
-            let novoValor = parseInt(document.getElementById('trofeusInput').value, 10);
-            if (isNaN(novoValor) || novoValor < 0) novoValor = 0;
-            if (novoValor > 9000) novoValor = 9000;
-            const urlParams = new URLSearchParams(window.location.search);
-            const userId = urlParams.get('id');
-            let id = userId;
-            if (!id) {
-                const { data: { user } } = await supabase.auth.getUser();
-                id = user.id;
-            }
-            const { error } = await supabase
-                .from('utilizadores')
-                .update({ trofeus: novoValor })
-                .eq('id', id);
-            if (!error) {
-                document.getElementById('trofeus').textContent = novoValor;
-                showSuccessModal('Troféus atualizados com sucesso!');
-                trofeusModal.style.display = 'none';
-            } else {
-                showNotification('Erro ao atualizar troféus', 'error');
-            }
-        };
-
-        // Eventos para editar max liga
-        const maxLigaModal = document.getElementById('maxLigaModal');
-        document.getElementById('editMaxLigaBtn').onclick = () => {
-            const valorAtual = document.getElementById('maxLiga').textContent;
-            document.getElementById('maxLigaInput').value = valorAtual;
-            maxLigaModal.style.display = 'flex';
-            setTimeout(() => document.getElementById('maxLigaInput').focus(), 100);
-        };
-        document.getElementById('cancelMaxLigaBtn').onclick = () => {
-            maxLigaModal.style.display = 'none';
-        };
-        document.getElementById('saveMaxLigaBtn').onclick = async () => {
-            const novoValor = document.getElementById('maxLigaInput').value;
-            const urlParams = new URLSearchParams(window.location.search);
-            const userId = urlParams.get('id');
-            let id = userId;
-            if (!id) {
-                const { data: { user } } = await supabase.auth.getUser();
-                id = user.id;
-            }
-            const { error } = await supabase
-                .from('utilizadores')
-                .update({ max_liga: novoValor })
-                .eq('id', id);
-            if (!error) {
-                document.getElementById('maxLiga').textContent = novoValor;
-                showSuccessModal('Max Liga atualizada com sucesso!');
-                maxLigaModal.style.display = 'none';
-            } else {
-                showNotification('Erro ao atualizar Max Liga', 'error');
-            }
-        };
-
-        // Fechar modais ao clicar fora
-        window.addEventListener('click', function(event) {
-            if (event.target === trofeusModal) trofeusModal.style.display = 'none';
-            if (event.target === maxLigaModal) maxLigaModal.style.display = 'none';
-        });
 
         // Função para mostrar tutorial da tag
         function showTagTutorial() {

@@ -993,6 +993,73 @@
     </style>
 
     <script>
+        // Função para verificar se a tag do Clash Royale é válida
+        async function verificarTagClashRoyale(tag) {
+            try {
+                // Remove o # da tag se existir e garante que está em maiúsculas
+                const tagFormatada = tag.replace('#', '').toUpperCase();
+                
+                // Verifica se a tag tem o formato correto (8 caracteres alfanuméricos)
+                if (!/^[0-9A-Z]{8}$/.test(tagFormatada)) {
+                    return false;
+                }
+
+                // Tenta buscar os dados do jogador
+                const response = await fetch(`http://localhost:3000/api/clash/${tagFormatada}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    return false;
+                }
+
+                const data = await response.json();
+                return data && data.name ? true : false;
+            } catch (error) {
+                console.error('Erro ao verificar tag do Clash Royale:', error);
+                return false;
+            }
+        }
+
+        // Função para buscar dados do Clash Royale
+        async function buscarDadosClashRoyale(tag) {
+            try {
+                // Remove o # da tag se existir e garante que está em maiúsculas
+                const tagFormatada = tag.replace('#', '').toUpperCase();
+                console.log('Buscando dados para tag:', tagFormatada);
+                
+                // Verifica se a tag é válida antes de prosseguir
+                const tagValida = await verificarTagClashRoyale(tagFormatada);
+                if (!tagValida) {
+                    throw new Error('Tag do Clash Royale inválida');
+                }
+                
+                // Usando o servidor local
+                const response = await fetch(`http://localhost:3000/api/clash/${tagFormatada}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Erro na resposta da API:', errorData);
+                    throw new Error(errorData.reason || 'Erro ao buscar dados do Clash Royale');
+                }
+
+                const data = await response.json();
+                console.log('Dados recebidos da API:', data);
+                return data;
+            } catch (error) {
+                console.error('Erro ao buscar dados do Clash Royale:', error);
+                throw error;
+            }
+        }
+
         // Função para carregar os treinadores
         async function carregarTreinadores() {
             try {
@@ -1017,7 +1084,7 @@
                 const userIds = treinadores.map(t => t.user_id);
                 const { data: usuarios, error: usuariosError } = await supabase
                     .from('utilizadores')
-                    .select('id, nome, foto_perfil_url, tipo_conta, ultimo_login, trofeus, max_liga')
+                    .select('id, nome, foto_perfil_url, tipo_conta, ultimo_login, tag_clash')
                     .in('id', userIds);
 
                 if (usuariosError) {
@@ -1025,9 +1092,25 @@
                     throw usuariosError;
                 }
 
-                // Criar um mapa de usuários para fácil acesso
+                // Buscar estatísticas dos usuários
+                const { data: estatisticas, error: estatisticasError } = await supabase
+                    .from('estatisticas')
+                    .select('*')
+                    .in('user_id', userIds);
+
+                if (estatisticasError) {
+                    console.error('Erro ao buscar estatísticas:', estatisticasError);
+                    throw estatisticasError;
+                }
+
+                // Criar um mapa de usuários e estatísticas para fácil acesso
                 const usuariosMap = usuarios.reduce((acc, user) => {
                     acc[user.id] = user;
+                    return acc;
+                }, {});
+
+                const estatisticasMap = estatisticas.reduce((acc, stat) => {
+                    acc[stat.user_id] = stat;
                     return acc;
                 }, {});
 
@@ -1041,12 +1124,6 @@
                     return;
                 }
 
-                // Combinar dados dos treinadores com dados dos usuários
-                const treinadoresCompletos = treinadoresValidos.map(treinador => ({
-                    ...treinador,
-                    utilizador: usuariosMap[treinador.user_id]
-                }));
-
                 // Buscar todas as avaliações de uma vez
                 const { data: todasAvaliacoes, error: avaliacoesError } = await supabase
                     .from('avaliacoes_treinadores')
@@ -1058,29 +1135,106 @@
                 }
 
                 // Calcular média de avaliações para cada treinador
-                const treinadoresComAvaliacoes = treinadoresCompletos.map(treinador => {
+                const treinadoresComAvaliacoes = treinadoresValidos.map(treinador => {
                     const avaliacoesDoTreinador = todasAvaliacoes.filter(a => a.treinador_id === treinador.id);
                     const media = avaliacoesDoTreinador.length > 0
                         ? avaliacoesDoTreinador.reduce((acc, curr) => acc + curr.estrelas, 0) / avaliacoesDoTreinador.length
                         : 0;
 
-                    return { ...treinador, avaliacao_media: media.toFixed(1) };
+                    const usuario = usuariosMap[treinador.user_id];
+                    const estatistica = estatisticasMap[treinador.user_id];
+
+                    return {
+                        ...treinador,
+                        avaliacao_media: media.toFixed(1),
+                        utilizador: usuario,
+                        estatisticas: estatistica
+                    };
                 });
 
                 // Ordenar treinadores por troféus (maior para menor)
                 treinadoresComAvaliacoes.sort((a, b) => {
-                    const trofeusA = a.utilizador?.trofeus || 0;
-                    const trofeusB = b.utilizador?.trofeus || 0;
+                    const trofeusA = a.estatisticas?.trofeus || 0;
+                    const trofeusB = b.estatisticas?.trofeus || 0;
                     return trofeusB - trofeusA;
                 });
 
                 const coachesGrid = document.getElementById('coachesGrid');
                 coachesGrid.innerHTML = '';
 
-                treinadoresComAvaliacoes.forEach((treinador, index) => {
+                // Processar cada treinador e buscar dados do Clash Royale se disponível
+                for (const treinador of treinadoresComAvaliacoes) {
+                    let trofeus = treinador.estatisticas?.trofeus || 0;
+                    let maxLiga = treinador.estatisticas?.max_liga || 'N/D';
+
+                    // Se o treinador tiver uma tag do Clash Royale, buscar dados atualizados
+                    if (treinador.utilizador?.tag_clash) {
+                        try {
+                            // Verifica se a tag é válida antes de prosseguir
+                            const tagValida = await verificarTagClashRoyale(treinador.utilizador.tag_clash);
+                            if (!tagValida) {
+                                console.error('Tag do Clash Royale inválida para o treinador:', treinador.nome);
+                                continue;
+                            }
+
+                            const dadosClash = await buscarDadosClashRoyale(treinador.utilizador.tag_clash);
+                            
+                            // Atualizar troféus
+                            trofeus = dadosClash.trophies || trofeus;
+                            
+                            // Atualizar max liga usando o leagueNumber
+                            if (dadosClash.bestPathOfLegendSeasonResult && dadosClash.bestPathOfLegendSeasonResult.leagueNumber) {
+                                const ligas = [
+                                    'Desafiante I',
+                                    'Desafiante II',
+                                    'Desafiante III',
+                                    'Mestre I',
+                                    'Mestre II',
+                                    'Mestre III',
+                                    'Campeão',
+                                    'Grande Campeão',
+                                    'Campeão Real',
+                                    'Maior Campeão'
+                                ];
+                                const leagueNumber = dadosClash.bestPathOfLegendSeasonResult.leagueNumber;
+                                if (leagueNumber >= 1 && leagueNumber <= 10) {
+                                    maxLiga = ligas[leagueNumber - 1];
+                                }
+                            }
+
+                            // Atualizar estatísticas no banco de dados
+                            const estatisticasData = {
+                                user_id: treinador.user_id,
+                                trofeus: trofeus,
+                                max_liga: maxLiga,
+                                nivel_jogador: dadosClash.expLevel || treinador.estatisticas?.nivel_jogador,
+                                vitorias: dadosClash.wins || treinador.estatisticas?.vitorias,
+                                derrotas: dadosClash.losses || treinador.estatisticas?.derrotas,
+                                taxa_vitoria: dadosClash.wins && dadosClash.losses ? 
+                                    ((dadosClash.wins / (dadosClash.wins + dadosClash.losses)) * 100).toFixed(1) + '%' : 
+                                    treinador.estatisticas?.taxa_vitoria,
+                                melhor_posicao: dadosClash.bestTrophies || treinador.estatisticas?.melhor_posicao,
+                                clan_atual: dadosClash.clan?.name || treinador.estatisticas?.clan_atual
+                            };
+
+                            await supabase
+                                .from('estatisticas')
+                                .upsert(estatisticasData, {
+                                    onConflict: 'user_id',
+                                    ignoreDuplicates: false
+                                });
+
+                        } catch (error) {
+                            console.error('Erro ao buscar dados do Clash Royale:', error);
+                            // Se houver erro, usar os dados do banco
+                            trofeus = treinador.estatisticas?.trofeus || trofeus;
+                            maxLiga = treinador.estatisticas?.max_liga || maxLiga;
+                        }
+                    }
+
                     const card = document.createElement('div');
                     card.className = `coach-card animate__animated animate__fadeInUp`;
-                    card.style.animationDelay = `${index * 0.2}s`;
+                    card.style.animationDelay = `${treinadoresComAvaliacoes.indexOf(treinador) * 0.2}s`;
 
                     const defaultAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${treinador.nome}`;
                     const avatarUrl = treinador.utilizador?.foto_perfil_url 
@@ -1101,9 +1255,8 @@
                         minute: '2-digit'
                     }) : 'Nunca';
 
-                    // Formatar troféus e liga máxima
-                    const trofeus = treinador.utilizador?.trofeus ? treinador.utilizador.trofeus.toLocaleString('pt-BR') : 'N/D';
-                    const maxLiga = treinador.utilizador?.max_liga || 'N/D';
+                    // Formatar troféus
+                    const trofeusFormatados = trofeus ? trofeus.toLocaleString('pt-BR') : 'N/D';
 
                     card.innerHTML = `
                         <div class="coach-avatar">
@@ -1118,7 +1271,7 @@
                             </div>
                             <div class="coach-stats">
                                 <div class="stat-item">
-                                    <div class="stat-value">${trofeus}</div>
+                                    <div class="stat-value">${trofeusFormatados}</div>
                                     <div class="stat-label">Troféus</div>
                                 </div>
                                 <div class="stat-item">
@@ -1151,7 +1304,7 @@
                         </div>
                     `;
                     coachesGrid.appendChild(card);
-                });
+                }
 
                 document.querySelectorAll('.rating').forEach(rating => {
                     rating.addEventListener('click', function() {
@@ -1180,14 +1333,15 @@
                 }
                 if (tipo === 'trofeus') {
                     const val = card.querySelector('.coach-stats .stat-item:nth-child(1) .stat-value');
-                    return val ? parseInt(val.textContent) || 0 : 0;
+                    return val ? parseInt(val.textContent.replace(/\./g, '')) || 0 : 0;
                 }
                 if (tipo === 'maxliga') {
                     const val = card.querySelector('.coach-stats .stat-item:nth-child(2) .stat-value');
                     const ligas = [
                         'Desafiante I','Desafiante II','Desafiante III','Mestre I','Mestre II','Mestre III','Campeão','Grande Campeão','Campeão Real','Maior Campeão'
                     ];
-                    return val ? ligas.indexOf(val.textContent.trim()) : -1;
+                    const liga = val ? val.textContent.trim() : '';
+                    return liga ? ligas.indexOf(liga) : -1;
                 }
                 return 0;
             }

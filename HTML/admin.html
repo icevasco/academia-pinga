@@ -1053,6 +1053,34 @@
             padding: 20px;
             opacity: 0.8;
         }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Removendo os estilos do botão delete-all-button */
+        /* .delete-all-button {
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-all-button:hover {
+            background-color: #cc0000;
+        }
+
+        .delete-all-button i {
+            font-size: 16px;
+        } */
     </style>
 </head>
 <body>
@@ -2610,7 +2638,34 @@
                     btn.classList.add('loading');
                 });
 
-                const { error } = await window.supabaseClient
+                // Primeiro, buscar os dados da inscrição
+                const { data: inscricao, error: fetchError } = await window.supabaseClient
+                    .from('inscricoes')
+                    .select('*')
+                    .eq('id', formId)
+                    .single();
+
+                if (fetchError) throw fetchError;
+
+                // Mapear o plano para o tipo de conta correspondente
+                const tipoContaMap = {
+                    'iniciante': 'premium_iniciante',
+                    'avancado': 'premium_avancado',
+                    'pro': 'premium_pro'
+                };
+
+                const tipoConta = tipoContaMap[inscricao.plano];
+
+                // Atualizar o tipo de conta do usuário
+                const { error: updateUserError } = await window.supabaseClient
+                    .from('utilizadores')
+                    .update({ tipo_conta: tipoConta })
+                    .eq('id', inscricao.utilizador_id);
+
+                if (updateUserError) throw updateUserError;
+
+                // Atualizar o status da inscrição
+                const { error: updateInscricaoError } = await window.supabaseClient
                     .from('inscricoes')
                     .update({ 
                         status: 'aprovado',
@@ -2618,7 +2673,7 @@
                     })
                     .eq('id', formId);
 
-                if (error) throw error;
+                if (updateInscricaoError) throw updateInscricaoError;
 
                 showNotification('Inscrição aprovada com sucesso!', 'success');
                 loadForms();
@@ -2896,6 +2951,55 @@
             }
             // ... existing code ...
         }
+
+        window.confirmarApagarTodasInscricoes = function() {
+            const modal = document.getElementById('confirmActionModal');
+            const modalTitle = document.getElementById('confirmActionTitle');
+            const modalText = document.getElementById('confirmActionText');
+            const modalBtn = document.getElementById('confirmActionBtn');
+
+            modalTitle.textContent = 'Confirmar Exclusão';
+            modalText.innerHTML = `
+                <p style="color: #ff4444; font-weight: bold;">ATENÇÃO: Esta ação não pode ser desfeita!</p>
+                <p>Tem certeza que deseja apagar TODAS as inscrições?</p>
+            `;
+            modalBtn.textContent = 'Apagar Tudo';
+            modalBtn.style.backgroundColor = '#ff4444';
+            modalBtn.onclick = function() {
+                apagarTodasInscricoes();
+            };
+
+            modal.style.display = 'flex';
+            modal.classList.add('active');
+        };
+
+        window.apagarTodasInscricoes = async function() {
+            try {
+                console.log('Iniciando processo de apagar todas as inscrições...');
+                
+                const { error } = await window.supabaseClient
+                    .from('inscricoes')
+                    .delete()
+                    .neq('id', '00000000-0000-0000-0000-000000000000');
+
+                if (error) {
+                    console.error('Erro ao apagar inscrições:', error);
+                    throw error;
+                }
+
+                console.log('Inscrições apagadas com sucesso');
+                showNotification('Todas as inscrições foram apagadas com sucesso!', 'success');
+                closeConfirmActionModal();
+                
+                // Atualizar a página
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            } catch (error) {
+                console.error('Erro ao apagar inscrições:', error);
+                showNotification('Erro ao apagar inscrições: ' + error.message, 'error');
+            }
+        };
     </script>
 </body>
 </html>
