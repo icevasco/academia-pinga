@@ -999,8 +999,8 @@
                 // Remove o # da tag se existir e garante que está em maiúsculas
                 const tagFormatada = tag.replace('#', '').toUpperCase();
                 
-                // Verifica se a tag tem o formato correto (8 caracteres alfanuméricos)
-                if (!/^[0-9A-Z]{8}$/.test(tagFormatada)) {
+                // Verifica se a tag tem o formato correto (entre 3 e 9 caracteres alfanuméricos)
+                if (!/^[0-9A-Z]{3,9}$/.test(tagFormatada)) {
                     return false;
                 }
 
