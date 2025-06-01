@@ -23,7 +23,44 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Rota para a API do Clash Royale
+// Rota de teste para verificar se a API está funcionando
+app.get('/api/test', (req, res) => {
+    res.json({ message: 'API está funcionando!' });
+});
+
+// Rota para buscar membros do clã
+app.get('/api/clash/clan/:tag', async (req, res) => {
+    try {
+        const tag = req.params.tag;
+        console.log('Buscando dados do clã:', tag);
+        console.log('API Key:', process.env.CLASH_API_KEY ? 'Presente' : 'Ausente');
+        
+        const url = `https://api.clashroyale.com/v1/clans/%23${tag}`;
+        console.log('URL da requisição:', url);
+        
+        const response = await axios.get(url, {
+            headers: {
+                'Authorization': `Bearer ${process.env.CLASH_API_KEY}`,
+                'Accept': 'application/json'
+            }
+        });
+
+        console.log('Resposta da API:', response.status);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Erro ao buscar dados do clã:', error.response?.data || error.message);
+        console.error('Status do erro:', error.response?.status);
+        console.error('Headers da resposta:', error.response?.headers);
+        
+        res.status(error.response?.status || 500).json({
+            error: true,
+            message: error.response?.data?.message || 'Erro ao buscar dados do clã',
+            details: error.response?.data || error.message
+        });
+    }
+});
+
+// Rota para buscar dados do jogador
 app.get('/api/clash/:tag', async (req, res) => {
     try {
         const tag = req.params.tag;
@@ -45,13 +82,9 @@ app.get('/api/clash/:tag', async (req, res) => {
     }
 });
 
-// Rota de teste para verificar se a API está funcionando
-app.get('/api/test', (req, res) => {
-    res.json({ message: 'API está funcionando!' });
-});
-
 // Tratamento de erros 404
 app.use((req, res) => {
+    console.log('Rota não encontrada:', req.url);
     res.status(404).json({ error: true, message: 'Rota não encontrada' });
 });
 

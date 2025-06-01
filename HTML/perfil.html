@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil | Academia Pinga</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../CSS/styles.css">
     <link rel="stylesheet" href="../CSS/user-menu.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../JS/user-menu.js"></script>
     <link rel="icon" type="image/png" href="../IMG/favicon_sem_fundo.png">
     <style>
@@ -351,6 +354,40 @@
         .no-friends {
             display: none;
         }
+
+        .custom-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-content {
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-button:hover {
+            color: #FFA500 !important;
+        }
     </style>
 </head>
 <body>
@@ -448,7 +485,7 @@
                 </div>
                 <div class="stat-card">
                     <p>Clã Atual</p>
-                    <h3 id="clanAtual">N/A</h3>
+                    <h3><a href="#" id="clanAtual" style="color: #FFD700; text-decoration: underline; cursor: pointer;"></a></h3>
                 </div>
             </div>
         </div>
@@ -547,6 +584,19 @@
         </div>
     </div>
 
+    <!-- Modal do clã -->
+    <div id="clanModal" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center;">
+        <div style="background: #222; padding: 2rem 1.5rem; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); min-width: 320px; max-width: 90vw; max-height: 90vh; overflow-y: auto; position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; position: sticky; top: 0; background: #222; padding: 1rem 0; z-index: 2;">
+                <h2 style="color: #FFD700; margin: 0;">Informações do Clã</h2>
+                <button id="closeClanModal" style="background: none; border: none; color: #FFD700; font-size: 1.5rem; cursor: pointer; transition: color 0.3s ease;">&times;</button>
+            </div>
+            <div id="clanInfo" style="color: #fff;">
+                <!-- As informações do clã serão inseridas aqui dinamicamente -->
+            </div>
+        </div>
+    </div>
+
     <script>
         // Inicializar Supabase
         const supabaseUrl = 'https://vhswdfifhhcqmtpnhoso.supabase.co'
@@ -589,18 +639,12 @@
                 const dadosClash = await buscarDadosClashRoyale(tag);
                 
                 // Atualizar troféus
-                console.log('Dados completos do Clash Royale:', dadosClash);
-                console.log('Trophies:', dadosClash.trophies);
-                console.log('Best Path:', dadosClash.bestPathOfLegendSeasonResult);
-                
                 const trofeus = dadosClash.trophies || 0;
-                document.getElementById('trofeus').textContent = trofeus;
-                console.log('Troféus atualizados:', trofeus);
+                document.getElementById('trofeus').textContent = trofeus.toLocaleString();
                 
                 // Atualizar max liga usando o leagueNumber
                 let maxLiga = 'N/A';
                 if (dadosClash.bestPathOfLegendSeasonResult && dadosClash.bestPathOfLegendSeasonResult.leagueNumber) {
-                    console.log('League Number recebido:', dadosClash.bestPathOfLegendSeasonResult.leagueNumber);
                     const ligas = [
                         'Desafiante I',
                         'Desafiante II',
@@ -614,10 +658,8 @@
                         'Maior Campeão'
                     ];
                     const leagueNumber = dadosClash.bestPathOfLegendSeasonResult.leagueNumber;
-                    console.log('League Number processado:', leagueNumber);
                     if (leagueNumber >= 1 && leagueNumber <= 10) {
                         maxLiga = ligas[leagueNumber - 1];
-                        console.log('Max Liga definida como:', maxLiga);
                     }
                 }
                 document.getElementById('maxLiga').textContent = maxLiga;
@@ -625,38 +667,32 @@
                 // Atualizar nível do jogador
                 const nivelJogador = dadosClash.expLevel || 'N/A';
                 document.getElementById('nivelJogador').textContent = nivelJogador;
-                console.log('Nível do jogador atualizado:', nivelJogador);
                 
                 // Atualizar vitórias
-                const vitorias = dadosClash.wins || 'N/A';
-                document.getElementById('vitorias').textContent = vitorias;
-                console.log('Vitórias atualizadas:', vitorias);
+                const vitorias = dadosClash.wins || 0;
+                document.getElementById('vitorias').textContent = vitorias.toLocaleString();
                 
                 // Atualizar derrotas
-                const derrotas = dadosClash.losses || 'N/A';
-                document.getElementById('derrotas').textContent = derrotas;
-                console.log('Derrotas atualizadas:', derrotas);
+                const derrotas = dadosClash.losses || 0;
+                document.getElementById('derrotas').textContent = derrotas.toLocaleString();
                 
                 // Calcular e atualizar taxa de vitória
-                const totalJogos = (dadosClash.wins || 0) + (dadosClash.losses || 0);
-                const taxaVitoria = totalJogos > 0 ? ((dadosClash.wins / totalJogos) * 100).toFixed(1) + '%' : 'N/A';
+                const totalJogos = vitorias + derrotas;
+                const taxaVitoria = totalJogos > 0 ? ((vitorias / totalJogos) * 100).toFixed(1) + '%' : 'N/A';
                 document.getElementById('taxaVitoria').textContent = taxaVitoria;
-                console.log('Taxa de vitória atualizada:', taxaVitoria);
                 
                 // Atualizar recorde de troféus
-                const melhorPosicao = dadosClash.bestTrophies || 'N/A';
-                document.getElementById('melhorPosicao').textContent = melhorPosicao;
-                console.log('Recorde de troféus atualizado:', melhorPosicao);
+                const melhorPosicao = dadosClash.bestTrophies || 0;
+                document.getElementById('melhorPosicao').textContent = melhorPosicao.toLocaleString();
                 
                 // Atualizar clã atual
                 const clanAtual = dadosClash.clan?.name || 'Sem Clã';
-                document.getElementById('clanAtual').textContent = clanAtual;
-                console.log('Clã atual atualizado:', clanAtual);
+                const clanTag = dadosClash.clan?.tag || null;
+                updateClanDisplay(clanAtual, clanTag);
 
                 // Atualizar no banco de dados
                 const { data: { session } } = await supabase.auth.getSession();
                 if (session) {
-                    // Tentar fazer update primeiro
                     const estatisticasData = {
                         user_id: session.user.id,
                         trofeus: trofeus,
@@ -669,9 +705,6 @@
                         clan_atual: clanAtual
                     };
 
-                    console.log('Tentando salvar estatísticas:', estatisticasData);
-
-                    // Usar upsert para criar ou atualizar o registro
                     const { data, error } = await supabase
                         .from('estatisticas')
                         .upsert(estatisticasData, {
@@ -683,8 +716,6 @@
                         console.error('Erro ao salvar estatísticas:', error);
                         throw error;
                     }
-
-                    console.log('Estatísticas salvas com sucesso:', data);
                 }
 
                 showSuccessModal('Dados do Clash Royale atualizados com sucesso!');
@@ -763,7 +794,7 @@
                             
                             // Atualizar troféus
                             const trofeus = dadosClash.trophies || 0;
-                            document.getElementById('trofeus').textContent = trofeus;
+                            document.getElementById('trofeus').textContent = trofeus.toLocaleString();
                             console.log('Troféus atualizados:', trofeus);
                             
                             // Atualizar max liga usando o leagueNumber
@@ -797,30 +828,30 @@
                             console.log('Nível do jogador atualizado:', nivelJogador);
                             
                             // Atualizar vitórias
-                            const vitorias = dadosClash.wins || 'N/A';
-                            document.getElementById('vitorias').textContent = vitorias;
+                            const vitorias = dadosClash.wins || 0;
+                            document.getElementById('vitorias').textContent = vitorias.toLocaleString();
                             console.log('Vitórias atualizadas:', vitorias);
                             
                             // Atualizar derrotas
-                            const derrotas = dadosClash.losses || 'N/A';
-                            document.getElementById('derrotas').textContent = derrotas;
+                            const derrotas = dadosClash.losses || 0;
+                            document.getElementById('derrotas').textContent = derrotas.toLocaleString();
                             console.log('Derrotas atualizadas:', derrotas);
                             
                             // Calcular e atualizar taxa de vitória
-                            const totalJogos = (dadosClash.wins || 0) + (dadosClash.losses || 0);
-                            const taxaVitoria = totalJogos > 0 ? ((dadosClash.wins / totalJogos) * 100).toFixed(1) + '%' : 'N/A';
+                            const totalJogos = vitorias + derrotas;
+                            const taxaVitoria = totalJogos > 0 ? ((vitorias / totalJogos) * 100).toFixed(1) + '%' : 'N/A';
                             document.getElementById('taxaVitoria').textContent = taxaVitoria;
                             console.log('Taxa de vitória atualizada:', taxaVitoria);
                             
                             // Atualizar recorde de troféus
-                            const melhorPosicao = dadosClash.bestTrophies || 'N/A';
-                            document.getElementById('melhorPosicao').textContent = melhorPosicao;
+                            const melhorPosicao = dadosClash.bestTrophies || 0;
+                            document.getElementById('melhorPosicao').textContent = melhorPosicao.toLocaleString();
                             console.log('Recorde de troféus atualizado:', melhorPosicao);
                             
                             // Atualizar clã atual
                             const clanAtual = dadosClash.clan?.name || 'Sem Clã';
-                            document.getElementById('clanAtual').textContent = clanAtual;
-                            console.log('Clã atual atualizado:', clanAtual);
+                            const clanTag = dadosClash.clan?.tag || null;
+                            updateClanDisplay(clanAtual, clanTag);
 
                             // Atualizar no banco de dados
                             try {
@@ -910,7 +941,7 @@
                             
                             // Atualizar troféus
                             const trofeus = dadosClash.trophies || 0;
-                            document.getElementById('trofeus').textContent = trofeus;
+                            document.getElementById('trofeus').textContent = trofeus.toLocaleString();
                             console.log('Troféus atualizados:', trofeus);
                             
                             // Atualizar max liga usando o leagueNumber
@@ -944,30 +975,30 @@
                             console.log('Nível do jogador atualizado:', nivelJogador);
                             
                             // Atualizar vitórias
-                            const vitorias = dadosClash.wins || 'N/A';
-                            document.getElementById('vitorias').textContent = vitorias;
+                            const vitorias = dadosClash.wins || 0;
+                            document.getElementById('vitorias').textContent = vitorias.toLocaleString();
                             console.log('Vitórias atualizadas:', vitorias);
                             
                             // Atualizar derrotas
-                            const derrotas = dadosClash.losses || 'N/A';
-                            document.getElementById('derrotas').textContent = derrotas;
+                            const derrotas = dadosClash.losses || 0;
+                            document.getElementById('derrotas').textContent = derrotas.toLocaleString();
                             console.log('Derrotas atualizadas:', derrotas);
                             
                             // Calcular e atualizar taxa de vitória
-                            const totalJogos = (dadosClash.wins || 0) + (dadosClash.losses || 0);
-                            const taxaVitoria = totalJogos > 0 ? ((dadosClash.wins / totalJogos) * 100).toFixed(1) + '%' : 'N/A';
+                            const totalJogos = vitorias + derrotas;
+                            const taxaVitoria = totalJogos > 0 ? ((vitorias / totalJogos) * 100).toFixed(1) + '%' : 'N/A';
                             document.getElementById('taxaVitoria').textContent = taxaVitoria;
                             console.log('Taxa de vitória atualizada:', taxaVitoria);
                             
                             // Atualizar recorde de troféus
-                            const melhorPosicao = dadosClash.bestTrophies || 'N/A';
-                            document.getElementById('melhorPosicao').textContent = melhorPosicao;
+                            const melhorPosicao = dadosClash.bestTrophies || 0;
+                            document.getElementById('melhorPosicao').textContent = melhorPosicao.toLocaleString();
                             console.log('Recorde de troféus atualizado:', melhorPosicao);
                             
                             // Atualizar clã atual
                             const clanAtual = dadosClash.clan?.name || 'Sem Clã';
-                            document.getElementById('clanAtual').textContent = clanAtual;
-                            console.log('Clã atual atualizado:', clanAtual);
+                            const clanTag = dadosClash.clan?.tag || null;
+                            updateClanDisplay(clanAtual, clanTag);
 
                             // Atualizar no banco de dados
                             try {
@@ -1308,6 +1339,297 @@
                 closeTagTutorial();
             }
         }
+
+        // Função para atualizar o clã atual
+        function updateClanDisplay(clanName, clanTag) {
+            const clanElement = document.getElementById('clanAtual');
+            if (!clanElement) return;
+
+            if (clanName && clanName !== 'Sem Clã') {
+                clanElement.textContent = clanName;
+                clanElement.style.cursor = 'pointer';
+                // Remover o # da tag do clã antes de passar para a função
+                const cleanClanTag = clanTag ? clanTag.replace('#', '') : null;
+                clanElement.onclick = () => showClanInfo(cleanClanTag);
+            } else {
+                clanElement.textContent = 'Sem Clã';
+                clanElement.style.cursor = 'default';
+                clanElement.onclick = null;
+            }
+        }
+
+        // Função para mostrar informações do clã
+        async function showClanInfo(clanTag) {
+            if (!clanTag) {
+                console.error('Tag do clã não fornecida');
+                return;
+            }
+
+            const modal = document.getElementById('clanModal');
+            const clanInfo = document.getElementById('clanInfo');
+            
+            try {
+                clanInfo.innerHTML = '<p>Carregando informações do clã...</p>';
+                modal.style.display = 'flex';
+
+                console.log('Buscando informações do clã com tag:', clanTag);
+
+                // Chamada à API do Clash Royale
+                const response = await fetch(`http://localhost:3000/api/clash/clan/${clanTag}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar informações do clã');
+                }
+
+                const clanData = await response.json();
+                console.log('Dados do clã recebidos:', clanData);
+                
+                // Formatar a data do último visto
+                function formatLastSeen(lastSeen) {
+                    const date = new Date(lastSeen);
+                    return date.toLocaleDateString('pt-BR') + ' ' + date.toLocaleTimeString('pt-BR');
+                }
+
+                // Formatar o HTML com as informações do clã
+                clanInfo.innerHTML = `
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #FFD700; margin-bottom: 1rem; font-size: 1.5rem;">Informações Gerais</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';">
+                                <p style="color: #FFD700; margin: 0 0 0.5rem 0; font-weight: bold;">Nome</p>
+                                <p style="margin: 0;">${clanData.name}</p>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';">
+                                <p style="color: #FFD700; margin: 0 0 0.5rem 0; font-weight: bold;">Tag</p>
+                                <p style="margin: 0;">${clanData.tag}</p>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';">
+                                <p style="color: #FFD700; margin: 0 0 0.5rem 0; font-weight: bold;">Localização</p>
+                                <p style="margin: 0;">${clanData.location.name}</p>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';">
+                                <p style="color: #FFD700; margin: 0 0 0.5rem 0; font-weight: bold;">Pontuação</p>
+                                <p style="margin: 0;">${clanData.clanScore.toLocaleString()}</p>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';">
+                                <p style="color: #FFD700; margin: 0 0 0.5rem 0; font-weight: bold;">Troféus de Guerra</p>
+                                <p style="margin: 0;">${clanData.clanWarTrophies.toLocaleString()}</p>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';">
+                                <p style="color: #FFD700; margin: 0 0 0.5rem 0; font-weight: bold;">Membros</p>
+                                <p style="margin: 0;">${clanData.members}/50</p>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';">
+                                <p style="color: #FFD700; margin: 0 0 0.5rem 0; font-weight: bold;">Doações/Semana</p>
+                                <p style="margin: 0;">${clanData.donationsPerWeek.toLocaleString()}</p>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';">
+                                <p style="color: #FFD700; margin: 0 0 0.5rem 0; font-weight: bold;">Troféus Mínimos</p>
+                                <p style="margin: 0;">${clanData.requiredTrophies.toLocaleString()}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 style="color: #FFD700; margin-bottom: 1rem; font-size: 1.5rem;">Membros</h3>
+                        <div style="margin-bottom: 1rem;">
+                            <input type="text" id="searchInput" placeholder="Pesquisar..." style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #FFD700; background: rgba(255,255,255,0.1); color: white;">
+                        </div>
+                        <div style="max-height: 400px; overflow-y: auto; position: relative;">
+                            <table id="membersTable" style="width: 100%; border-collapse: collapse;">
+                                <thead style="position: sticky; top: 0; background: #222; z-index: 1;">
+                                    <tr>
+                                        <th style="padding: 1rem; text-align: left; color: #FFD700; font-weight: bold; border-bottom: 2px solid #FFD700; cursor: pointer;" onclick="sortTable(0)">Nome <i class="fas fa-sort"></i></th>
+                                        <th style="padding: 1rem; text-align: left; color: #FFD700; font-weight: bold; border-bottom: 2px solid #FFD700; cursor: pointer;" onclick="sortTable(1)">Cargo <i class="fas fa-sort"></i></th>
+                                        <th style="padding: 1rem; text-align: left; color: #FFD700; font-weight: bold; border-bottom: 2px solid #FFD700; cursor: pointer;" onclick="sortTable(2)">Nível <i class="fas fa-sort"></i></th>
+                                        <th style="padding: 1rem; text-align: left; color: #FFD700; font-weight: bold; border-bottom: 2px solid #FFD700; cursor: pointer;" onclick="sortTable(3)">Troféus <i class="fas fa-sort"></i></th>
+                                        <th style="padding: 1rem; text-align: left; color: #FFD700; font-weight: bold; border-bottom: 2px solid #FFD700; cursor: pointer;" onclick="sortTable(4)">Doações <i class="fas fa-sort"></i></th>
+                                        <th style="padding: 1rem; text-align: left; color: #FFD700; font-weight: bold; border-bottom: 2px solid #FFD700; cursor: pointer;" onclick="sortTable(5)">Última vez visto <i class="fas fa-sort"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${clanData.memberList.map(member => {
+                                        // Formatar a data do último visto
+                                        const lastSeen = new Date(member.lastSeen);
+                                        const now = new Date();
+                                        const diffTime = Math.abs(now - lastSeen);
+                                        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                                        const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+                                        const diffMinutes = Math.floor(diffTime / (1000 * 60));
+
+                                        let lastSeenText;
+                                        if (diffDays > 0) {
+                                            lastSeenText = `Há ${diffDays} ${diffDays === 1 ? 'dia' : 'dias'}`;
+                                        } else if (diffHours > 0) {
+                                            lastSeenText = `Há ${diffHours} ${diffHours === 1 ? 'hora' : 'horas'}`;
+                                        } else if (diffMinutes > 0) {
+                                            lastSeenText = `Há ${diffMinutes} ${diffMinutes === 1 ? 'minuto' : 'minutos'}`;
+                                        } else {
+                                            lastSeenText = 'Agora mesmo';
+                                        }
+
+                                        // Mapear o cargo do membro
+                                        let cargoText;
+                                        let cargoStyle;
+                                        switch(member.role) {
+                                            case 'leader':
+                                                cargoText = 'Líder';
+                                                cargoStyle = 'background: #ff4444;';
+                                                break;
+                                            case 'coLeader':
+                                                cargoText = 'Co-Líder';
+                                                cargoStyle = 'background: #4CAF50;';
+                                                break;
+                                            case 'elder':
+                                                cargoText = 'Ancião';
+                                                cargoStyle = 'background: #2196F3;';
+                                                break;
+                                            default:
+                                                cargoText = 'Membro';
+                                                cargoStyle = 'background: #888;';
+                                        }
+
+                                        return `
+                                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.05)';" onmouseout="this.style.backgroundColor='transparent';">
+                                                <td style="padding: 1rem;">${member.name}</td>
+                                                <td style="padding: 1rem;">
+                                                    <span style="
+                                                        padding: 0.25rem 0.5rem;
+                                                        border-radius: 4px;
+                                                        font-size: 0.875rem;
+                                                        font-weight: bold;
+                                                        ${cargoStyle}
+                                                    ">${cargoText}</span>
+                                                </td>
+                                                <td style="padding: 1rem;">${member.expLevel}</td>
+                                                <td style="padding: 1rem;">${member.trophies.toLocaleString()}</td>
+                                                <td style="padding: 1rem;">${member.donations}</td>
+                                                <td style="padding: 1rem;">${lastSeenText}</td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+
+                // Adicionar funcionalidade de pesquisa e ordenação
+                const searchInput = document.getElementById('searchInput');
+                const table = document.getElementById('membersTable');
+                let sortDirection = 1; // 1 para ascendente, -1 para descendente
+
+                // Função de pesquisa
+                searchInput.addEventListener('input', function() {
+                    const searchText = this.value.toLowerCase();
+                    const rows = table.getElementsByTagName('tr');
+
+                    for (let i = 1; i < rows.length; i++) {
+                        const row = rows[i];
+                        const cells = row.getElementsByTagName('td');
+                        let found = false;
+
+                        for (let j = 0; j < cells.length; j++) {
+                            const cell = cells[j];
+                            if (cell.textContent.toLowerCase().indexOf(searchText) > -1) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        row.style.display = found ? '' : 'none';
+                    }
+                });
+
+                // Função de ordenação
+                window.sortTable = function(n) {
+                    const tbody = table.getElementsByTagName('tbody')[0];
+                    const rows = Array.from(tbody.getElementsByTagName('tr'));
+
+                    // Alternar direção de ordenação
+                    sortDirection *= -1;
+
+                    // Ordenar as linhas
+                    rows.sort((a, b) => {
+                        const x = a.getElementsByTagName('td')[n].textContent.trim();
+                        const y = b.getElementsByTagName('td')[n].textContent.trim();
+
+                        // Ordenação especial para a coluna de cargo
+                        if (n === 1) { // Coluna de cargo
+                            // Extrair o texto do cargo do span
+                            const xCargo = x.includes('Líder') ? 'Líder' :
+                                         x.includes('Co-Líder') ? 'Co-Líder' :
+                                         x.includes('Ancião') ? 'Ancião' : 'Membro';
+                            
+                            const yCargo = y.includes('Líder') ? 'Líder' :
+                                         y.includes('Co-Líder') ? 'Co-Líder' :
+                                         y.includes('Ancião') ? 'Ancião' : 'Membro';
+
+                            const cargoOrder = {
+                                'Líder': 0,      // Melhor cargo
+                                'Co-Líder': 1,   // Segundo melhor cargo
+                                'Ancião': 2,     // Terceiro melhor cargo
+                                'Membro': 3      // Quarto melhor cargo
+                            };
+
+                            return sortDirection * (cargoOrder[xCargo] - cargoOrder[yCargo]);
+                        }
+
+                        // Verificar se é um número
+                        const isNumeric = !isNaN(x) && !isNaN(y);
+                        
+                        if (isNumeric) {
+                            return sortDirection * (parseFloat(x) - parseFloat(y));
+                        } else {
+                            return sortDirection * x.localeCompare(y);
+                        }
+                    });
+
+                    // Reordenar as linhas na tabela
+                    rows.forEach(row => tbody.appendChild(row));
+
+                    // Atualizar ícones de ordenação
+                    const headers = table.getElementsByTagName('th');
+                    for (let i = 0; i < headers.length; i++) {
+                        headers[i].querySelector('i').className = 'fas fa-sort';
+                    }
+                    headers[n].querySelector('i').className = sortDirection === 1 ? 'fas fa-sort-up' : 'fas fa-sort-down';
+                };
+
+            } catch (error) {
+                console.error('Erro ao buscar informações do clã:', error);
+                clanInfo.innerHTML = '<p style="color: #ff4444;">Erro ao carregar informações do clã.</p>';
+            }
+        }
+
+        // Adicionar efeito hover no botão de fechar
+        document.getElementById('closeClanModal').addEventListener('mouseover', function() {
+            this.style.color = '#FFA500';
+        });
+        document.getElementById('closeClanModal').addEventListener('mouseout', function() {
+            this.style.color = '#FFD700';
+        });
+
+        // Adicionar evento de clique para fechar o modal do clã
+        document.getElementById('closeClanModal').addEventListener('click', function() {
+            document.getElementById('clanModal').style.display = 'none';
+        });
+
+        // Inicializar o modal quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM carregado, inicializando elementos');
+            // Inicializar todos os modais do Bootstrap
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                new bootstrap.Modal(modal);
+            });
+            console.log('Modais do Bootstrap inicializados');
+        });
     </script>
 </body>
 </html> 
